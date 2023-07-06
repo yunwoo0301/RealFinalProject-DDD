@@ -29,6 +29,9 @@ const SlideContainer = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    cursor: pointer;
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 링크 색상 상속 */
   }
 
   .RollDiv > div > a > img {
@@ -54,6 +57,7 @@ const SlideContainer = styled.div`
 const RollDiv = () => {
   const { t } = useTranslation();
   const [exhibitionList, setExhibitionList] = useState([]);
+  console.log("anchors" + exhibitionList[0]?.imgUrl);
 
   const intervalRef = useRef(null);
 
@@ -76,6 +80,8 @@ const RollDiv = () => {
       try {
         const exhibitListData = await DDDApi.exhibitionList();
         setExhibitionList(exhibitListData.data);
+        console.log("전시리스트 + ", exhibitListData.data);
+        console.log("첫번째 리스트" + exhibitListData.data[0]?.imgUrl);
       } catch (e) {
         console.log(e);
       }
@@ -91,7 +97,7 @@ const RollDiv = () => {
       <div className="RollDiv">
         <div>
           {exhibitionList.map((exhibition) => (
-            <a key={exhibition.exhibitNo} href={exhibition.href}>
+            <a key={exhibition.exhibitNo} href={`/exhibitInfo/${exhibition.exhibitNo}`}>
               <img src={exhibition.imgUrl} alt="전시사진" />
               {exhibition.exhibitName.length > 15 ? (
             <p>
