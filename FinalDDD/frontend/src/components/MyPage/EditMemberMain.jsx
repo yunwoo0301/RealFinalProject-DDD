@@ -7,6 +7,7 @@ import { member_info } from './Data';
 import MyReservation from './MyReservation';
 import DeleteAccount from './DeleteAccount';
 import useStore from '../../store';
+import ChangePwd from './ChangePwd';
 
 const Container = styled.div`
   /* background-color  : beige; */
@@ -79,6 +80,11 @@ const EditMemberMain = () => {
                         <div onClick={() => (setShowPage('마이페이지'))}>마이페이지</div>
 
                         {
+                            pageOnEdit === 2 ? 
+                            (<div className='FocusedMenuBtn'>비밀번호 변경</div>) : 
+                            (<div onClick={()=> setPageOnEdit(2)}>비밀번호 변경</div>)
+                        }
+                        {
                             pageOnEdit === 1 ? 
                             (<div className='FocusedMenuBtn'>회원탈퇴</div>) : 
                             (<div onClick={()=> setPageOnEdit(1)}>회원탈퇴</div>)
@@ -89,6 +95,9 @@ const EditMemberMain = () => {
                         {pageOnEdit === 0  && <EditInfo />}
                         {
                             pageOnEdit === 1 && <DeleteAccount/>
+                        } 
+                        {
+                            pageOnEdit === 2 && <ChangePwd/>
                         } 
             </MenuSpace>
         </Container>

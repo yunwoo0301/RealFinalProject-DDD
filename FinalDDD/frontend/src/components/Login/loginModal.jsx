@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import LoginApi from "../../api/LoginApi";
 import { useNavigate } from "react-router-dom";
+import useStore from "../../store";
 
 const Container = styled.div`
   position: absolute;
