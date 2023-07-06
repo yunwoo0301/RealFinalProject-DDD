@@ -32,7 +32,7 @@ const Container = styled.div`
             width: 15rem;
             height: 1.5rem;
             border-radius: 0.3rem;
-
+            
         }
         button {
             margin: 0;
@@ -118,17 +118,21 @@ const ExhibitionReview = ({data}) => {
                 comments(); // 작성 후 한줄평 리스트초기화
                 setComment(""); // 한줄평 내용 초기화
                 setOpenModal(false);
+                comments(); // 작성 후 한줄평 리스트초기화
                 setStars(0); // 별점 초기화
               }, 500); // 0.8초 후에 모달을 닫음
             }
     }
 
     // 엔터로도 입력가능
-    const handleKeyPress = (e) => {
-        if(e.key === "Enter") {
-            handleToComment();
+    const handleKeyPress = async (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault(); // 기본 동작 막기
+      
+          await handleToComment(); // 비동기 동작이 완료될 때까지 대기
         }
-    };
+      };
+      
 
 
     // 한줄평리스트
@@ -141,9 +145,9 @@ const ExhibitionReview = ({data}) => {
             console.log(e);
         }
     };
-
+    
     useEffect(() => {
-
+        
         comments();
     }, []);
 
@@ -152,24 +156,24 @@ const ExhibitionReview = ({data}) => {
     return(
 
         <Container>
-           {openModal && <AlertModal/>}
+           {openModal && <AlertModal/>} 
         <div className="reviewBox">
             <div className="rating">
             <Stack spacing={1}>
-              <Rating
+              <Rating 
               name="half-rating"
               value={stars}
               onChange={(e, newValue) => {
                 setStars(newValue);
-              }}
+              }} 
               precision={0.5} />
             </Stack>
             </div>
-            <div className="textBox">
-            <input
+            <div className="textBox"> 
+            <input 
             type="text"
-            value={comment}
-            placeholder="한줄평을 남겨보세요!"
+            value={comment} 
+            placeholder="한줄평을 남겨보세요!" 
             onChange={handleCommentChange}
             onKeyDown={handleKeyPress}/>
             <button onClick={handleToComment}  disabled={!isLogin}>입력</button>
@@ -180,15 +184,15 @@ const ExhibitionReview = ({data}) => {
                     <Review key={e.commentNo}>
                     <div className="imgContainer">
                     <img src={e.memberPic} alt="" />
-                    <div className="name">{e.memberName}</div>
+                    <div className="name">{e.memberName}</div> 
                     </div>
-
+                    
                     <div className="memberInfo">
-                    <Rating name="read-only" value={e.starRates} readOnly />
+                    <Rating name="read-only" value={e.starRates} readOnly />         
                     <div className="comment">{e.comment}</div>
                     {/* <div>{e.booking? "예매자":null}</div> */}
                     </div>
-
+                    
                     {/* <div>{e.like}</div> */}
                     </Review>
                 ))}
