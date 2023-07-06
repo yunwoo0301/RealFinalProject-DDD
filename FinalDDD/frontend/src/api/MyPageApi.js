@@ -51,6 +51,14 @@ const MyPageApi = {
     // 소개글 변경
     introduce: (memberId, inputIntro) => updateProfileField(memberId, 'introduce', inputIntro),
 
+    // 회원 탈퇴
+    delete: (memberId, inputEmail, inputPwd) => updateProfileField(memberId, 'delete', { email: inputEmail, password: inputPwd }),
+
+    // 비밀번호 변경
+    password : (memberId, inputCurrentPwd, inputNewPwd ) => updateProfileField(
+        memberId, 'password', { currentPassword: inputCurrentPwd, newPassword: inputNewPwd }),
+
+
 
     
 };

@@ -125,31 +125,32 @@ const ReservedDetail = ({exhibitionData, currentPageData}) => {
         openMobileTicket();
     }, [resevationData]);
 
+    console.log("티켓금액 : " + currentPageData?.paymentDTO?.paidPrice);
+
     return (
         <>
             <div className='count'>총 {totalRecords} 건</div>
 
-                {
-                    currentPageData.map((ticket, index) => (
-                        <Container 
-                            key={index}
+                {currentPageData.map((e) => (
+                        <Container
+                            key={e.exhibitNo}
                             onClick={ () => {
-                                handleData(ticket.index)
+                                handleData(e.index)
                             }}
-                        
+
                         >
-                            <div className="showImage"><img src={ticket.imgUrl} alt='exhibition' /></div>
+                            <div className="showImage"><img src={e.imgUrl} alt='exhibition' /></div>
                             <div className='justfyTop'>
                                 <div className='leftBox'>
-                                    <div><span>전시명</span> {ticket.name}</div>
-                                    <div><span>전시관</span>{ticket.place}</div>
+                                    <div><span>전시명</span> {e.exhibitName}</div>
+                                    <div><span>전시관</span>{e.exhibitLocation}</div>
                                     <div className='flexRow'>
-                                        <div className='row2'><span>관람인원</span>{ticket.index}</div>
-                                        <div className='row2'><span>관람일시</span>{ticket.startDate}</div>
+                                        <div className='row2'><span>관람인원</span>{e.paymentCnt}</div>
+                                        <div className='row2'><span>관람일시</span>{e.visitDate}</div>
                                     </div>
                                     <div className='flexRow'>
-                                        <div className='row2'><span>금액</span>{ticket.index}</div>
-                                        <div className='row2'><span>결제일시</span>{ticket.startDate}</div>
+                                        <div className='row2'><span>금액</span>{e.paidPrice}</div>
+                                        <div className='row2'><span>결제일시</span>{e.paymentDate}</div>
                                     </div>
                                 </div>
                             </div>

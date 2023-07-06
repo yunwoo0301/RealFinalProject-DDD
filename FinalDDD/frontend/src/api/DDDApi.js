@@ -125,7 +125,12 @@ const DDDApi = {
     // 전시상세 한줄평출력
     commentList: async(exhibitNo) =>{
         return await axios.get( `/exhibitComment/list?exhibitNo=${exhibitNo}`);
-    }
+    },
+
+    // 내가 한 예약조회(마이페이지 내)
+    myBookedList: async(getId) => {
+        return await axios.get(DDD_DOMAIN + `/booking/checkTicket?id=${getId}`);
+    },
 
 
 };

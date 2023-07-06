@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { SlMagnifier } from 'react-icons/sl'
 import ReservedDetail from './ReservedDetail';
 import exhibitionData from '../exhibition/exhibitionData';
 import PageNation from '../../util/PageNation';
+import DDDApi from '../../api/DDDApi';
 
 
 const Container = styled.div`
@@ -52,7 +53,7 @@ const Container = styled.div`
         .searchBar{
             width: 8rem;
             margin-right: .3rem;
-            
+
         }
         .btn{
             font-size: .8rem;
@@ -70,7 +71,7 @@ const Container = styled.div`
             cursor: pointer;
 
         }
-    
+
 
     }
     .ticketBox{
@@ -98,22 +99,42 @@ const Container = styled.div`
 const MyReservation = (props) => {
     const [selectedValue, setSelectedValue] = useState('');
     const [selectedState, setSelectedState] = useState('lastest')
+    const getId = window.localStorage.getItem("memberId");
 
     const handleSelectChange = (event) => {
       setSelectedValue(event.target.value);
     };
 
+    // 내가 한 예매리스트
+    const [bookedList, setBookedList] = useState([]);
+    useEffect(() => {
+    const reservations = async() => {
+        try{
+            const reservationList = await DDDApi.myBookedList(getId);
+            setBookedList(reservationList.data);
+            console.log("가져오는 데이터 : ", reservationList.data);
+            console.log("페이드디티오 :  ",  reservationList.paymentDTO);
+
+        } catch(e) {
+            console.log(e);
+        }
+    }
+    reservations();
+    }, []);
+
+    //
+
     //보여질 페이지 Item 개수(페이지네이션)
     const ITEMS_PAGE = 3;
     const [currentPage, setCurrentPage] = useState(0);
-    
+
     const handlePageClick = (selectedPage) => {
         setCurrentPage(selectedPage.selected);
     };
-    const pageCount = Math.ceil(exhibitionData.length / ITEMS_PAGE); // 전체 페이지 수
+    const pageCount = Math.ceil(bookedList.length / ITEMS_PAGE); // 전체 페이지 수
     const offset = currentPage * ITEMS_PAGE; // 현재 페이지에서 보여줄 아이템의 시작 인덱스
 
-    const currentPageData = exhibitionData.slice(offset, offset + ITEMS_PAGE);
+    const currentPageData = bookedList.slice(offset, offset + ITEMS_PAGE);
 
 
     return (
@@ -122,9 +143,9 @@ const MyReservation = (props) => {
                 <div className='title' >예약 관리</div>
                 <div className='serachBox'>
                     <span className='boldText'>구분</span>
-                    <input type="radio" name="searchDate" value="lastest" defaultChecked onChange={() => setSelectedState('lastest')}/> 
+                    <input type="radio" name="searchDate" value="lastest" defaultChecked onChange={() => setSelectedState('lastest')}/>
                     <span>최신순</span>
-                    <input type="radio" name='searchDate' value="search" onChange={() => setSelectedState('search')}/> 
+                    <input type="radio" name='searchDate' value="search" onChange={() => setSelectedState('search')}/>
                     <span>검색</span>
                     {
                         selectedState === 'lastest' && (
@@ -145,7 +166,7 @@ const MyReservation = (props) => {
                     }
                 </div>
                 <div className='ticketBox'>
-                    <ReservedDetail exhibitionData={exhibitionData} currentPageData={currentPageData}/>
+                    <ReservedDetail exhibitionData={bookedList} currentPageData={currentPageData}/>
                 </div>
                     
             <div className="pageBlock">

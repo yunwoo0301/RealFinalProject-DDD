@@ -79,34 +79,31 @@ public class BookingService {
     }
 
 
-    // 예매조회(결제정보조인)
-    public List<BookingDTO> FindTicket(String id) {
+    // 예매전체목록조회(회원아이디별)
+    public List<BookingDTO> FindTicketList(String id) {
         List<BookingDTO> bookingDTOS = new ArrayList<>();
         List<Booking> bookings = bookingRepository.findByMemberId(Long.parseLong(id));
 
         for(Booking e : bookings) {
             BookingDTO bookingDTO = new BookingDTO();
             bookingDTO.setBookingId(e.getBookingId());
-          //  bookingDTO.setId(e.getMember().getId());
-            bookingDTO.setBookedName(e.getMember().getName());
-            bookingDTO.setBookedEmail(e.getMember().getEmail());
-            bookingDTO.setExhibitNo(e.getExhibitions().getExhibitNo());
-            //bookingDTO.setExhibitName(e.getExhibitions().getExhibitName());
-            bookingDTO.setBookingDate(e.getBookingDate());
-            bookingDTO.setVisitDate(e.getVisitDate());
+            bookingDTO.setMemberId(e.getMember().getId());
+            bookingDTO.setImgUrl(e.getExhibitions().getImgUrl());
+            bookingDTO.setExhibitName(e.getExhibitions().getExhibitName());
+            bookingDTO.setExhibitLocation(e.getExhibitions().getExhibitLocation()); // 전시회장소
+            bookingDTO.setVisitDate(e.getVisitDate()); // 관람일
 
-            // 결제정보추출
-            if(e.getPayment() != null) {
+            // 결제정보설정
+            Payment payment = paymentRepository.findByBookingBookingId(e.getBookingId());
+            if(payment != null) {
                 PaymentDTO paymentDTO = new PaymentDTO();
-                paymentDTO.setPaymentId(e.getPayment().getPaymentId());
-                paymentDTO.setPaymentType(e.getPayment().getPaymentType());
-                paymentDTO.setPaidPrice(String.valueOf(e.getPayment().getPaidPrice()));
-                paymentDTO.setPaymentStatus(String.valueOf(e.getPayment().getPaymentStatus()));
-                paymentDTO.setPaymentDate(e.getPayment().getPaymentDate());
-                paymentDTO.setPaymentCnt(e.getPayment().getPaymentCnt());
+                paymentDTO.setPaymentDate(payment.getPaymentDate()); // 결제일
+                paymentDTO.setPaymentCnt(payment.getPaymentCnt()); // 관람인원(티켓예매수)
+                paymentDTO.setPaidPrice(String.valueOf(payment.getPaidPrice())); // 총금액
 
-               // bookingDTO.setPaymentDTO(paymentDTO);
+                bookingDTO.setPaymentDTO(paymentDTO);
             }
+
             bookingDTOS.add(bookingDTO);
         }
         return bookingDTOS;

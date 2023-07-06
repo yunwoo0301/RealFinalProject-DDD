@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { dummy_reply } from './Data'
 import useStore from '../../store';
 import DDDApi from '../../api/DDDApi';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -75,6 +76,8 @@ const Table = styled.table`
 
 const MyPost = ({ memberId, posts, setPosts}) => {
 
+    const navigate = useNavigate();
+
     const fetchPost = async (memberId) => {
         try {
             const response = await DDDApi.getBoardsByMember(memberId);
@@ -98,6 +101,11 @@ const MyPost = ({ memberId, posts, setPosts}) => {
     const formatDate = (date) => {
         const formattedDate = new Date(date).toISOString().substring(0, 10);
         return formattedDate;
+    };
+
+    // 타이틀 클릭 시 해당 게시물로 이동
+    const handleTitleClick = (no) => {
+        navigate(`/boardList/boardView/${memberId}`);
     };
 
 
@@ -129,7 +137,10 @@ const MyPost = ({ memberId, posts, setPosts}) => {
                             <tr key={index}>
                             <td>{post.boardNo}</td>
                             <td>{post.category}</td>
-                            <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{post.title}</td>
+                            <td
+                                style={{ textAlign: 'left', paddingLeft: '.6rem', cursor: 'pointer' }}
+                                onClick={() => handleTitleClick(post.memberId)}>{post.title}
+                            </td>
                             <td>{post.author}</td>
                             <td >{post.views}</td>
                             <td>{formatDate(post.writeDate)}</td>
