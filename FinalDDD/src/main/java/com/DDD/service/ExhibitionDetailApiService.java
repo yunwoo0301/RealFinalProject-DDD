@@ -51,7 +51,7 @@ public class ExhibitionDetailApiService {
                     responseBuilder.append(line);
                 }
                 reader.close();
-               // System.out.println("상세정보주소 : " + urlString);
+                // System.out.println("상세정보주소 : " + urlString);
                 // 응답 데이터 반환
                 return responseBuilder.toString();
             } else {
@@ -62,6 +62,15 @@ public class ExhibitionDetailApiService {
         }
 
         return null;
+    }
+
+    private String convertHtmlEntities(String text) {
+        text = text.replace("&amp;", "&")
+                .replace("&lt;", "<")
+                .replace("&gt;", ">")
+                .replace("&quot;", "\"")
+                .replace("&#39;", "'");
+        return text;
     }
 
     public List<ExhibitionDetailDTO> detailFromJsonObj(String result) {
@@ -84,10 +93,15 @@ public class ExhibitionDetailApiService {
             ExhibitionDetailDTO exhibitionDetailDTO = new ExhibitionDetailDTO(item);
             list.add(exhibitionDetailDTO);
             System.out.println("상세정보 불러오기 성공!! :)😍😍😍");
+
+            // 특수문자 변환
+            exhibitionDetailDTO.setExhibitName(convertHtmlEntities(exhibitionDetailDTO.getExhibitName()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
 
     }
+
 }
