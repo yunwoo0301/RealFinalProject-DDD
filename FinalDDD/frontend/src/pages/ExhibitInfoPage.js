@@ -10,8 +10,7 @@ import Header from "../components/header/Header";
 
 
 const Container = styled.div`
-    margin-top: 10rem;
-    .header { 
+    .header {
         width: 100%;
         height: 170px;
     }
@@ -21,7 +20,7 @@ const Container = styled.div`
         border: 3px solid #eee;
         margin: 0 auto;
         border-radius:5px;
-       
+
     }
     .category{
         margin: 10px;
@@ -44,20 +43,15 @@ const Container = styled.div`
     }
   `;
 
-  const HeaderStyle = styled.div`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 2;
-  `;
+
 
 const ExhibitInfoPage = () => {
 
    //클릭한 정보id가져오기 (전시번호 가지고오기)
     const { id } = useParams();
-    //데이터 상태관리 
+    //데이터 상태관리
     const [exData, setExData] = useState({});
-     //메뉴 바 상태 관리 
+     //메뉴 바 상태 관리
     const [category,setCategory] = useState('menu1');
     const categories = [
       {name :'menu1',text : '상세정보'},
@@ -78,12 +72,11 @@ const ExhibitInfoPage = () => {
       }
       exhibitionDetail();
     }, [id]);
-  
+
     return(
-      <Container>
-      <HeaderStyle>
+      <>
       <Header/>
-      </HeaderStyle>
+      <Container>
        <div className="InfoBox"><DetailBox data ={exData[0]}/></div>
        <div className="coment"><ComentBox/></div>
         <div className="category">
@@ -91,6 +84,7 @@ const ExhibitInfoPage = () => {
         </div>
         <div className="section"><Section category={category} data ={exData[0]}/></div>
       </Container>
+      </>
     );
   };
 
