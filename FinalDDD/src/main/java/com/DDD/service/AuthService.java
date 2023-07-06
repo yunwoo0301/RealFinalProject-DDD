@@ -7,6 +7,7 @@ import com.DDD.entity.Member;
 import com.DDD.jwt.TokenProvider;
 import com.DDD.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -38,6 +39,18 @@ public class AuthService {
         Long memberId = getMemberIdByEmail(requestDto.getEmail());
 
         return tokenProvider.generateTokenDto(authentication, memberId); // memberId 인자 추가
+    }
+
+    public void delete(MemberRequestDto requestDto) {
+        Member member = memberRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        }
+
+        member.setActive(false);
+        memberRepository.save(member);
     }
 
     public Long getMemberIdByEmail(String email) {

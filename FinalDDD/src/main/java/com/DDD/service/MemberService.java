@@ -40,15 +40,16 @@ public class MemberService {
 
         MemberDto memberDto = new MemberDto();
 
-        memberDto.setEmail(member.getEmail());
         memberDto.setId(Long.valueOf(member.getId()));
+        memberDto.setEmail(member.getEmail());
         memberDto.setName(member.getName());
         memberDto.setTel(member.getTel());
         memberDto.setNickname(member.getNickname());
         memberDto.setInstagram(member.getInstagram());
-        memberDto.setIntroduce(member.getIntroduce());
         memberDto.setBackgroundImg(member.getBackgroundImg());
         memberDto.setProfileImg(member.getProfileImg());
+        memberDto.setIntroduce(member.getIntroduce());
+        memberDto.setActive(member.isActive());
 
         return memberDto;
     }

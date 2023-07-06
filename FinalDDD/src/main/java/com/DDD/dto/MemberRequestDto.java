@@ -32,6 +32,10 @@ public class MemberRequestDto { // DB 넣어질 요소
                 .name(name)
                 .tel(tel)
                 .authority(Authority.ROLE_USER)
+                .isActive(true)
+                .introduce(introduce)
+                .profileImg(profileImg)
+                .backgroundImg(backgroundImg)
                 .build();
     }
     public UsernamePasswordAuthenticationToken toAuthentication() {
