@@ -23,6 +23,7 @@ const Modal = styled.div`
     flex-direction: column;
     align-items: center;
     border: 1px solid #ccc;
+    z-index: 3;
 
     .closeBtn{
         /* color: white; */
@@ -125,11 +126,11 @@ const MobileTicket = ({ reservationData, closeModal, openCancel }) => {
                 {/* 현장 발권일 때는 주의 문구 출력 */}
                 {reservationData.deliveryMethod === "onSite" && <p>* 현장 발권일 경우, 관람 전 실물 티켓으로 교환 후 관람 가능합니다.</p>}<br />
             </div>
-            <div className='btnBlock'>
-                <button>
-                    <Link to={`/exhibitInfo/${reservationData.index}`} className='link'>상세정보</Link></button>
-                <button onClick={openCancel}>예매취소</button>
-            </div>
+{/*             <div className='btnBlock'> */}
+{/*                 <button> */}
+{/*                     <Link to={`/exhibitInfo/${reservationData.index}`} className='link'>상세정보</Link></button> */}
+{/*                 <button onClick={openCancel}>예매취소</button> */}
+{/*             </div> */}
         </Modal>
 
     );
