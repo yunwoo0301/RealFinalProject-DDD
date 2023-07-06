@@ -40,6 +40,7 @@ const Modal = styled.div`
 `;
 
 const MyPageBG = () => {
+  const [posts, setPosts] = useState([]);
   let memberId = Functions.getMemberId();
 
   const { showPage, memberData, setMemberData, myDiaryData, setMyDiaryData } =
@@ -94,7 +95,10 @@ const MyPageBG = () => {
             <>
               <Thumnail />
               <NaviBox />
-              <MyPost />
+              <MyPost
+              memberId={memberId}
+              posts={posts}
+              setPosts={setPosts}/>
             </>
           )}
           {showPage === "내정보수정" && (

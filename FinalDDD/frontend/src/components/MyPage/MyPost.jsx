@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import {dummy_post, dummy_reply} from './Data'
+import { dummy_reply } from './Data'
 import useStore from '../../store';
+import DDDApi from '../../api/DDDApi';
 
 
 
@@ -72,15 +73,40 @@ const Table = styled.table`
 `;
 
 
-const Introduce = (props) => {
+const MyPost = ({ memberId, posts, setPosts}) => {
 
-    const slicedPosts = dummy_post.slice(0, 5);
+    const fetchPost = async (memberId) => {
+        try {
+            const response = await DDDApi.getBoardsByMember(memberId);
+            setPosts(response.data);
+        } catch (error) {
+            console.error('Failed to fetch posts', error);
+        }
+    };
+
+    // 로그인했을 시 회원 ID의 값을 받아오기 위해
+    useEffect(() => {
+        fetchPost(memberId);
+    }, [memberId]);
+
+
+    const slicedPosts = posts.slice(0, 5); // 게시글 5개로 나눠서 노출
     const slicedReplies = dummy_reply.slice(0, 5);
+
+
+    // 작성일자 yyyy-MM-dd 형식으로 변환
+    const formatDate = (date) => {
+        const formattedDate = new Date(date).toISOString().substring(0, 10);
+        return formattedDate;
+    };
+
+
+
 
     return (
         <>
             <PostWrap>
-                
+
                 <div className='title' >내 게시물</div>
                 <div className='moreBox'>
                     <span>내가 쓴 글</span>
@@ -99,19 +125,19 @@ const Introduce = (props) => {
                     </thead>
                     <tbody>
                     {
-                       dummy_post.length > 0 && slicedPosts.map((post, index) => (
+                       slicedPosts.length > 0 && slicedPosts.map((post, index) => (
                             <tr key={index}>
-                            <td>{post.no}</td> 
-                            <td>{post.category}</td> 
-                            <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{post.title}</td> 
-                            <td>{post.nickName}</td> 
-                            <td >{post.view}</td> 
-                            <td>{post.date}</td> 
+                            <td>{post.boardNo}</td>
+                            <td>{post.category}</td>
+                            <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{post.title}</td>
+                            <td>{post.author}</td>
+                            <td >{post.views}</td>
+                            <td>{formatDate(post.writeDate)}</td>
                             </tr>
                         ))
                     }
                                         {
-                        dummy_post.length === 0 && 
+                        slicedPosts.length === 0 &&
                         (
                             <tr>
                                 <td colSpan={6}>작성 한 게시글이 없습니다. </td>
@@ -142,17 +168,17 @@ const Introduce = (props) => {
                     {
                         dummy_reply.length > 0 && slicedReplies.map((reply, index) => (
                             <tr key={index}>
-                                <td>{reply.no}</td> 
-                                <td>{reply.category}</td> 
-                                <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{reply.title}</td> 
-                                <td>{reply.nickName}</td> 
-                                <td>{reply.view}</td> 
-                                <td>{reply.date}</td> 
+                                <td>{reply.no}</td>
+                                <td>{reply.category}</td>
+                                <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{reply.title}</td>
+                                <td>{reply.nickName}</td>
+                                <td>{reply.view}</td>
+                                <td>{reply.date}</td>
                             </tr>
                         ))
                     }
                     {
-                        dummy_reply.length === 0 && 
+                        dummy_reply.length === 0 &&
                         (
                             <tr>
                                 <td colSpan={6}>작성 한 댓글이 없습니다. </td>
@@ -161,10 +187,10 @@ const Introduce = (props) => {
                     }
                     </tbody>
                 </Table>
-                
+
             </PostWrap>
         </>
     );
 };
 
-export default Introduce;
+export default MyPost;

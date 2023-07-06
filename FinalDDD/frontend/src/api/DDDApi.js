@@ -38,6 +38,11 @@ const DDDApi = {
     },
 
 
+    // 마이페이지 내 게시글 조회
+    getBoardsByMember: async (memberId) => {
+        return await axios.get(`/boardList/members/${memberId}/boards`);
+    },
+
 
     // 자유게시판 검색 목록 출력
     searchListLoad: async (keyword) => {
