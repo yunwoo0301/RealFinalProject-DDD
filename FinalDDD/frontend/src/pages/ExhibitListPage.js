@@ -13,8 +13,7 @@ import DDDApi from "../api/DDDApi";
 import Header from "../components/header/Header";
 
 const Container = styled.div`
-    margin-top: 10rem;
-    .header { 
+    .header {
         width: 100%;
         height: 170px;
     }
@@ -24,7 +23,7 @@ const Container = styled.div`
         border: 3px solid #eee;
         margin: 0 auto;
         border-radius:5px;
-       
+
     }
     .category{
         margin: 10px;
@@ -65,12 +64,7 @@ const Container = styled.div`
   }
 
 `;
-const HeaderStyle = styled.div`
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 2;
-`;
+
 
 
 
@@ -80,7 +74,7 @@ const ExhibitListPage = () => {
     const [exhibitionList, setExhibitionList] = useState([]);
     //셀렉트박스 상태관리
     const [selectedOption, setSelectedOption] = useState('');
-     //메뉴 바 상태 관리 
+     //메뉴 바 상태 관리
     const [category,setCategory] = useState('menu1');
     //카테고리 배열
     const categories = [
@@ -111,19 +105,19 @@ const ExhibitListPage = () => {
       exhibitions();
     }, []);
 
-   
+
     useEffect(() => {
         if (category === "menu1") {
         // 인기순 데이터로 리셋
         setFilteredData(exhibitionList);
-              
+
         } else if (category === "menu2") {
           setAreaCategory("서울");
           const areaData = exhibitionList.filter((item) =>
             item.region.includes(areaCategory)
           );
           setFilteredData(areaData);
-          
+
         } else {
           // 최신순 데이터로 리셋
           const dateData = [...exhibitionList].sort((a, b) => {
@@ -135,18 +129,18 @@ const ExhibitListPage = () => {
         }
       }, [category, exhibitionList]);
 
-     //필터 데이터 
+     //필터 데이터
    const [filteredData, setFilteredData] = useState([]);
-    //지역 메뉴바 상태관리 
+    //지역 메뉴바 상태관리
     const [areaCategory,setAreaCategory] = useState('서울');
-    const AreaOnSelect = useCallback(areaCategory =>{ 
+    const AreaOnSelect = useCallback(areaCategory =>{
         setAreaCategory(areaCategory);
         if(category === 'menu2'){
             const areaData = exhibitionList.filter(item=> item.region.includes(areaCategory))
             setFilteredData(areaData);
             console.log(areaData);
         }
-      
+
     },[category]);
 
   const pageCount = Math.ceil(filteredData.length / ITEMS_PAGE); // 전체 페이지 수
@@ -156,20 +150,18 @@ const ExhibitListPage = () => {
   const [modalOpen,setModalOpen] = useState(false);
   const closeModal =() => {
     setModalOpen(false);
-   
+
   }
-  //선택한 전시 정보 상태 관리 
+  //선택한 전시 정보 상태 관리
   const [selectEx, setSelectEx] = useState('');
-  const exClick=(selectEx) => { 
+  const exClick=(selectEx) => {
     setModalOpen(true);
     setSelectEx(selectEx);
-   
+
   }
     return(
       <>
-      <HeaderStyle>
       <Header/>
-      </HeaderStyle>
         <Container>
           
         <div className="apiBox">

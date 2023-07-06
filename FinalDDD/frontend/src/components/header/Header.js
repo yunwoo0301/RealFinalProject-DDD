@@ -12,7 +12,7 @@ const HeaderPosition =styled.div`
     top: 0;
     width: 100%;
     z-index: 2;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
 `;
 
 
