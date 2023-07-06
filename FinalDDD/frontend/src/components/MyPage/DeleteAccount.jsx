@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { MyPageApi } from '../../api/MyPageApi';
+import  Functions from '../../util/Functions'
 
 const Container = styled.div`
     width: 60%;
@@ -95,6 +97,36 @@ const Container = styled.div`
 `;
 
 const DeleteAccount = () => {
+    const memberId = Functions.getMemberId();
+    const [inputEmail, setInputEmail ] = useState();
+    const [inputPwd, setInputPwd ] = useState();
+
+    const onChangeEmail = (e) => {
+        const emailCurrent = e.target.value;
+        setInputEmail(emailCurrent);
+      };
+
+    const onChangePwd = (e) => {
+        const pwdCurrent = e.target.value;
+        setInputPwd(pwdCurrent);
+      };
+
+      const onClickDelete = async(inputEmail, inputPwd ) => {
+          console.log('버튼 클릭')
+          console.log(memberId)
+          try{
+              const response = await MyPageApi.delete(memberId, inputEmail, inputPwd);
+            if(response.status === 200){
+                console.log('회원 탈퇴 완료')
+            } else{
+                console.log('실패')
+            }
+        } catch (e) {
+            console.log(e);
+          }
+    }
+
+
     return (
         <>
             <Container>
@@ -108,15 +140,15 @@ const DeleteAccount = () => {
                 <div className="inputBlock">
                     <div>
                     <p>이메일</p>
-                    <input type="text" placeholder="Email@:DDD.com"/>
+                    <input type="text" placeholder="Email@:DDD.com" onChange={onChangeEmail} value={inputEmail}/>
                     </div>
                     <div>
                     <p>비밀번호</p>
-                    <input type="password" placeholder="비밀번호를 입력하세요"/> 
+                    <input type="password" placeholder="비밀번호를 입력하세요" onChange={onChangePwd} value={inputPwd}/> 
                     </div>
                 </div>
                 <div className="btnBlock">
-                    <button>탈퇴하기</button>
+                    <button onClick={onClickDelete}>탈퇴하기</button>
                     <button>돌아가기</button>
                 </div>
                 
