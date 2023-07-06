@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import profile from "./../../resources/프로필.png";
 import styled from "styled-components";
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
@@ -30,10 +29,10 @@ const Container = styled.div`
             justify-content: center;
         }
         input{
-            width: 300px;
-            height: 30px;
+            width: 15rem;
+            height: 1.5rem;
             border-radius: 0.3rem;
-            
+
         }
         button {
             margin: 0;
@@ -45,7 +44,7 @@ const Container = styled.div`
             color:  white;
             font-size: 1rem;
             font-weight: bold;
-            height: 35px;
+            height: 2rem;
         }
         &>*{
             margin: 10px;
@@ -65,15 +64,29 @@ const Review = styled.div`
     margin: 1rem;
     padding: 1em;
     img{
-        border-radius:100px;
-        width: 100px;
-        height: 100px;
-        margin-right: 30px;
+        border-radius: 10rem;
+        width: 5rem;
+        height: 5rem;
         background-color: gray;
     }
     .memberInfo{
+        margin-left: 3rem;
         display: flex;
         flex-direction: column;
+        gap: 2rem;
+    }
+    .name{
+        margin-top: 0.5rem;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    .comment{
+        font-size: 1rem;
+    }
+    .imgContainer{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 `;
 
@@ -102,14 +115,21 @@ const ExhibitionReview = ({data}) => {
         if(isOk) {
             setOpenModal(true);
             setTimeout(() => {
+                comments(); // 작성 후 한줄평 리스트초기화
                 setComment(""); // 한줄평 내용 초기화
                 setOpenModal(false);
                 setStars(0); // 별점 초기화
-                // 등록되자마자 리스트 업데이트
-                comments();
               }, 500); // 0.8초 후에 모달을 닫음
             }
     }
+
+    // 엔터로도 입력가능
+    const handleKeyPress = (e) => {
+        if(e.key === "Enter") {
+            handleToComment();
+        }
+    };
+
 
     // 한줄평리스트
     const [commentList, setCommentList] = useState([]);
@@ -121,8 +141,9 @@ const ExhibitionReview = ({data}) => {
             console.log(e);
         }
     };
-    
+
     useEffect(() => {
+
         comments();
     }, []);
 
@@ -131,41 +152,44 @@ const ExhibitionReview = ({data}) => {
     return(
 
         <Container>
-           {openModal && <AlertModal/>} 
+           {openModal && <AlertModal/>}
         <div className="reviewBox">
             <div className="rating">
             <Stack spacing={1}>
-              <Rating 
+              <Rating
               name="half-rating"
               value={stars}
               onChange={(e, newValue) => {
                 setStars(newValue);
-              }} 
+              }}
               precision={0.5} />
             </Stack>
             </div>
-            <div className="textBox"> 
-            <input 
+            <div className="textBox">
+            <input
             type="text"
-            value={comment} 
-            placeholder="한줄평을 남겨보세요!" 
-            onChange={handleCommentChange}/>
-            <button onClick={handleToComment} disabled={!isLogin}>입력</button>
+            value={comment}
+            placeholder="한줄평을 남겨보세요!"
+            onChange={handleCommentChange}
+            onKeyDown={handleKeyPress}/>
+            <button onClick={handleToComment}  disabled={!isLogin}>입력</button>
             </div>
         </div>
         <div className="review">
                 {commentList.map((e) => (
                     <Review key={e.commentNo}>
+                    <div className="imgContainer">
                     <img src={e.memberPic} alt="" />
-                    <div>
+                    <div className="name">{e.memberName}</div>
+                    </div>
+
                     <div className="memberInfo">
-                    <Rating name="read-only" value={e.starRates} readOnly />         
-                    <div>{e.memberName}</div>        
+                    <Rating name="read-only" value={e.starRates} readOnly />
+                    <div className="comment">{e.comment}</div>
                     {/* <div>{e.booking? "예매자":null}</div> */}
                     </div>
-                    <div>{e.comment}</div>
+
                     {/* <div>{e.like}</div> */}
-                    </div>  
                     </Review>
                 ))}
         </div>
