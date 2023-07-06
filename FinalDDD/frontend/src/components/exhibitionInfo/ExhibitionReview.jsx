@@ -105,21 +105,24 @@ const ExhibitionReview = ({data}) => {
                 setComment(""); // 한줄평 내용 초기화
                 setOpenModal(false);
                 setStars(0); // 별점 초기화
+                // 등록되자마자 리스트 업데이트
+                comments();
               }, 500); // 0.8초 후에 모달을 닫음
             }
     }
 
     // 한줄평리스트
     const [commentList, setCommentList] = useState([]);
+    const comments = async() => {
+        try{
+            const commentsList = await DDDApi.commentList(exhibitNo);
+            setCommentList(commentsList.data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    
     useEffect(() => {
-        const comments = async() => {
-            try{
-                const commentsList = await DDDApi.commentList(exhibitNo);
-                setCommentList(commentsList.data);
-            } catch (e) {
-                console.log(e);
-            }
-        };
         comments();
     }, []);
 

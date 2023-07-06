@@ -47,7 +47,7 @@ dependencies {
 
 }
 
-def frontendDir = "$projectDir/final-ddd"
+def frontendDir = "$projectDir/frontend"
 
 sourceSets {
 	main {
