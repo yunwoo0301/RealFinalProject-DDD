@@ -6,6 +6,16 @@ import WeatherInfo from "./WeatherInfo";
 import LanguagesSelect from "./LanguagesSelect";
 
 // header
+
+const HeaderPosition =styled.div`
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+    margin-bottom: 4rem;
+`;
+
+
 const HeaderStyle = styled.div`
     margin-bottom: 1rem;
     width: 100%;
@@ -73,19 +83,21 @@ const LogoContainer = styled.div`
 
 const Header = () => {
     return(
+        <HeaderPosition>
         <HeaderStyle>
             <FirstLayer>
                 <div className="first-container">
                     <WeatherInfo className="weahter"/>
                     <LanguagesSelect className="language"/>
                 </div>
-            
+
             </FirstLayer>
         <LogoContainer>
             <div className="logo"><Logo/></div>
             <div className="icons"><Icons/></div>
         </LogoContainer>
         </HeaderStyle>
+        </HeaderPosition>
     );
 }
 
