@@ -61,3 +61,6 @@ yarn-error.log*
 
 # API KEY
 .env
+
+# Resources
+src/main/resources/static/static
