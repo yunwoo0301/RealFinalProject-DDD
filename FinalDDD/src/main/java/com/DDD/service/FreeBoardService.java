@@ -218,7 +218,7 @@ public class FreeBoardService {
     }
 
 
-    // 특정 회원이 작성한 게시글 조회(마이페이지 내 게시글 + 댓글 포함 조회)
+    // 특정 회원이 작성한 게시글 조회(마이페이지 내 게시글 조회 ** 재수정
     public List<FreeBoardDto> getBoardsByMember(Long id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
 
@@ -238,37 +238,11 @@ public class FreeBoardService {
             freeBoardDto.setTitle(freeBoard.getTitle());
             freeBoardDto.setWriteDate(freeBoard.getWriteDate());
             freeBoardDto.setId(freeBoard.getMember().getId());
+            freeBoardDto.setWriteDate(freeBoard.getWriteDate());
 
             freeBoardDto.setViews(freeBoard.getViews());
             System.out.println("조회수: " + freeBoard.getViews());
 
-
-            // 댓글 리스트 조회
-            List<BoardComment> comments = freeBoard.getComments();
-            List<BoardCommentDto> boardCommentDtos = new ArrayList<>();
-
-            for (BoardComment comment : comments) {
-                BoardCommentDto boardCommentDto = new BoardCommentDto();
-                boardCommentDto.setCommentNo(comment.getCommentNo()); // 댓글번호
-                boardCommentDto.setCategory(comment.getFreeBoard().getCategory());
-                boardCommentDto.setContent(comment.getContent()); // 댓글내용
-
-
-                // 작성일 변환
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-                String writeDateStr = LocalDateTime.now().format(formatter);
-                LocalDateTime formattedWriteDate = LocalDateTime.parse(writeDateStr, formatter);
-                boardCommentDto.setWriteDate(formattedWriteDate);
-
-
-                boardCommentDto.setBoardNo(comment.getFreeBoard().getBoardNo()); // 게시판번호
-                boardCommentDto.setId(comment.getMember().getId()); // 회원번호
-                boardCommentDto.setNickname(comment.getMember().getNickname()); // 닉네임
-
-                boardCommentDtos.add(boardCommentDto);
-            }
-
-            freeBoardDto.setComments(boardCommentDtos); // 댓글 리스트 설정
             freeBoardDtos.add(freeBoardDto);
         }
 

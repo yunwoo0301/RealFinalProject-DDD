@@ -1,6 +1,7 @@
 package com.DDD.controller;
 
 
+import com.DDD.dto.BoardCommentDto;
 import com.DDD.entity.BoardComment;
 import com.DDD.service.BoardCommentService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -46,5 +48,10 @@ public class BoardCommentController {
         }
     }
 
+    // 마이페이지 내 댓글 조회
+    @GetMapping("/members/{memberId}/comments")
+    public ResponseEntity<List<BoardCommentDto>> commentLoad(@PathVariable("memberId") Long id) {
+        List<BoardCommentDto> boardCommentDtos = boardCommentService.getCommentsByMember(id);
+        return ResponseEntity.ok(boardCommentDtos);
+    }
 }
-

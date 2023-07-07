@@ -33,7 +33,7 @@ public class BoardComment {
     private FreeBoard freeBoard; // 게시판 번호
 
     // 회원 테이블의 회원 번호를 외래 키(FK)로 가져옴(한 명의 회원의 여러 댓글)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id")
     private Member member;
 

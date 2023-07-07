@@ -4,6 +4,7 @@ import { dummy_reply } from './Data'
 import useStore from '../../store';
 import DDDApi from '../../api/DDDApi';
 import { useNavigate } from 'react-router-dom';
+import PageNation from '../../util/PageNation';
 
 
 
@@ -40,11 +41,12 @@ const PostWrap = styled.div`
     }
     .buffer{
         width: 90%;
-        height: 10%;
+        height: 5%;
         /* background-color: aqua; */
         border-bottom : 1px solid #ddd;
     }
 `;
+
 const Table = styled.table`
     width: 92%;
     /* background-color: aqua; */
@@ -71,42 +73,75 @@ const Table = styled.table`
     tr:nth-child(even) {
         background-color: #F4F8FF;
     }
+    .pageArea {
+        align-items: center;
+    }
 `;
 
 
-const MyPost = ({ memberId, posts, setPosts}) => {
+const MyPost = ({ memberId }) => {
 
     const navigate = useNavigate();
+    const [posts, setPosts] = useState([]);
+    const [comments, setComments] = useState([]);
 
     const fetchPost = async (memberId) => {
         try {
             const response = await DDDApi.getBoardsByMember(memberId);
             setPosts(response.data);
         } catch (error) {
-            console.error('Failed to fetch posts', error);
+            console.error('게시글 정보를 불러오지 못했습니다', error);
         }
     };
 
-    // 로그인했을 시 회원 ID의 값을 받아오기 위해
+    const fetchComments = async (memberId) => {
+        try {
+            const response = await DDDApi.commentLoad(memberId);
+            setComments(response.data);
+            console.log(response.data)
+        } catch (error) {
+            console.error('댓글 정보를 불러오지 못했습니다', error);
+        }
+    };
+
+    // 로그인 했을 시 회원 ID 값을 받아오기 위해
     useEffect(() => {
         fetchPost(memberId);
+        fetchComments(memberId);
     }, [memberId]);
 
 
     const slicedPosts = posts.slice(0, 5); // 게시글 5개로 나눠서 노출
-    const slicedReplies = dummy_reply.slice(0, 5);
+    const slicedComments = comments.slice(0, 5); // 댓글 5개로 나눠서 노출
 
 
     // 작성일자 yyyy-MM-dd 형식으로 변환
     const formatDate = (date) => {
-        const formattedDate = new Date(date).toISOString().substring(0, 10);
-        return formattedDate;
-    };
+        const year = date.toString().substring(0, 4);
+        const month = date.toString().substring(5, 7);
+        const day = date.toString().substring(8, 10);
+        return `${year}-${month}-${day}`;
+};
+
 
     // 타이틀 클릭 시 해당 게시물로 이동
     const handleTitleClick = (no) => {
         navigate(`/boardList/boardView/${memberId}`);
     };
+
+    // 페이지 네이션
+    const ITEMS_PAGE = 5;
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const handlePageClick = (selectedPage) => {
+        setCurrentPage(selectedPage.selected);
+    };
+
+    const offset = currentPage * ITEMS_PAGE;
+    const currentPageData = slicedPosts.slice(offset, offset + ITEMS_PAGE);
+    const pageCount = Math.ceil(slicedPosts.length / ITEMS_PAGE);
+
+
 
 
 
@@ -118,7 +153,6 @@ const MyPost = ({ memberId, posts, setPosts}) => {
                 <div className='title' >내 게시물</div>
                 <div className='moreBox'>
                     <span>내가 쓴 글</span>
-                    <span onClick={()=>{}} className='seeMore'>더 보기</span>
                 </div>
                 <Table>
                     <thead>
@@ -127,13 +161,13 @@ const MyPost = ({ memberId, posts, setPosts}) => {
                             <th style={{width:'10%'}}>카테고리</th>
                             <th style={{width:'42%'}}>제목</th>
                             <th style={{width:'18%'}}>작성자</th>
-                            <th style={{width:'8%'}}>조회수</th>
-                            <th style={{width:'14%'}}>작성일</th>
+                            <th style={{width:'7%'}}>조회수</th>
+                            <th style={{width:'15%'}}>작성일</th>
                         </tr>
                     </thead>
                     <tbody>
                     {
-                       slicedPosts.length > 0 && slicedPosts.map((post, index) => (
+                       currentPageData.length > 0 && currentPageData.map((post, index) => (
                             <tr key={index}>
                             <td>{post.boardNo}</td>
                             <td>{post.category}</td>
@@ -147,8 +181,8 @@ const MyPost = ({ memberId, posts, setPosts}) => {
                             </tr>
                         ))
                     }
-                                        {
-                        slicedPosts.length === 0 &&
+                        {
+                        currentPageData.length === 0 &&
                         (
                             <tr>
                                 <td colSpan={6}>작성 한 게시글이 없습니다. </td>
@@ -157,39 +191,40 @@ const MyPost = ({ memberId, posts, setPosts}) => {
                     }
                     </tbody>
                 </Table>
+                <div className="pageArea">
+                    <PageNation pageCount={pageCount} onPageChange={handlePageClick}/>
+                </div>
 
                 <div className="buffer"/>
 
                 <div className='moreBox' style={{marginTop:'2rem'}}>
                     <span>내가 쓴 댓글</span>
-                    <span onClick={()=>{}} className='seeMore'>더 보기</span>
                 </div>
                 <Table>
                     <thead>
                         <tr>
                             <th style={{width:'8%'}}>번호</th>
                             <th style={{width:'10%'}}>카테고리</th>
-                            <th style={{width:'42%'}}>제목</th>
+                            <th style={{width:'42%'}}>내용</th>
                             <th style={{width:'18%'}}>작성자</th>
-                            <th style={{width:'8%'}}>조회수</th>
                             <th style={{width:'14%'}}>작성일</th>
                         </tr>
                     </thead>
                     <tbody>
                     {
-                        dummy_reply.length > 0 && slicedReplies.map((reply, index) => (
+                        slicedComments.length > 0 && slicedComments.map((comment, index) => (
                             <tr key={index}>
-                                <td>{reply.no}</td>
-                                <td>{reply.category}</td>
-                                <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{reply.title}</td>
-                                <td>{reply.nickName}</td>
-                                <td>{reply.view}</td>
-                                <td>{reply.date}</td>
+                                <td>{comment.commentNo}</td>
+                                <td>{comment.category}</td>
+                                {/* <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{comment.content}</td>  */}
+                                <td>{comment.content}</td>
+                                <td>{comment.nickname}</td>
+                                <td>{formatDate(comment.writeDate)}</td>
                             </tr>
                         ))
                     }
                     {
-                        dummy_reply.length === 0 &&
+                        slicedComments.length === 0 &&
                         (
                             <tr>
                                 <td colSpan={6}>작성 한 댓글이 없습니다. </td>
@@ -198,7 +233,7 @@ const MyPost = ({ memberId, posts, setPosts}) => {
                     }
                     </tbody>
                 </Table>
-
+                <PageNation pageCount={pageCount} onPageChange={handlePageClick}/>
             </PostWrap>
         </>
     );
