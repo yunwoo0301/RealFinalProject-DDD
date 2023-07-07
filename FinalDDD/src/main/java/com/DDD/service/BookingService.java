@@ -90,8 +90,15 @@ public class BookingService {
             bookingDTO.setMemberId(e.getMember().getId());
             bookingDTO.setImgUrl(e.getExhibitions().getImgUrl());
             bookingDTO.setExhibitName(e.getExhibitions().getExhibitName());
+            bookingDTO.setStartDate(e.getExhibitions().getStartDate());
+            bookingDTO.setEndDate(e.getExhibitions().getEndDate());
+            bookingDTO.setBookedName(e.getBookedName());
+            bookingDTO.setBookedEmail(e.getBookedEmail());
+            bookingDTO.setBookedTel(e.getBookedTel());
+            bookingDTO.setBookingDate(e.getBookingDate()); // 예매일
             bookingDTO.setExhibitLocation(e.getExhibitions().getExhibitLocation()); // 전시회장소
             bookingDTO.setVisitDate(e.getVisitDate()); // 관람일
+            bookingDTO.setGetTicket(e.getGetTicket()); // 수령방법
 
             // 결제정보설정
             Payment payment = paymentRepository.findByBookingBookingId(e.getBookingId());
@@ -99,6 +106,7 @@ public class BookingService {
                 PaymentDTO paymentDTO = new PaymentDTO();
                 paymentDTO.setPaymentDate(payment.getPaymentDate()); // 결제일
                 paymentDTO.setPaymentCnt(payment.getPaymentCnt()); // 관람인원(티켓예매수)
+                paymentDTO.setPaymentType(payment.getPaymentType()); // 결제수단
                 paymentDTO.setPaidPrice(String.valueOf(payment.getPaidPrice())); // 총금액
 
                 bookingDTO.setPaymentDTO(paymentDTO);
