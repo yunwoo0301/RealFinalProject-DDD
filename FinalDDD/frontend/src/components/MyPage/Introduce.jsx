@@ -47,6 +47,7 @@ const TextBox = styled.div`
   }
 `;
 
+
 const Introduce = () => {
   const { setShowPage, memberData, myDiaryData } = useStore();
   const { memberId } = useParams();

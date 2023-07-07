@@ -167,7 +167,7 @@ const EditInfo = (props) => {
       }
     };
     infoFetchDate();
-  }, [memberId]);
+  }, [open]);
 
   // onChangeHandling
   const onChangeName = (e) => {
@@ -272,14 +272,6 @@ const EditInfo = (props) => {
                   disabled
                 />
               </div>
-              {/* <p>비밀번호</p>
-                        <div className="textBox">
-                            <input type="password"  />
-                        </div>
-                        <p>비밀번호 확인</p>
-                        <div className="textBox">
-                            <input type="password"  />
-                        </div> */}
               <p>닉네임</p>
               <div className="textBox">
                 <input type="text" onChange={onChangeNick} value={inputNick} />
@@ -324,7 +316,7 @@ const EditInfo = (props) => {
             </button>
             <Backdrop
               sx={{
-                backgroundColor: "transparent", // 배경색을 녹색으로 설정
+                backgroundColor: "transparent", 
                 color: "#fff",
                 zIndex: (theme) => theme.zIndex.drawer + 1,
                 top: 0, // 팝업을 상단에 위치

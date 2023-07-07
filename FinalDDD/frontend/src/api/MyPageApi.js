@@ -37,19 +37,19 @@ const MyPageApi = {
     },
 
     // 닉네임 변경
-    nickname: (memberId, inputNick) => updateProfileField(memberId, 'nickname', inputNick),
+    nickname: (memberId, inputNick) => updateProfileField(memberId, 'nickname', {nickname : inputNick}),
 
     // 이름 변경
-    name: (memberId, inputName) => updateProfileField(memberId, 'name', inputName),
+    name: (memberId, inputName) => updateProfileField(memberId, 'name', {name : inputName}),
 
     // 연락처 변경
-    tel: (memberId, inputTel) => updateProfileField(memberId, 'tel', inputTel),
+    tel: (memberId, inputTel) => updateProfileField(memberId, 'tel', { tel : inputTel}),
 
     // 인스타그램 변경
-    instagram: (memberId, inputInst) => updateProfileField(memberId, 'instagram', inputInst),
+    instagram: (memberId, inputInst) => updateProfileField(memberId, 'instagram', { instagram : inputInst}),
 
     // 소개글 변경
-    introduce: (memberId, inputIntro) => updateProfileField(memberId, 'introduce', inputIntro),
+    introduce: (memberId, inputIntro) => updateProfileField(memberId, 'introduce', {introduce : inputIntro}),
 
     // 회원 탈퇴
     delete: (memberId, inputEmail, inputPwd) => updateProfileField(memberId, 'delete', {email: inputEmail, password: inputPwd} ),

@@ -43,7 +43,7 @@ const MyPageBG = () => {
   const [posts, setPosts] = useState([]);
   let memberId = Functions.getMemberId();
 
-  const { showPage, memberData, setMemberData, myDiaryData, setMyDiaryData } =
+  const { setShowPage, showPage, memberData, setMemberData, myDiaryData, setMyDiaryData } =
     useStore();
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const MyPageBG = () => {
       //   console.log(memberData);
     };
     memberFetchDate();
-  }, [memberId]);
+  }, [showPage]);
 
   useEffect(() => {
     const diaryFetchDate = async () => {
@@ -64,7 +64,7 @@ const MyPageBG = () => {
       console.log(newMyDiaryData);
     };
     diaryFetchDate();
-  }, [memberId]);
+  }, [showPage]);
 
   return (
     <>
