@@ -167,7 +167,7 @@ const Recommend = () => {
         console.log(isLogin);
         console.log(getId);
         
-        if (isLogin && getId) {
+        if (isLogin === "true") {
             const link = "write/";
             navigate(link);
         } else {

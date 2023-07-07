@@ -169,9 +169,18 @@ const Card = () => {
 
     // 글쓰기 버튼 클릭 시 게시판 작성페이지로 이동
     const onClickToWrite = () => {
-        const link = "write/"
-        navigate(link);
-    }
+        const isLogin = window.localStorage.getItem("isLogin");
+        const getId = window.localStorage.getItem("memberId");
+        console.log(isLogin);
+        console.log(getId);
+
+        if (isLogin && getId) {
+            const link = "write/";
+            navigate(link);
+        } else {
+            alert("로그인 완료 시 작성 진행 가능합니다.");
+        }
+    };
 
 
     return(
