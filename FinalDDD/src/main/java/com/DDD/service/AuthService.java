@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -41,17 +43,31 @@ public class AuthService {
         return tokenProvider.generateTokenDto(authentication, memberId); // memberId 인자 추가
     }
 
+    // 회원 삭제
     public void delete(MemberRequestDto requestDto) {
         Member member = memberRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
         if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("Invalid password");
         }
-
         member.setActive(false);
         memberRepository.save(member);
     }
+
+    // 비밀번호 변경
+    public void changePw(Long id, String password, String newPassword){
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        } else {
+            member.setPassword(passwordEncoder.encode(newPassword));
+            memberRepository.save(member);
+        }
+    }
+
+
 
     public Long getMemberIdByEmail(String email) {
         return memberRepository.findByEmail(email)

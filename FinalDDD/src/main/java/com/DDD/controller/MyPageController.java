@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -88,5 +90,19 @@ public class MyPageController {
         authService.delete(requestDto);
         return ResponseEntity.ok("Member deactivated successfully");
     }
+
+    // 비밀번호 변경
+    @PostMapping("/password")
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> infoData) {
+        Long id = Long.valueOf(infoData.get("id"));
+        String password = infoData.get("password");
+        String newPassword = infoData.get("newPassword");
+
+        authService.changePw(id, password, newPassword);
+        return ResponseEntity.ok("password changed successfully");
+    }
+
+
+
 
 }

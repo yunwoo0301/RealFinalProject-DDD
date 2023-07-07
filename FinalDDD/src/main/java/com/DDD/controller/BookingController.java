@@ -46,7 +46,7 @@ public class BookingController {
 
     @GetMapping("/checkTicket")
     public ResponseEntity<List<BookingDTO>> getBookedTicketList(@RequestParam("id") String id) {
-        List<BookingDTO> list = bookingService.FindTicket(id);
+        List<BookingDTO> list = bookingService.FindTicketList(id);
         return  new ResponseEntity<>(list,HttpStatus.OK);
     }
 }

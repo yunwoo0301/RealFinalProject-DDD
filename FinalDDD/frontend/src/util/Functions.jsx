@@ -68,3 +68,6 @@ const Functions = {
 }
 
 export default Functions;
+
+      // await Functions.handleApiError(error);  // api 에러 401을 받으면 로컬에 저장된 리프레쉬 토큰을 보내 액세스 토큰을 재발급 받는 axios 요청을 보내는 함수(await 필수)
+      // return await axios.get(DDD_DOMAIN + `/mypage/info?email=${storageEmail}`); // 요청 재실행

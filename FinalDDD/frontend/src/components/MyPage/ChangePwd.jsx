@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { MyPageApi } from '../../api/MyPageApi';
 import Functions from '../../util/Functions';
+import AlertModal from '../../util/Alert';
 
 const Container = styled.div`
     width: 60%;
@@ -58,11 +59,11 @@ const Container = styled.div`
             width: 50%;
             float: right;
             .hint{
-                background-color: red;
+                /* background-color: red; */
                 width: 86%;
                 height: 1rem;
                 text-align: right;
-                font-size: .8rem;
+                font-size: .7rem;
             }
         }
 
@@ -122,29 +123,30 @@ const ChangePwd = () => {
     const [inputNewPwd , setInputNewPwd] = useState();
     const [inputNewPwdCheck , setInputNewPwdCheck] = useState();
     const [errorMessage, setErrorMessage] = useState();
+    const [conMessage, setConMessage] = useState();
     const [ isPwd, setIsPwd ] = useState(false);
     const [pwdCheck, setPwdCheck] = useState(false);
     
     const msg = {
-        passwordCriteria: "숫자+영문자+특수문자의 8자리 이상",
-        correctFormat: "올바른 형식 입니다.",
-        passwordMatch: '비밀 번호가 일치합니다.',
-        passwordMismatch: '비밀 번호가 일치하지 않습니다.'
+        regex: "숫자+영문자+특수문자의 8자리 이상",
+        correct: "올바른 형식 입니다.",
+        match: '비밀번호가 일치합니다.',
+        mismatch: '새로운 비밀번호가 일치하지 않습니다.',
+        error : '변경이 실패하였습니다. '
+        
       }
       
 
-    // 현재 비밀번호 검사 //
-
-
+    // 새 비밀번호 유효성 검사
     const onChangePwd = (e) => {
         setInputNewPwd(e.target.value);
         const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
         const pwdCheck = regexPwd.test(e.target.value);
         if (!pwdCheck) {
-            setErrorMessage(msg.passwordCriteria);
+            setErrorMessage(msg.regex);
             setIsPwd(false);    
         } else {
-            setErrorMessage(msg.correctFormat);
+            setErrorMessage(msg.correct);
             setIsPwd(true);
         }
     }
@@ -152,38 +154,43 @@ const ChangePwd = () => {
     const onChangeConPw = (e) => {
         setInputNewPwdCheck(e.target.value);
         if(e.target.value !== inputNewPwd) {
-            setErrorMessage(msg.passwordMismatch);
+            setConMessage(msg.mismatch);
             setPwdCheck(false);
         } else {
-            setErrorMessage(msg.passwordMatch);
+            setConMessage(msg.match);
             setPwdCheck(true);
         }
     }
+
+    const onChangeCurrentPw = (e) => {
+        setInputCurrentPwd(e.target.value)
+    }
     
       
-
-
-    const pwdFetchDate = async () => {
-        console.log("통신 시작");
-        try {
-            const response = await MyPageApi.password(memberId, inputCurrentPwd, inputNewPwd);
-    
-            if (response.status === 200) {
-                console.log(msg[0])
-                } else {
-                    setErrorMessage(msg[1]);
-                }
-        } catch (e) {
-          console.log(e);
-          setErrorMessage(msg[2]);
-        }
-      };
-
+const pwdFetchDate = async () => {
+    try {
+      const response = await MyPageApi.password(memberId, inputCurrentPwd, inputNewPwd);
+      if (response.status === 200) {
+      } else {
+        setErrorMessage(msg.error);
+      }
+    } catch (e) {
+      console.log(e);
+      setErrorMessage(msg.error + 'catch e');
+    }
+  };
 
     const onClickChange = () => {
-        console.log('클릭 ')
         pwdFetchDate();
+        setOpen(true);
+        setTimeout(handleClose, 1000)
     }
+
+    const [open, setOpen] = React.useState(false);
+    const handleClose = () => {
+      setOpen(false);
+    };
+  
     return (
         <>
             <Container>
@@ -196,14 +203,14 @@ const ChangePwd = () => {
                 <div className="inputBlock">
                     <div className='pwBox'>
                         <p>현재 비밀번호 </p>
-                        <input type="password" placeholder="Email@:DDD.com" onChange={()=>{}} value={inputCurrentPwd} tabIndex={1}/>
-                        <div className="hint">{errorMessage}성공입니다~</div>
+                        <input type="password" placeholder="Email@:DDD.com" onChange={(e)=>{onChangeCurrentPw(e)}} value={inputCurrentPwd} tabIndex={1}/>
+                        {/* <div className="hint">{errorMessage}</div> */}
                     </div>
                     <div className='rowBox'>
                     <div className='pwBox'>
                         <p>새 비밀번호 확인</p>
                         <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangeConPw(e)} value={inputNewPwdCheck} tabIndex={3}/> 
-                        <div className="hint">{errorMessage}</div>
+                        <div className="hint">{conMessage}</div>
                     </div>
                     <div className='pwBox'>
                         <p>새 비밀번호</p>
@@ -215,7 +222,13 @@ const ChangePwd = () => {
                 </div>
 
                 <div className="btnBlock">
-                    <button onClick={onClickChange}>변경</button>
+                <button 
+                        style={isPwd && pwdCheck ?  null : { backgroundColor: '#ddd'}  }
+                        disabled={!isPwd || !pwdCheck }
+                    onClick={onClickChange}>변경</button>
+                    {
+                        open && <AlertModal />
+                    }
                     <button>돌아가기</button> 
                 </div>
                 
@@ -225,20 +238,3 @@ const ChangePwd = () => {
 };
 
 export default ChangePwd;
-
-{/* <div className="inputBlock">
-<div className='curPwBox'>
-    <p>현재 비밀번호 </p>
-    <input type="text" placeholder="Email@:DDD.com" onChange={(e) => onChangeHandle(e, setInputCurrentPwd )} value={inputCurrentPwd}/>
-</div>
-<div className='newPwBox'>
-    <div>
-        <p>새 비밀번호</p>
-        <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangeHandle(e, setInputNewPwd )} value={inputNewPwd}/> 
-    </div>
-    <div>
-        <p>새 비밀번호 확인</p>
-        <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangeHandle(e, setInputNewPwdCheck )} value={inputNewPwdCheck}/> 
-    </div>
-</div>
-</div> */}

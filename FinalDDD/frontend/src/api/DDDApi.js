@@ -129,7 +129,7 @@ const DDDApi = {
 
     // 내가 한 예약조회(마이페이지 내)
     myBookedList: async(getId) => {
-        return await axios.get(DDD_DOMAIN + `/booking/checkTicket?id=${getId}`);
+        return await axios.get(`/booking/checkTicket?id=${getId}`);
     },
 
 

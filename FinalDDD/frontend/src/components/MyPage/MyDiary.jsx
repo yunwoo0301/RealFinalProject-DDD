@@ -287,7 +287,7 @@ const MyDiary = () => {
                       </Tooltip>
                       <Backdrop
                         sx={{
-                            backgroundColor: 'transparent', // 배경색을 녹색으로 설정
+                            backgroundColor: 'transparent', // 배경색을 투명
                             color: '#fff',
                             zIndex: (theme) => theme.zIndex.drawer + 1,
                             top: 0, // 팝업을 상단에 위치

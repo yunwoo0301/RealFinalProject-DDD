@@ -7,14 +7,14 @@ const updateProfileField = async (memberId, fieldName, fieldValue) => {
       Functions.setAuthorizationHeader(); // 헤더에 토큰을 넣는 함수
       return await axios.post(`/mypage/${memberId}/${fieldName}`, {
         id: memberId,
-        [fieldName]: fieldValue
+        ...fieldValue
       });
     } catch (error) {
-      console.log("error입니다. ");
-      // await Functions.handleApiError(error);  // api 에러 401을 받으면 로컬에 저장된 리프레쉬 토큰을 보내 액세스 토큰을 재발급 받는 axios 요청을 보내는 함수(await 필수)
-      // return await axios.get(DDD_DOMAIN + `/mypage/info?email=${storageEmail}`); // 요청 재실행
+        console.log("Error: ", error);
+        throw error;
     }
   };
+
 
 const MyPageApi = {
 
@@ -52,15 +52,12 @@ const MyPageApi = {
     introduce: (memberId, inputIntro) => updateProfileField(memberId, 'introduce', inputIntro),
 
     // 회원 탈퇴
-    delete: (memberId, inputEmail, inputPwd) => updateProfileField(memberId, 'delete', { email: inputEmail, password: inputPwd }),
+    delete: (memberId, inputEmail, inputPwd) => updateProfileField(memberId, 'delete', {email: inputEmail, password: inputPwd} ),
 
     // 비밀번호 변경
     password : (memberId, inputCurrentPwd, inputNewPwd ) => updateProfileField(
-        memberId, 'password', { currentPassword: inputCurrentPwd, newPassword: inputNewPwd }),
+        memberId, 'password', {password: inputCurrentPwd, newPassword: inputNewPwd}), 
 
-
-
-    
 };
 
 const DiaryApi = {
