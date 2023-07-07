@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 public class BoardCommentDto {
     private Long commentNo; // 댓글번호
+    private String category; // 카테고리(게시판) **
     private String content; // 댓글내용
     private LocalDateTime writeDate; // 작성일자
     private Long boardNo; // 게시판번호

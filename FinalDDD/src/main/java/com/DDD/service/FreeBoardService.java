@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -215,43 +217,61 @@ public class FreeBoardService {
         return freeBoards;
     }
 
-    // 특정 회원이 작성한 게시글 조회(마이페이지 내 게시글)
+
+    // 특정 회원이 작성한 게시글 조회(마이페이지 내 게시글 + 댓글 포함 조회)
     public List<FreeBoardDto> getBoardsByMember(Long id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
-
 
         if (optionalMember.isEmpty()) {
             throw new UsernameNotFoundException("해당 멤버를 찾을 수 없습니다.");
         }
 
         Member member = optionalMember.get();
-
         List<FreeBoard> freeBoardList = freeBoardRepository.findByMember(member);
         List<FreeBoardDto> freeBoardDtos = new ArrayList<>();
+
         for (FreeBoard freeBoard : freeBoardList) {
             FreeBoardDto freeBoardDto = new FreeBoardDto();
-
-
             freeBoardDto.setBoardNo(freeBoard.getBoardNo());
+            freeBoardDto.setAuthor(freeBoard.getMember().getNickname());
             freeBoardDto.setCategory(freeBoard.getCategory());
             freeBoardDto.setTitle(freeBoard.getTitle());
             freeBoardDto.setWriteDate(freeBoard.getWriteDate());
             freeBoardDto.setId(freeBoard.getMember().getId());
 
-            Member author = freeBoard.getMember(); // 작성자
-
-            if (author != null) {
-                MemberDto memberDto = MemberDto.fromMember(author);
-                if (memberDto != null) {
-                    freeBoardDto.setAuthor(memberDto.getNickname());
-                }
-            }
-
             freeBoardDto.setViews(freeBoard.getViews());
             System.out.println("조회수: " + freeBoard.getViews());
 
+
+            // 댓글 리스트 조회
+            List<BoardComment> comments = freeBoard.getComments();
+            List<BoardCommentDto> boardCommentDtos = new ArrayList<>();
+
+            for (BoardComment comment : comments) {
+                BoardCommentDto boardCommentDto = new BoardCommentDto();
+                boardCommentDto.setCommentNo(comment.getCommentNo()); // 댓글번호
+                boardCommentDto.setCategory(comment.getFreeBoard().getCategory());
+                boardCommentDto.setContent(comment.getContent()); // 댓글내용
+
+
+                // 작성일 변환
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+                String writeDateStr = LocalDateTime.now().format(formatter);
+                LocalDateTime formattedWriteDate = LocalDateTime.parse(writeDateStr, formatter);
+                boardCommentDto.setWriteDate(formattedWriteDate);
+
+
+                boardCommentDto.setBoardNo(comment.getFreeBoard().getBoardNo()); // 게시판번호
+                boardCommentDto.setId(comment.getMember().getId()); // 회원번호
+                boardCommentDto.setNickname(comment.getMember().getNickname()); // 닉네임
+
+                boardCommentDtos.add(boardCommentDto);
+            }
+
+            freeBoardDto.setComments(boardCommentDtos); // 댓글 리스트 설정
             freeBoardDtos.add(freeBoardDto);
         }
+
         return freeBoardDtos;
     }
 }
