@@ -439,6 +439,7 @@ const PayTicket = ({data}) => {
           buyerInfo={data.buyerInfo}
           deliveryMethod={data.deliveryMethod}
           paymentMethod={data.paymentMethod}
+          selectedDate={data.selectedDate}
         />
       ) : (
         <>
