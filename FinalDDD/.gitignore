@@ -65,4 +65,4 @@ yarn-error.log*
 .env
 
 # Resources
-src/main/resources/static/static
+src/main/resources/static/*
