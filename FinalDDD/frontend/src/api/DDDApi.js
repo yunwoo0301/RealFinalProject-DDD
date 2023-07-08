@@ -100,7 +100,7 @@ const DDDApi = {
         const booking = {
             id: getId,
             exhibitNo: exhibitNo,
-            visitDate: selectedDate,
+            visitDate: kstDate,
             bookedName: bookedName,
             bookedEmail: bookedEmail,
             bookedTel: bookedContact,
