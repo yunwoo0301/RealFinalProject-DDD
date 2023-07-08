@@ -11,6 +11,7 @@ import MyDiary from "./MyDiary";
 import useStore from "../../store";
 import Functions from "../../util/Functions";
 import { MyPageApi, DiaryApi } from "../../api/MyPageApi";
+import EditThumnail from "./EditThumnail";
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -70,7 +71,7 @@ const MyPageBG = () => {
         <Modal>
           {showPage === "마이페이지" && (
             <>
-              <Thumnail />
+              <EditThumnail />
               <SNSBox />
               <Introduce />
             </>
@@ -100,7 +101,7 @@ const MyPageBG = () => {
           )}
           {showPage === "내정보수정" && (
             <>
-              <Thumnail />
+              <EditThumnail />
               <NaviBox />
               <EditMemberMain />
             </>
