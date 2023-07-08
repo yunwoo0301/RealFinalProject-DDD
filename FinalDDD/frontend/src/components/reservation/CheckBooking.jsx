@@ -3,6 +3,17 @@ import styled from "styled-components";
 import Button from "../../util/Button";
 import ConfirmModal from "../../util/ConfirmModal";
 import {FcCancel} from "react-icons/fc";
+import MobileTicket from "../MyPage/MobileTicket";
+import dayjs from "dayjs";
+
+const Modal = styled.div`
+    position: fixed;
+    width: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 3rem;
+`
 
 export const Container = styled.div`
     display: flex;
@@ -30,8 +41,13 @@ export const Container = styled.div`
         display: flex;
         align-items: center;
         flex-direction: row;
+        justify-content:  space-between;
         text-align: left;
         width: 100%;
+        p{
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
     }
     .infoBox {
     display: flex;
@@ -65,6 +81,10 @@ export const Container = styled.div`
         &>*{
             margin-bottom: 10px;
         }
+        .ticket{
+            color: #5EADF7;
+            text-decoration: underline;
+        }
     }
 
 }
@@ -85,12 +105,19 @@ export const Container = styled.div`
     .payItem:nth-child(4){
     font-weight: bold;
     }
+    .bookingItem:nth-child(2){
+    font-weight: bold;
+    color: red;
+    }
     }
 
     .btnContainer{
-        width: 7rem;
-        height: 1.5rem;
-        border: 1px solid red;
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: row;
+        width: 15rem;
+        height: 2rem;
+        gap: 1rem;
     }
 
 `;
@@ -117,8 +144,8 @@ const ModalBodyStyle = styled.div`
 
 
 
-const CheckBooking = ({reservationData}) => {
-    console.log("예매확인페이지 데이터 : ", reservationData);
+const CheckBooking = ({reservationDatas, closeModal}) => {
+
     // 날짜형식변경
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -140,6 +167,7 @@ const CheckBooking = ({reservationData}) => {
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       }
 
+
       // 예매취소모달
       const [openModal, setOpenModal] = useState(false);
       const close = () =>{
@@ -154,6 +182,7 @@ const CheckBooking = ({reservationData}) => {
       const handleCheckChange = (e) => {
         setIsChecked(e.target.checked);
       }
+
       const props ={
         title: "예매취소",
         body: (
@@ -171,66 +200,98 @@ const CheckBooking = ({reservationData}) => {
         </ModalBodyStyle>
         ),
         button: [
-            <button onClick={close}>닫기</button>,
-            <button onClick={close} disabled={isChecked}>확인</button>
+        <button onClick={close}>닫기</button>,
+        <button onClick={close} disabled={!isChecked} style={isChecked ? {} : {backgroundColor: "#b0abab", color: "#050E3D"}}>확인</button>
         ],
         icon: <FcCancel/>
       }
 
+      // 티켓확인모달
+      const [openTicket, setOpenTicket] = useState(false);
+      const clickToTicket = () =>{
+        setOpenTicket(true);
+      }
+
+      const closeTicket = () =>{
+        setOpenTicket(false);
+      }
+      // YYMMDD 형태로 전달
+    const visitDateDigits = dayjs(reservationDatas.visitDate).format('YYMMDD');
+
+      const reservationData = {
+        imgUrl: reservationDatas.imgUrl,
+        name: reservationDatas.exhibitName,
+        place: reservationDatas.exhibitLocation,
+        visitDate: reservationDatas.visitDate,
+        deliveryMethod: reservationDatas.getTicket,
+        barcodeNo: visitDateDigits,
+        index: reservationDatas.exhibitNo
+      }
+
     return(
-        <>
-        {reservationData &&
-        <Container  imgUrl ={reservationData.imgUrl}>
+        <Modal>
+        {reservationDatas &&
+        <Container  imgUrl ={reservationDatas.imgUrl}>
             <div className="reservationBox">
                 <div className="root">
                 <h3>예매 확인</h3>
+                <p onClick={closeModal}>&times;</p>
                 </div>
                 <div className="bodyContainer">
                <div className="infoBox">
                <div className="imgBox"/>
                 <div className="textBox">
-                    <div className="title">{reservationData.exhibitName}</div>
-                    <div>{reservationData.startDate} ~ {reservationData.endDate}</div>
-                    <div>{reservationData.exhibitLocation}</div>
+                    <div><p className="ticket" onClick={clickToTicket}>티켓확인</p></div>
+                    <div className="title">{reservationDatas.exhibitName}</div>
+                    <div>{reservationDatas.startDate} ~ {reservationDatas.endDate}</div>
+                    <div>{reservationDatas.exhibitLocation}</div>
                 </div>
                </div>
                <div className="rightBox">
                <div className="bookingContainer">
                 <h4>예매 정보</h4>
                 <div className="bookingItem">
+                    <span className="label">방문일</span>
+                    <span className="value">{formatDate(reservationDatas.visitDate)}</span>
+                </div>
+                <div className="bookingItem">
                     <span className="label">예매일</span>
-                    <span className="value">{formatDate(reservationData.bookingDate)}</span>
+                    <span className="value">{formatDate(reservationDatas.bookingDate)}</span>
                 </div>
                 <div className="bookingItem">
                     <span className="label">예매자</span>
-                    <span className="value">{reservationData.bookedName}</span>
+                    <span className="value">{reservationDatas.bookedName}</span>
                 </div>
                 <div className="bookingItem">
                     <span className="label">예매자 전화번호</span>
-                    <span className="value">{reservationData.bookedTel}</span>
+                    <span className="value">{reservationDatas.bookedTel}</span>
                 </div>
                 <div className="bookingItem">
                     <span className="label">예매자 이메일</span>
-                    <span className="value">{reservationData.bookedEmail}</span>
+                    <span className="value">{reservationDatas.bookedEmail}</span>
                 </div>
                 <div className="bookingItem">
                     <span className="label">예매수량</span>
-                    <span className="value">{reservationData.paymentDTO.paymentCnt}매</span>
+                    <span className="value">{reservationDatas.paymentDTO.paymentCnt}매</span>
+                </div>
+                <div className="bookingItem">
+                    <span className="label">수령방법</span>
+                    <span className="value">{reservationDatas.getTicket}매</span>
                 </div>
                 </div>
                 <div className="payContainer">
                 <h4>결제정보</h4>
                 <div className="payItem">
                     <span className="label">결제일</span>
-                    <span className="value">{formatDateTime(reservationData.paymentDTO.paymentDate)}</span>
+                    <span className="value">{formatDateTime(reservationDatas.paymentDTO.paymentDate)}</span>
                 </div>
                 <div className="payItem">
                     <span className="label">결제수단</span>
-                    <span className="value">{reservationData.paymentDTO.paymentType}</span>
+                    <span className="value">{reservationDatas.paymentDTO.paymentType}</span>
                 </div>
                 <div className="payItem">
                     <span className="label">총 결제금액</span>
-                    <span className="value">{reservationData.paymentDTO.paidPrice}원</span>
+                    <span className="value">{reservationDatas.paymentDTO.paidPrice}원</span>
                 </div>
                 </div>
                 <div className="cancelContainer">
@@ -261,13 +322,15 @@ const CheckBooking = ({reservationData}) => {
                </div>
                </div>
                <div className="btnContainer">
+                <Button onClick={closeModal}>확인</Button>
                 <Button onClick={clickToCancel}>예매취소</Button>
                </div>
             </div>
         </Container>
         }
         {openModal && <ConfirmModal props={props}/>}
-        </>
+        {openTicket && <MobileTicket reservationData={reservationData} closeModal={closeTicket}/>}
+        </Modal>
     );
 }
 
