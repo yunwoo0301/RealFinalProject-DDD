@@ -139,7 +139,7 @@ const DDDApi = {
 
     // 예매취소
     cancelReservation: async(selectedData) => {
-        return await axios.post(DDD_DOMAIN + `/booking/cancel?bookingId=${selectedData}`);
+        return await axios.post(`/booking/cancel?bookingId=${selectedData}`);
     },
 
 
