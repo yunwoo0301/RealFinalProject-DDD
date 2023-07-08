@@ -84,7 +84,7 @@ public class PaymentService {
         params.add("total_amount", totalPrice);
         // 상품비과세 금액(필수)
         params.add("tax_free_amount", "0");
-         // 성공 시 redirect url => 결제완료페이지와 연결해야함
+        // 성공 시 redirect url => 결제완료페이지와 연결해야함
         String approvalUrl = "http://localhost:8111/pay/kakaoSuccess?id=" + id + "&bookingId=" + bookingId;
         params.add("approval_url", approvalUrl);
         // 취소 시  url
@@ -150,19 +150,24 @@ public class PaymentService {
         return approveResponse;
     }
 
-   // 무통장입금
+    // 무통장입금
     public PaymentDTO BankingPayment(String id, String bookingId, int paidPrice, int paymentCnt) {
         Payment payment = new Payment();
         Member member = memberRepository.findById(Long.parseLong(id)).orElse(null);
         Booking booking = bookingRepository.findById(Long.valueOf(bookingId)).orElse(null);
         if (booking == null) {
-            throw new IllegalArgumentException("Invalid booking ID");
+            throw new IllegalArgumentException("❌없는 예매아이디입니다!");
         }
 
         payment.setMember(member);
-        payment.setPaymentType("무통장입금");
+        if (paidPrice > 0) {
+            payment.setPaymentType("무통장입금");
+            payment.setPaymentStatus(PaymentStatus.결제완료);
+        } else {
+            payment.setPaymentType("무료전시");
+            payment.setPaymentStatus(PaymentStatus.무료전시);
+        }
         payment.setPaidPrice(paidPrice);
-        payment.setPaymentStatus(PaymentStatus.입금확인중);
         payment.setPaymentDate(LocalDateTime.now());
         payment.setPaymentCnt(paymentCnt);
         payment.setBooking(booking);
@@ -178,16 +183,6 @@ public class PaymentService {
         paymentDTO.setPaymentStatus(savedPayment.getPaymentStatus().toString());
         paymentDTO.setPaymentDate(savedPayment.getPaymentDate());
         paymentDTO.setPaymentCnt(savedPayment.getPaymentCnt());
-
-        // 일정 시간이 지난 후 결제 상태 변경 로직
-        // 예: 2일(48시간)이 지나면 결제완료로 변경
-        Duration duration = Duration.ofHours(48);
-        LocalDateTime expirationDate = savedPayment.getPaymentDate().plus(duration);
-        if (LocalDateTime.now().isAfter(expirationDate)) {
-            savedPayment.setPaymentStatus(PaymentStatus.결제완료);
-            paymentRepository.save(savedPayment);
-            paymentDTO.setPaymentStatus(savedPayment.getPaymentStatus().toString());
-        }
 
 
         return paymentDTO;
