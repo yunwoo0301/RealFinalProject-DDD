@@ -84,7 +84,6 @@ export const Container = styled.div`
         .ticket{
             color: #5EADF7;
             text-decoration: underline;
-            cursor: pointer;
         }
     }
 
@@ -145,7 +144,7 @@ const ModalBodyStyle = styled.div`
 
 
 
-const CheckBooking = ({reservationDatas, closeModal}) => {
+const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, close, clickToCancel}) => {
 
     // 날짜형식변경
     const formatDate = (dateString) => {
@@ -169,20 +168,13 @@ const CheckBooking = ({reservationDatas, closeModal}) => {
       }
 
 
-      // 예매취소모달
-      const [openModal, setOpenModal] = useState(false);
-      const close = () =>{
-        setOpenModal(false);
-      }
-      const clickToCancel = () => {
-        setOpenModal(true);
-      }
 
       // 취소예매 모달 체크박스
       const [isChecked, setIsChecked] = useState(false);
       const handleCheckChange = (e) => {
         setIsChecked(e.target.checked);
       }
+
 
       const props ={
         title: "예매취소",
@@ -202,7 +194,7 @@ const CheckBooking = ({reservationDatas, closeModal}) => {
         ),
         button: [
         <button onClick={close}>닫기</button>,
-        <button onClick={close} disabled={!isChecked} style={isChecked ? {} : {backgroundColor: "#b0abab", color: "#050E3D"}}>확인</button>
+        <button onClick={cancelBooking} disabled={!isChecked} style={isChecked ? {} : {backgroundColor: "#b0abab", color: "#050E3D"}}>확인</button>
         ],
         icon: <FcCancel/>
       }
@@ -218,7 +210,7 @@ const CheckBooking = ({reservationDatas, closeModal}) => {
       }
       // YYMMDD 형태로 전달
     const visitDateDigits = dayjs(reservationDatas.visitDate).format('YYMMDD');
-
+      // 티켓이미지로 props전달
       const reservationData = {
         imgUrl: reservationDatas.imgUrl,
         name: reservationDatas.exhibitName,
@@ -277,7 +269,11 @@ const CheckBooking = ({reservationDatas, closeModal}) => {
                 </div>
                 <div className="bookingItem">
                     <span className="label">수령방법</span>
-                    <span className="value">{reservationDatas.getTicket}매</span>
+                    {reservationDatas.getTicket === "onSite" ? (
+                    <span className="value">현장발권</span>
+                    ) : reservationDatas.getTicket === "mobileTicket" ? (
+                    <span className="value">모바일티켓</span>
+                    ) : null}
                 </div>
                 </div>
                 <div className="payContainer">

@@ -137,6 +137,12 @@ const DDDApi = {
         return await axios.get(`/booking/checkTicket?id=${getId}`);
     },
 
+    // 예매취소
+    cancelReservation: async(selectedData) => {
+        return await axios.post(DDD_DOMAIN + `/booking/cancel?bookingId=${selectedData}`);
+    },
+
+
 
 };
 
