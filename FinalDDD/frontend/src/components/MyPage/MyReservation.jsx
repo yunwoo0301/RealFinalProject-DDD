@@ -96,7 +96,7 @@ const Container = styled.div`
 
 
 
-const MyReservation = (props) => {
+const MyReservation = () => {
     const [selectedValue, setSelectedValue] = useState('');
     const [selectedState, setSelectedState] = useState('lastest')
     const getId = window.localStorage.getItem("memberId");
@@ -107,20 +107,24 @@ const MyReservation = (props) => {
 
     // 내가 한 예매리스트
     const [bookedList, setBookedList] = useState([]);
-    useEffect(() => {
-    const reservations = async() => {
-        try{
-            const reservationList = await DDDApi.myBookedList(getId);
-            setBookedList(reservationList.data);
-            console.log("가져오는 데이터 : ", reservationList.data);
-            console.log("페이드디티오 :  ",  reservationList.paymentDTO);
 
-        } catch(e) {
-            console.log(e);
-        }
-    }
+useEffect(() => {
+    const reservations = async () => {
+      try {
+        const reservationList = await DDDApi.myBookedList(getId);
+        // 예매일 기준 최신일로 정렬
+        const sortedList = reservationList.data.sort((a, b) => {
+          return new Date(b.bookingDate) - new Date(a.bookingDate);
+        });
+        setBookedList(sortedList);
+        console.log("가져오는 데이터 : ", sortedList);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
     reservations();
-    }, []);
+  }, []);
 
     //
 
