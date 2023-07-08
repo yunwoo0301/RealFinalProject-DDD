@@ -223,6 +223,14 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
     }));
   };
 
+  // 날짜를 한국시간으로 변경
+  const convertToKST = (timestamp) => {
+  const date = new Date(timestamp);
+  const kstTime = new Date(date.getTime() + (9 * 3600000)); // 한국 표준시(KST) 오프셋 추가 (9시간: 9 * 3600000ms)
+  return kstTime;
+};
+
+
   // 날짜를 가지고와서 yy년 mm월 dd일로 표시하기위해
   const formatSelectedDate = (date) => {
     if (date) {
@@ -231,13 +239,15 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
     return '';
   };
 
-  // 전체 Wrapper 열리고 닫히게 
+
+
+  // 전체 Wrapper 열리고 닫히게
   const [isExpandedDeliever, setIsExpandedDeliever] = useState(false);
   const [isExpandedPayment, setIsExpandedPayment] = useState(false);
   const [isExpandedInputInfo, setIsExpandedInputInfo] = useState(true);
   const [isExpandedPrice, setIsExpandedPrice] = useState(false);
-  
-  
+
+
 
 
   const handleHeaderClick = () => {
@@ -255,7 +265,7 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
     setIsExpandedInputInfo(false);
     setIsExpandedPrice(!isExpandedPrice);
   };
-  
+
   // 모든입력이 완료되어야만 결제하기 버튼활성화
   const isPaymentButtonDisabled =
   !buyerInfo.name ||
@@ -275,33 +285,36 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
   }
 
   // 결제정보에 데이터 넘겨줌
-  const data = 
-  {reservationData: reservationData, 
-    rootData: rootData, 
-    id: id, 
-    price: price, 
-    totalPrice: totalPrice, 
+  const data =
+  {reservationData: reservationData,
+    rootData: rootData,
+    id: id,
+    price: price,
+    totalPrice: totalPrice,
     quantity: quantity,
     buyerInfo: buyerInfo,
     deliveryMethod: deliveryMethod,
     paymentMethod: paymentMethod,
-    selectedDate: selectedDate 
+    selectedDate: selectedDate
 }
 
     // 컴포넌트 이동을 위한 변수설정
     const [toPayment, setToPayment] = useState(false);
+
+    // 예약정보저장
     const handleReservation = async () => {
       const exhibitNo = reservationData.exhibitNo;
       const bookedName = buyerInfo.name;
       const bookedEmail = buyerInfo.email;
       const bookedContact = buyerInfo.contact;
+      const kstDate = convertToKST(selectedDate);
       const result = await DDDApi.bookTicket(
-        getId, exhibitNo, selectedDate, bookedName, 
+        getId, exhibitNo, kstDate, bookedName,
         bookedEmail, bookedContact, deliveryMethod);
       const resultNo = result.data;
       setBookedNo(resultNo);
       setToPayment(true);
-    } 
+    }
 
 
   return (

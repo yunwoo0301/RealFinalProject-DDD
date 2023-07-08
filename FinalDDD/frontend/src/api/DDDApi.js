@@ -95,11 +95,8 @@ const DDDApi = {
     },
 
     // 예매정보저장
-    bookTicket: async(getId, exhibitNo, selectedDate,
+    bookTicket: async(getId, exhibitNo, kstDate,
         bookedName, bookedContact, bookedEmail, deliveryMethod) => {
-            console.log("선택한날짜 : " + selectedDate);
-            console.log("번호 " + exhibitNo, " 아이디 " + getId, ", 방문날짜 " + selectedDate, ", 예매자: " + bookedName, ", 전번 " + bookedContact , ", 이메일 " + bookedEmail
-        +", 수령방법 : " + deliveryMethod);
         const booking = {
             id: getId,
             exhibitNo: exhibitNo,
