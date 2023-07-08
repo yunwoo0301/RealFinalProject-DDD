@@ -409,6 +409,7 @@ const PayTicket = ({data}) => {
         close: closeModal,
         handleToComplete: handleToComplete,
         handleGoToHome: handleGoToHome,
+
       }
 
       const openToKakaoPay = async() => {
@@ -460,11 +461,11 @@ const PayTicket = ({data}) => {
                     <div>{data.reservationData.startDate} ~ {data.reservationData.endDate}</div>
                     <div>{data.reservationData.exhibitLocation}</div>
                     <div className="visitDate">선택한 관람일{data.selectedDate && formatSelectedDate(data.selectedDate)}</div>
-                </div>       
+                </div>
         </div>
         <div className="rightBox">
         <RightContainer>
-         
+
       <BuyerInfoWrapper isExpanded={isExpandedInputInfo}>
         <div className="wrapperHeader" onClick={handleHeaderClickInput}>
         <h4>예매정보확인</h4>
@@ -479,13 +480,13 @@ const PayTicket = ({data}) => {
             disabled
         /></span>
         <span><p>연락처</p>
-        <input 
+        <input
             type="text"
             name="contact"
             defaultValue={data.buyerInfo.contact}
             disabled
             /></span>
-        <span><p>이메일</p><input 
+        <span><p>이메일</p><input
             type="text"
             name="email"
             defaultValue={data.buyerInfo.email}
@@ -500,7 +501,7 @@ const PayTicket = ({data}) => {
         </div>
       <div className="container">
         <div>
-            <p>티켓수령방법 :</p> 
+            <p>티켓수령방법 :</p>
             {data.deliveryMethod === 'onSite' && <span>현장수령</span>}
             {data.deliveryMethod === 'mobileTicket' && <span>모바일티켓</span>}
         </div>
@@ -516,7 +517,7 @@ const PayTicket = ({data}) => {
         {data.totalPrice}원
         </div>
       </div>
-      </PriceQuantityWrapper> 
+      </PriceQuantityWrapper>
       <PolicyWrapper>
         <div className="agreeAll">
             <PolicyCheckbox
@@ -536,7 +537,7 @@ const PayTicket = ({data}) => {
             </div>
             <MdOutlineKeyboardArrowDown onClick={handleOpenCancle} style={{ transform: isOpenCancle ? 'rotate(180deg)' : 'rotate(0deg)' }}/>
             </div>
-            {isOpenCancle &&  
+            {isOpenCancle &&
             <Table>
                 <thead>
                     <tr>
@@ -567,7 +568,7 @@ const PayTicket = ({data}) => {
             <PolicyCheckbox
             checked={agreePersonal}
             onChange={handleAgreePersonalChange}
-            /> 
+            />
             <p>개인정보 수집 및 이용동의(필수)</p>
             </div>
             <MdOutlineKeyboardArrowDown onClick={handleOpenPersonal} style={{ transform: isOpenPersonal? 'rotate(180deg)' : 'rotate(0deg)' }}/>
@@ -594,7 +595,7 @@ const PayTicket = ({data}) => {
       </PolicyWrapper>
       <ReservationButtonWrapper>
         <Button onClick={goToInputInfo}>이전 단계</Button>
-        {(data.paymentMethod === 'kakaoPay' || data.paymentMethod === 'banking') && data.totalPrice === 0 && <Button className="bankinBtn" disabled={!agreeCancel || !agreePersonal} onClick={handleToComplete}>예매완료</Button>}
+        {data.totalPrice === 0 && <Button className="bankinBtn" disabled={!agreeCancel || !agreePersonal} onClick={handleToComplete}>예매완료</Button>}
         {data.paymentMethod === 'kakaoPay' && data.totalPrice !== 0 && <Button className="kakaoBtn" disabled={!agreeCancel || !agreePersonal} onClick={openToKakaoPay}><RiKakaoTalkFill/><p>카카오페이</p></Button>}
         {data.paymentMethod === 'banking'  && data.totalPrice !== 0  && <Button className="bankingBtn" onClick={handleOpenModal} disabled={!agreeCancel || !agreePersonal}>무통장입금</Button>}
       </ReservationButtonWrapper>

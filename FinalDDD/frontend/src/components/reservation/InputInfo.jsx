@@ -274,6 +274,13 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
   !deliveryMethod ||
   !paymentMethod;
 
+  const isCheckButtonDisabled =
+  !buyerInfo.name ||
+  !buyerInfo.contact ||
+  !buyerInfo.email ||
+  !deliveryMethod;
+
+
 
   // 전시상세정보페이지로 다시 이동
   const handleGoToHome = () => {
@@ -329,14 +336,14 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
     </div>
     <div className="bodyContainer">
     <div className="infoBox">
-               
+
                <div className="imgBox"/>
                 <div className="textBox">
                     <div className="title">{reservationData.exhibitName}</div>
                     <div>{reservationData.startDate} ~ {reservationData.endDate}</div>
                     <div>{reservationData.exhibitLocation}</div>
                     <div className="visitDate">선택한 관람일 : {selectedDate && formatSelectedDate(selectedDate)}</div>
-                </div>       
+                </div>
         </div>
         <div className="rightBox">
         <RightContainer>
@@ -346,17 +353,17 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
         <MdOutlineKeyboardArrowDown style={{ transform: isExpandedInputInfo ? 'rotate(180deg)' : 'rotate(0deg)' }}/>
         </div>
         <div className="container">
-        <span><p>예매자</p><input 
+        <span><p>예매자</p><input
               type="text"
               name="name"
               value={buyerInfo.name}
               onChange={handleBuyerInfoChange}/></span>
-        <span><p>연락처</p><input 
+        <span><p>연락처</p><input
               type="text"
               name="contact"
               value={buyerInfo.contact}
               onChange={handleBuyerInfoChange} /></span>
-        <span><p>이메일</p><input 
+        <span><p>이메일</p><input
               type="text"
               name="email"
               value={buyerInfo.email}
@@ -382,7 +389,7 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
             총 가격 : {totalPrice}원
         </div>
         </div>
-        </PriceQuantityWrapper>  
+        </PriceQuantityWrapper>
       <DeliveryMethodWrapper isExpanded={isExpandedPayment} >
         <div className="wrapperHeader" onClick={handleHeaderClickPay}>
         <h4>수령 방법</h4>
@@ -399,7 +406,7 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
         />
       <label htmlFor="onSite">현장수령</label>
       <DeliveryMethodRadio
-        type="radio"      
+        type="radio"
         id="mobileTicket"
         name="deliveryMethod"
         value="mobileTicket"
@@ -409,6 +416,7 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
       <label htmlFor="mobileTicket">모바일티켓</label>
       </div>
       </DeliveryMethodWrapper>
+      {totalPrice > 0 && (
       <PaymentMethodWrapper isExpanded={isExpandedDeliever} >
       <div className="wrapperHeader" onClick={handleHeaderClick}>
         <h4>결제수단</h4>
@@ -435,9 +443,16 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
         <label htmlFor="kakaoPay">카카오페이</label>
       </div>
       </PaymentMethodWrapper>
+      )}
         <ReservationButtonWrapper>
           <Button onClick={handleGoBack}>이전 단계</Button>
-          <Button onClick={handleReservation} disabled={isPaymentButtonDisabled}>결제 하기</Button>
+          {totalPrice > 0 ? (
+                <Button onClick={handleReservation} disabled={isPaymentButtonDisabled}>
+                  결제 하기
+                </Button>
+              ) : (
+                <Button onClick={handleReservation} disabled={isCheckButtonDisabled}>예매 확인</Button>
+              )}
         </ReservationButtonWrapper>
       </RightContainer>
       </div>   
