@@ -5,6 +5,7 @@ import ConfirmModal from "../../util/ConfirmModal";
 import {FcCancel} from "react-icons/fc";
 import MobileTicket from "../MyPage/MobileTicket";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 const Modal = styled.div`
     position: fixed;
@@ -65,6 +66,7 @@ export const Container = styled.div`
         background-image: url(${props => props.imgUrl});
         background-repeat: no-repeat;
         background-size: contain;
+        cursor: pointer;
 
     }
     .textBox{
@@ -77,6 +79,7 @@ export const Container = styled.div`
             margin-top: 1rem;
             font-size: 1rem;
             font-weight: bold;
+            cursor: pointer;
         }
         &>*{
             margin-bottom: 10px;
@@ -145,6 +148,7 @@ const ModalBodyStyle = styled.div`
 
 
 const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, close, clickToCancel}) => {
+    const navigate = useNavigate();
 
     // 날짜형식변경
     const formatDate = (dateString) => {
@@ -221,6 +225,11 @@ const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, c
         index: reservationDatas.exhibitNo
       }
 
+      // 해당 전시로 이동
+      const moveToExhibition = () =>{
+        navigate(`/exhibitInfo/${reservationDatas.exhibitNo}`);
+      }
+
     return(
         <Modal>
         {reservationDatas &&
@@ -232,10 +241,10 @@ const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, c
                 </div>
                 <div className="bodyContainer">
                <div className="infoBox">
-               <div className="imgBox"/>
+               <div className="imgBox" onClick={moveToExhibition}/>
                 <div className="textBox">
                     <div><p className="ticket" onClick={clickToTicket}>티켓확인</p></div>
-                    <div className="title">{reservationDatas.exhibitName}</div>
+                    <div className="title" onClick={moveToExhibition}>{reservationDatas.exhibitName}</div>
                     <div>{reservationDatas.startDate} ~ {reservationDatas.endDate}</div>
                     <div>{reservationDatas.exhibitLocation}</div>
                 </div>
