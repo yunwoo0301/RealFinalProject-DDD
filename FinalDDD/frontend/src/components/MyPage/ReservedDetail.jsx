@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import CheckBooking from '../reservation/CheckBooking';
-
+import DDDApi from "../../api/DDDApi";
 
 const Container = styled.div`
     width: calc(100% - 2.5rem);
@@ -81,7 +81,7 @@ const Container = styled.div`
 
 
 
-const ReservedDetail = ({exhibitionData, currentPageData}) => {
+const ReservedDetail = ({exhibitionData, currentPageData, setExhibitionData}) => {
 
     // 예약 총 개수
     const totalRecords = exhibitionData.length;
@@ -108,6 +108,31 @@ const ReservedDetail = ({exhibitionData, currentPageData}) => {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+      }
+
+
+    // 예매 상세 페이지 속 예매취소확인모달
+      const [openModal, setOpenModal] = useState(false);
+      const close = () =>{
+        setOpenModal(false);
+      }
+      const clickToCancel = () => {
+        setOpenModal(true);
+      }
+
+      // 예매취소 백엔드연결
+      const cancelBooking = async () =>{
+        const result = await DDDApi.cancelReservation(selectedData);
+        const resultStatus = result.data;
+        if(resultStatus) {
+            setOpenModal(false);
+            setShowModal(false);
+            // exhibitionData에서 취소된 예약 제거
+        const updatedData = exhibitionData.filter(
+            (item) => item.bookingId !== selectedData
+            );
+        setExhibitionData(updatedData);
+        }
       }
     return (
         <>
@@ -139,6 +164,11 @@ const ReservedDetail = ({exhibitionData, currentPageData}) => {
                     <CheckBooking
                         reservationDatas={currentPageData.find(e =>  e.bookingId === selectedData)}
                         closeModal={closeModal}
+                        cancelBooking={cancelBooking}
+                        openModal={openModal}
+                        close={close}
+                        clickToCancel={clickToCancel}
+
                     />
                     )}
         </>
