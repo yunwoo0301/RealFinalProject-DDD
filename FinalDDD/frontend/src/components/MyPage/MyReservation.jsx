@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { SlMagnifier } from 'react-icons/sl'
 import ReservedDetail from './ReservedDetail';
-import exhibitionData from '../exhibition/exhibitionData';
 import PageNation from '../../util/PageNation';
 import DDDApi from '../../api/DDDApi';
 
@@ -181,8 +180,13 @@ useEffect(() => {
                         )
                     }
                 </div>
-                <div className='ticketBox'>
-                    <ReservedDetail exhibitionData={bookedList} currentPageData={currentPageData}/>
+                <div className='ticketBox'  >
+                    <ReservedDetail
+                    key={bookedList.bookingId}
+                    exhibitionData={bookedList}
+                    setExhibitionData={setBookedList}
+                    currentPageData={currentPageData}
+                    />
                 </div>
                     
             <div className="pageBlock">
