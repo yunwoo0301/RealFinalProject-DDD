@@ -100,10 +100,18 @@ const MyReservation = () => {
     const [selectedValue, setSelectedValue] = useState('');
     const [selectedState, setSelectedState] = useState('lastest')
     const getId = window.localStorage.getItem("memberId");
+    // 검색을 위한 변수설정
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const handleSelectChange = (event) => {
-      setSelectedValue(event.target.value);
+
+    const handleSelectChange = (e) => {
+      setSelectedValue(e.target.value);
     };
+
+    // 검색어
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+      };
 
     // 내가 한 예매리스트
     const [bookedList, setBookedList] = useState([]);
@@ -112,7 +120,6 @@ useEffect(() => {
     const reservations = async () => {
       try {
         const reservationList = await DDDApi.myBookedList(getId);
-        // 예매일 기준 최신일로 정렬
         const sortedList = reservationList.data.sort((a, b) => {
           return new Date(b.bookingDate) - new Date(a.bookingDate);
         });
@@ -138,7 +145,11 @@ useEffect(() => {
     const pageCount = Math.ceil(bookedList.length / ITEMS_PAGE); // 전체 페이지 수
     const offset = currentPage * ITEMS_PAGE; // 현재 페이지에서 보여줄 아이템의 시작 인덱스
 
-    const currentPageData = bookedList.slice(offset, offset + ITEMS_PAGE);
+    // 검색어에 따라 예매 목록 필터링
+    const filteredData = bookedList.filter((item) =>
+    item.exhibitName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    const currentPageData = filteredData.slice(offset, offset + ITEMS_PAGE);
 
 
     return (
@@ -163,7 +174,8 @@ useEffect(() => {
                     {
                         selectedState === 'search' && (
                             <>
-                                <input type="text" className='searchBar' height={'1rem'} />
+                                <input type="text" className='searchBar' height={'1rem'}
+                                value={searchQuery} onChange={handleSearchChange} />
                                 <div className='btn'><SlMagnifier/></div>
                             </>
                         )
