@@ -40,7 +40,6 @@ const Modal = styled.div`
 `;
 
 const MyPageBG = () => {
-  const [posts, setPosts] = useState([]);
   let memberId = Functions.getMemberId();
 
   const { setShowPage, showPage, memberData, setMemberData, myDiaryData, setMyDiaryData } =
@@ -51,7 +50,6 @@ const MyPageBG = () => {
       const response = await MyPageApi.info(memberId);
       console.log(response);
       setMemberData(response.data);
-      //   console.log(memberData);
     };
     memberFetchDate();
   }, [showPage]);
@@ -97,8 +95,7 @@ const MyPageBG = () => {
               <NaviBox />
               <MyPost
               memberId={memberId}
-              posts={posts}
-              setPosts={setPosts}/>
+              />
             </>
           )}
           {showPage === "내정보수정" && (

@@ -1,11 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { dummy_reply } from './Data'
-import useStore from '../../store';
 import DDDApi from '../../api/DDDApi';
 import { useNavigate } from 'react-router-dom';
 import PageNation from '../../util/PageNation';
-
 
 
 
@@ -111,10 +108,6 @@ const MyPost = ({ memberId }) => {
     }, [memberId]);
 
 
-    const slicedPosts = posts.slice(0, 5); // 게시글 5개로 나눠서 노출
-    const slicedComments = comments.slice(0, 5); // 댓글 5개로 나눠서 노출
-
-
     // 작성일자 yyyy-MM-dd 형식으로 변환
     const formatDate = (date) => {
         const year = date.toString().substring(0, 4);
@@ -126,21 +119,33 @@ const MyPost = ({ memberId }) => {
 
     // 타이틀 클릭 시 해당 게시물로 이동
     const handleTitleClick = (no) => {
-        navigate(`/boardList/boardView/${memberId}`);
+        navigate(`/boardList/boardView/${no}`, { state : {memberId} });
     };
+
 
     // 페이지 네이션
     const ITEMS_PAGE = 5;
     const [currentPage, setCurrentPage] = useState(0);
+    const [currentCommentPage, setCurrentCommentPage] = useState(0);
 
+    // 게시글 페이지 넘기기
     const handlePageClick = (selectedPage) => {
         setCurrentPage(selectedPage.selected);
     };
 
-    const offset = currentPage * ITEMS_PAGE;
-    const currentPageData = slicedPosts.slice(offset, offset + ITEMS_PAGE);
-    const pageCount = Math.ceil(slicedPosts.length / ITEMS_PAGE);
+    // 댓글 페이지 넘기기
+    const handleCommentPageClick = (selectedPage) => {
+        setCurrentCommentPage(selectedPage.selected);
+    };
 
+
+    const offset = currentPage * ITEMS_PAGE;
+    const comoffset = currentCommentPage * ITEMS_PAGE;
+
+    const currentPageData = posts.slice(offset, offset + ITEMS_PAGE); // 게시글
+    const currentSecData = comments.slice(comoffset, comoffset + ITEMS_PAGE); // 댓글
+    const pageCount = Math.ceil(posts.length / ITEMS_PAGE);
+    const pageCount2 = Math.ceil(comments.length / ITEMS_PAGE);
 
 
 
@@ -173,7 +178,7 @@ const MyPost = ({ memberId }) => {
                             <td>{post.category}</td>
                             <td
                                 style={{ textAlign: 'left', paddingLeft: '.6rem', cursor: 'pointer' }}
-                                onClick={() => handleTitleClick(post.memberId)}>{post.title}
+                                onClick={() => handleTitleClick(post.boardNo)}>{post.title}
                             </td>
                             <td>{post.author}</td>
                             <td >{post.views}</td>
@@ -212,19 +217,22 @@ const MyPost = ({ memberId }) => {
                     </thead>
                     <tbody>
                     {
-                        slicedComments.length > 0 && slicedComments.map((comment, index) => (
+                        currentSecData.length > 0 && currentSecData.map((comment, index) => (
                             <tr key={index}>
                                 <td>{comment.commentNo}</td>
                                 <td>{comment.category}</td>
                                 {/* <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{comment.content}</td>  */}
-                                <td>{comment.content}</td>
+                                <td
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => handleTitleClick(comment.boardNo)}>{comment.content}
+                                </td>
                                 <td>{comment.nickname}</td>
                                 <td>{formatDate(comment.writeDate)}</td>
                             </tr>
                         ))
                     }
                     {
-                        slicedComments.length === 0 &&
+                        currentSecData.length === 0 &&
                         (
                             <tr>
                                 <td colSpan={6}>작성 한 댓글이 없습니다. </td>
@@ -233,7 +241,7 @@ const MyPost = ({ memberId }) => {
                     }
                     </tbody>
                 </Table>
-                <PageNation pageCount={pageCount} onPageChange={handlePageClick}/>
+                <PageNation pageCount={pageCount2} onPageChange={handleCommentPageClick}/>
             </PostWrap>
         </>
     );
