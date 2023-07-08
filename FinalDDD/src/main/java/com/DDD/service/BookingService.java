@@ -92,6 +92,7 @@ public class BookingService {
             bookingDTO.setExhibitName(e.getExhibitions().getExhibitName());
             bookingDTO.setStartDate(e.getExhibitions().getStartDate());
             bookingDTO.setEndDate(e.getExhibitions().getEndDate());
+            bookingDTO.setExhibitNo(String.valueOf(e.getExhibitions().getExhibitNo()));
             bookingDTO.setBookedName(e.getBookedName());
             bookingDTO.setBookedEmail(e.getBookedEmail());
             bookingDTO.setBookedTel(e.getBookedTel());
