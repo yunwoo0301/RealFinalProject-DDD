@@ -19,6 +19,7 @@ import java.util.Map;
 public class BookingController {
     private final BookingService bookingService;
 
+    // 예매확인
     @PostMapping("/newTicket")
     public ResponseEntity<Long> bookTicket(@RequestBody Map<String, String> data) {
         try {
@@ -43,10 +44,25 @@ public class BookingController {
     }
 
 
-
+   // 내 예매확인
     @GetMapping("/checkTicket")
     public ResponseEntity<List<BookingDTO>> getBookedTicketList(@RequestParam("id") String id) {
         List<BookingDTO> list = bookingService.FindTicketList(id);
         return  new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
+    // 예매 취소
+    @PostMapping("/cancel")
+    public ResponseEntity<String> cancelBooking(@RequestParam("bookingId") String bookingId) {
+        try{
+            boolean canceled = bookingService.cancelBooking(bookingId);
+            if(canceled) {
+                return ResponseEntity.ok("예매가 취소되었습니다😥😥");
+            } else {
+                return ResponseEntity.badRequest().body("예매취소에 실패하였습니다~ 🤯");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("❌예매취소를 수행하는 동안 에러가났습니당!❌");
+        }
     }
 }

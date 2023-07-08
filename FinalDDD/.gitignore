@@ -4,6 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+!FinalDDD/build
+!/build
 
 ### STS ###
 .apt_generated
@@ -46,7 +48,7 @@ out/
 /coverage
 
 # production
-/build
+
 
 # misc
 .DS_Store

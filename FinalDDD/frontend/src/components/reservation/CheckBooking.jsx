@@ -84,6 +84,7 @@ export const Container = styled.div`
         .ticket{
             color: #5EADF7;
             text-decoration: underline;
+            cursor: pointer;
         }
     }
 

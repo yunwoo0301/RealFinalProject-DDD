@@ -117,4 +117,24 @@ public class BookingService {
         }
         return bookingDTOS;
     }
+
+    //예매취소
+    public boolean cancelBooking(String bookingId) {
+        try {
+            Booking booking = bookingRepository.findByBookingId(Long.valueOf(bookingId));
+
+            // 예매와 관련된 결제 정보 조회
+            Payment payment = paymentRepository.findByBookingBookingId(booking.getBookingId());
+            if (payment != null) {
+                paymentRepository.delete(payment); // 결제 정보 삭제
+            }
+
+            bookingRepository.delete(booking); // 예매 정보 삭제
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

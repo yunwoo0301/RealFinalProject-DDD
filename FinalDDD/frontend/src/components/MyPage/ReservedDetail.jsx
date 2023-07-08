@@ -1,14 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import MobileTicket from './MobileTicket';
 import { useState } from 'react';
-import { useEffect } from 'react';
-import TicketModal from './TicketModal';
-import { Co2Sharp } from '@mui/icons-material';
 import CheckBooking from '../reservation/CheckBooking';
 
-
-// ====== data 확인하기 =====
 
 const Container = styled.div`
     width: calc(100% - 2.5rem);
@@ -92,13 +86,8 @@ const ReservedDetail = ({exhibitionData, currentPageData}) => {
     // 예약 총 개수
     const totalRecords = exhibitionData.length;
 
+    // 예매 확인페이지 모달
     const [showModal, setShowModal] = useState(false);
-
-    const openModal = () => {
-      setShowModal(true);
-      console.log(showModal)
-
-    };
 
     const closeModal = () => {
 
@@ -110,27 +99,6 @@ const ReservedDetail = ({exhibitionData, currentPageData}) => {
         setSelectedData(bookingId);
         setShowModal(true);
       };
-
-
-    // 모바일티켓으로 데이터 전송하기
-    // const [resevationData, setResevationData] = useState('');
-
-    // const handleData = (index) => {
-    //     const selectedData = exhibitionData.find((data) => data.index === index);
-    //     setResevationData(selectedData)
-    //     openModal();
-
-    //     console.log(resevationData);
-
-    // };
-    // useEffect(()=>{
-    //     openMobileTicket();
-    // }, [resevationData]);
-
-    console.log("currentData : ", currentPageData );
-    console.log("넘어오는 exhibitionData  : " , exhibitionData);
-    //console.log("넘어오는 데이터 중 금액 : ", exhibitionData[0].paymentDTO.paidPrice);
-    //console.log("넘어오는 데이터 중 crurrentData 중 금액 : ", currentPageData[0].paymentDTO.paidPrice);
 
 
     // 결제일시 날짜형식변경
@@ -169,7 +137,7 @@ const ReservedDetail = ({exhibitionData, currentPageData}) => {
                 }
                 {showModal && selectedData && (
                     <CheckBooking
-                        reservationData={currentPageData.find(e =>  e.bookingId === selectedData)}
+                        reservationDatas={currentPageData.find(e =>  e.bookingId === selectedData)}
                         closeModal={closeModal}
                     />
                     )}
