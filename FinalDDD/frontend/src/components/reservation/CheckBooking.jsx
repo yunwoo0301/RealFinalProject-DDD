@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "../../util/Button";
 import ConfirmModal from "../../util/ConfirmModal";
@@ -230,6 +230,19 @@ const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, c
         navigate(`/exhibitInfo/${reservationDatas.exhibitNo}`);
       }
 
+      // 관람일과 오늘날짜가 같을 경우 예매취소버튼숨기기
+      const [isVisitDateToday, setIsVisitDateToday] = useState(true);
+
+      useEffect(() => {
+        const visitDate = new Date(reservationDatas.visitDate).setHours(0, 0, 0, 0);
+        const today = new Date().setHours(0, 0, 0, 0);
+        if (visitDate === today) {
+            setIsVisitDateToday(false);
+        } else {
+            setIsVisitDateToday(true);
+        }
+      }, [reservationDatas.visitDate]);
+
     return(
         <Modal>
         {reservationDatas &&
@@ -327,9 +340,11 @@ const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, c
                 </div>
                </div>
                </div>
-               <div className="btnContainer">
+               <div className="btnContainer" style={!isVisitDateToday ? { width: '8rem' } : {}}>
                 <Button onClick={closeModal}>확인</Button>
+                {isVisitDateToday &&
                 <Button onClick={clickToCancel}>예매취소</Button>
+                }
                </div>
             </div>
         </Container>
