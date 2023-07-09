@@ -167,14 +167,14 @@ const Card = () => {
 
     
 
-    // 글쓰기 버튼 클릭 시 게시판 작성페이지로 이동
+    // 비로그인 시 작성페이지 접근 제한
     const onClickToWrite = () => {
         const isLogin = window.localStorage.getItem("isLogin");
         const getId = window.localStorage.getItem("memberId");
         console.log(isLogin);
         console.log(getId);
 
-        if (isLogin && getId) {
+        if (isLogin === "true") {
             const link = "write/";
             navigate(link);
         } else {

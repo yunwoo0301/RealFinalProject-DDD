@@ -163,7 +163,7 @@ const Recommend = () => {
 
     const onClickToWrite = () => {
         const isLogin = window.localStorage.getItem("isLogin");
-        const getId = window.localStorage.getItem("Id");
+        const getId = window.localStorage.getItem("memberId");
         console.log(isLogin);
         console.log(getId);
         

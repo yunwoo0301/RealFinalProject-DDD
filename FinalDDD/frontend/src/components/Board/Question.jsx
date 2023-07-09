@@ -162,7 +162,7 @@ const Question = () => {
     // 비로그인 시 작성페이지 접근 제한
     const onClickToWrite = () => {
         const isLogin = window.localStorage.getItem("isLogin");
-        const getId = window.localStorage.getItem("Id");
+        const getId = window.localStorage.getItem("memberId");
         console.log(isLogin);
         console.log(getId);
         
