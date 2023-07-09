@@ -91,6 +91,21 @@ public class MyPageController {
         return ResponseEntity.ok("Member deactivated successfully");
     }
 
+    // 프로필 사진 변경
+    @PostMapping("/profileImg")
+    public ResponseEntity<Boolean>  proifileImg(@RequestBody Map<String, String> infoData) {
+        Long id = Long.valueOf(infoData.get("id"));
+        String profileImg = infoData.get("profileImg");
+        return ResponseEntity.ok(memberService.newProfileImg(id, profileImg));
+    }
+    // 배경화면 이미지 변경
+    @PostMapping("/backgroundImg")
+    public ResponseEntity<Boolean>  backgroundImg(@RequestBody Map<String, String> infoData) {
+        Long id = Long.valueOf(infoData.get("id"));
+        String backgroundImg = infoData.get("backgroundImg");
+        return ResponseEntity.ok(memberService.newBackgroundImg(id, backgroundImg));
+    }
+
     // 비밀번호 변경
     @PostMapping("/password")
     public ResponseEntity<String> changePassword(@RequestBody Map<String, String> infoData) {

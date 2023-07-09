@@ -112,6 +112,28 @@ public class MemberService {
                 .orElse(false);
     }
 
+    public boolean newProfileImg(Long id, String profileImg) {
+        return memberRepository.findById(id)
+                .map(member -> {
+                    member.setProfileImg(profileImg);
+                    Member savedMember = memberRepository.save(member);
+                    log.info(savedMember.toString());
+                    return true;
+                })
+                .orElse(false);
+    }
+
+    public boolean newBackgroundImg(Long id, String backgroundImg) {
+        return memberRepository.findById(id)
+                .map(member -> {
+                    member.setBackgroundImg(backgroundImg);
+                    Member savedMember = memberRepository.save(member);
+                    log.info(savedMember.toString());
+                    return true;
+                })
+                .orElse(false);
+    }
+
     // 회원 탈퇴
     public Map<String, String> memberDelete(String email, String password){
         Map<String ,String> map = new HashMap<>();

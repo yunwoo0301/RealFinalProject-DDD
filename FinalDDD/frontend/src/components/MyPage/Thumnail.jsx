@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { thumbnail, profileImage } from './Data';
 
 
 const Container = styled.div`
@@ -11,17 +10,25 @@ const Container = styled.div`
     width: 100%;
     height: 30%;
     min-height: 270px;
+    max-height: 300px;
     border-top-right-radius: inherit;
     border-top-left-radius: inherit;
     .Thumnail{
         background-size : 100% ;
         width: 100%;
         height: 100%;
-        overflow-y: hidden;
+        overflow: hidden;
         background-repeat: no-repeat;
         background-position: center;
         border-top-right-radius: inherit;
         border-top-left-radius: inherit;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        img{
+          width: 100%;
+          height: auto;
+        }
     }
     .profileIcon{
         width: 6rem;
@@ -33,7 +40,15 @@ const Container = styled.div`
         left: 1.5rem;
         background-size:cover;
         background-repeat: no-repeat;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        overflow: hidden;
     }
+    img{
+          width: 100%;
+          height: auto;
+        }
 `;
 
 const BlackBG = styled.div`
@@ -47,24 +62,18 @@ const BlackBG = styled.div`
     border-top-left-radius: inherit;
 `;
 
-const thumnailStyle = () => {
-    return {
-      backgroundImage: `url(${thumbnail[0]})`,
-    };
-};
-const profileIconStyle = () => {
-    return {
-      backgroundImage: `url(${profileImage[0]})`,
-    };
-};
 
-const Thumnail = () => {
+const Thumnail = ({memberData}) => {
 
     return (
         <Container>
-            <div className='Thumnail' style={thumnailStyle()}></div>
+            <div className='Thumnail'>
+                <img src={memberData.backgroundImg} alt="썸네일" />
+            </div>
             <BlackBG/>
-            <div className='profileIcon' style={profileIconStyle()}></div>
+            <div className='profileIcon'>
+                <img src={memberData.profileImg} alt="프로필" />
+            </div>
         </Container>
     );
 };

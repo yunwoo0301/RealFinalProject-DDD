@@ -2,6 +2,8 @@ import axios from "axios";
 import Functions from "../util/Functions";
 //const HEADER = { "Content-type": "application/json" };
 
+
+
 const updateProfileField = async (memberId, fieldName, fieldValue) => {
     try {
       Functions.setAuthorizationHeader(); // 헤더에 토큰을 넣는 함수
@@ -57,6 +59,14 @@ const MyPageApi = {
     // 비밀번호 변경
     password : (memberId, inputCurrentPwd, inputNewPwd ) => updateProfileField(
         memberId, 'password', {password: inputCurrentPwd, newPassword: inputNewPwd}), 
+
+    // 프로필 이미지 변경
+    profileImage : (memberId, imageUrl) => updateProfileField(
+        memberId, 'profileImg', {profileImg: imageUrl}), 
+
+    // 배경화면 이미지 변경
+    backgroundImage : (memberId, imageUrl) => updateProfileField(
+        memberId, 'backgroundImg', {backgroundImg: imageUrl}), 
 
 };
 

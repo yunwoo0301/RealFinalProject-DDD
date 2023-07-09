@@ -1,17 +1,16 @@
 import {React, useState }from 'react';
-import { thumbnail, profileImage } from './Data';
 import styled from 'styled-components';
 import { Tooltip } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import UploadIcon from '@mui/icons-material/Upload';
 import { storage } from '../../util/FireBase';
-import { FiMoreVertical } from 'react-icons/fi'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { useStore } from 'zustand';
+import Functions from '../../util/Functions';
+import { MyPageApi } from '../../api/MyPageApi';
 
 const Container = styled.div`
-    background-color: aqua;
+    /* background-color: aqua; */
     box-sizing: border-box;
     position: relative;
     top: 0%;
@@ -134,6 +133,8 @@ const BlackBG = styled.div`
 
 
 const EditThumnail = ({memberData}) => {
+  const memberId = Functions.getMemberId();
+
     // 버튼 조작
     const [btnOpen, setBtnOpen] = useState(false);
     const handleMoreBtn = () => {
@@ -193,6 +194,16 @@ const previewProfileImage = (e) => {
         await fileRef.put(profileImage.image_file);
         imageUrl = await fileRef.getDownloadURL();
         setProfileImage({ ...profileImage, image_url: imageUrl });
+        
+        // 백엔드에 넘겨줌
+        const response = await MyPageApi.profileImage(memberId, imageUrl);
+      
+        if (response.status === 200) {
+          console.log('프로필 이미지 업데이트 성공');
+        } else {
+          console.log('프로필 이미지 업데이트 실패');
+        }
+
       } catch (error) {
         console.log(error);
         alert("이미지 업로드 중 오류가 발생했습니다.");
@@ -211,6 +222,15 @@ const previewProfileImage = (e) => {
         await fileRef.put(backgroundImage.image_file);
         imageUrl = await fileRef.getDownloadURL();
         setBackgroundImage({ ...backgroundImage, image_url: imageUrl });
+        
+        // 백엔드에 넘겨줌
+        const response = await MyPageApi.backgroundImage(memberId, imageUrl);
+      
+        if (response.status === 200) {
+          console.log('프로필 이미지 업데이트 성공');
+        } else {
+          console.log('프로필 이미지 업데이트 실패');
+        }
       } catch (error) {
         console.log(error);
         alert("이미지 업로드 중 오류가 발생했습니다.");
@@ -218,8 +238,6 @@ const previewProfileImage = (e) => {
       }
     }
   };
-  
-
 
     return (
         <>

@@ -81,21 +81,21 @@ const MyPageBG = () => {
           )}
           {showPage === "다이어리" && (
             <>
-              <Thumnail />
+              {memberData && <Thumnail memberData={memberData}/>}
               <NaviBox />
               <MyDiary />
             </>
           )}
           {showPage === "예약관리" && (
             <>
-              <Thumnail />
+              {memberData && <Thumnail memberData={memberData}/>}
               <NaviBox />
               <MyReservation />
             </>
           )}
           {showPage === "내게시물" && (
             <>
-              <Thumnail />
+              {memberData && <Thumnail memberData={memberData}/>}
               <NaviBox />
               <MyPost
               memberId={memberId}
@@ -104,7 +104,7 @@ const MyPageBG = () => {
           )}
           {showPage === "내정보수정" && (
             <>
-              <EditThumnail />
+              {memberData && <EditThumnail memberData={memberData}/>}
               <NaviBox />
               <EditMemberMain />
             </>
