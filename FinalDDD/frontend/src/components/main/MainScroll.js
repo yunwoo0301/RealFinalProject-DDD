@@ -43,7 +43,6 @@ const ScrollStyle = styled.div`
   font-size: 3rem;
   width: fit-content;
   height: fit-content;
-  border: 1px solid red;
 }
 .service .icon{
   float: left;
