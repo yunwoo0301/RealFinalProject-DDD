@@ -12,6 +12,10 @@ const ChatContainer = styled.div`
     }
 `;
 
+const inputStyle = {
+    display: 'none', // 입력 창을 숨김 처리
+  };
+
 const theme = {
     background: '#F4F8FF',
     headerBgColor: '#050E3D',
@@ -21,7 +25,6 @@ const theme = {
     botFontColor: '#fff',
     userBubbleColor: '#5EADF7',
     userFontColor: '#fff',
-
 }
 
 const Chatbot = () => {
@@ -261,10 +264,12 @@ const Chatbot = () => {
         <ChatContainer>
         <ThemeProvider theme={theme}>
             <ChatBot
+                headerTitle="❣️문의하기❣️ 문의하실 내용을 선택해주세요"
                 steps={steps}
-                placeholder={"문의하실 내용을 클릭해주세요."}
                 hideUserAvatar={true}
                 hideBotAvatar={true}
+                inputStyle={inputStyle}
+                hideSubmitButton={true}
             />
         </ThemeProvider>
         </ChatContainer>
