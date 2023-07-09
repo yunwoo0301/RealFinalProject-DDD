@@ -4,6 +4,8 @@ import BG from "../../resources/BGimg1.jpg"
 import MuseumInfo from "./Museum";
 import RollDiv from "./SlideBanner";
 import GridComponent from "./GridLayout";
+import {BsWechat} from "react-icons/bs";
+import Chatbot from "../../pages/Chatbot";
 
 const ScrollStyle = styled.div`
   body {
@@ -18,9 +20,9 @@ const ScrollStyle = styled.div`
 }
 
 /* 화면에서 스크롤바 안보이게 */
-/* .outer::-webkit-scrollbar {
+.outer::-webkit-scrollbar {
   display: none;
-} */
+}
 
 .inner {
   height: 100vh;
@@ -31,6 +33,21 @@ const ScrollStyle = styled.div`
 .first-layer{
   background-image: url(${BG});
   background-size: cover;
+  display: flex;
+  justify-content: space-between;
+}
+.service {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  font-size: 3rem;
+  width: fit-content;
+  height: fit-content;
+  border: 1px solid red;
+}
+.service .icon{
+  float: left;
+  z-index: 99;
 }
 
 .second-layer{
@@ -56,7 +73,7 @@ const Mainpage = () => {
             const { deltaY } = e;
             const { scrollTop } = outerDivRef.current; // 스크롤 위쪽 끝부분 위치
             const pageHeight = window.innerHeight; // 화면 세로길이, 100vh와 같습니다.
-    
+
             if (deltaY > 0) {
             // 스크롤 내릴 때
             if (scrollTop >= 0 && scrollTop < pageHeight) {
@@ -136,10 +153,22 @@ const Mainpage = () => {
         };
     }, []);
 
+    // 챗봇 나오게
+    const [showChatbot, setShowChatbot] = useState(false);
+    const openToChatbot = () => {
+      setShowChatbot((prevShowChatbot) => !prevShowChatbot);
+    };
     return (
-        <ScrollStyle> 
+        <ScrollStyle>
         <div ref={outerDivRef} className="outer">
-            <div className="inner first-layer"></div>
+            <div className="inner first-layer">
+            <div className="service">
+            {showChatbot && <Chatbot/> }
+            <div className="icon">
+            <BsWechat onClick={openToChatbot}/>
+            </div>
+            </div>
+            </div>
             <div className="inner second-layer"><RollDiv/></div>
             <div className="inner third-layer"><GridComponent/></div>
             <div className="inner fourth-layer"><MuseumInfo/></div>
