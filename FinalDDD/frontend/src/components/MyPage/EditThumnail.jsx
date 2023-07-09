@@ -3,7 +3,12 @@ import { thumbnail, profileImage } from './Data';
 import styled from 'styled-components';
 import { Tooltip } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import UploadIcon from '@mui/icons-material/Upload';
 import { storage } from '../../util/FireBase';
+import { FiMoreVertical } from 'react-icons/fi'
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { useStore } from 'zustand';
 
 const Container = styled.div`
     background-color: aqua;
@@ -17,9 +22,8 @@ const Container = styled.div`
     border-top-right-radius: inherit;
     border-top-left-radius: inherit;
     label{
-        position: absolute;
-        width: 2.4rem;
-        height: 2.4rem;
+        width: 2.0rem;
+        height: 2.0rem;
         border-radius: 2rem;
         /* background-color: #d1d1d1; */
         background-color: transparent;
@@ -30,12 +34,15 @@ const Container = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
+
     }
     label:hover{
         background-color: #e5e5e5;
         color: #727272;
-
     }
+
+        
+    
     .Thumnail{
         background-size : 100% ;
         width: 100%;
@@ -52,28 +59,64 @@ const Container = styled.div`
           width: 100%;
           height: auto;
         }
+    .btnBox{
+        /* background-color: red; */
+        position: absolute;
+        width: 3rem;
+        height: 2rem;
+        top:  6%;
+        right: 0%;
+    }
 
 
     }
-    .profileIcon{
-        width: 6rem;
-        height: 6rem;
-        border-radius: 3rem;
-        /* background-color: aqua; */
+    .profileBlock{
         position: relative;
         top: -15%;
-        left: 1.5rem;
-        background-size:cover;
-        background-repeat: no-repeat;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        overflow : hidden;
-        img{
-            width: 100%;
-            height: 100%;
+        left: 2.5rem;
+        width: 12rem;
+        height: 6rem;
+        /* background-color: aqua; */
+        .profileIcon{
+            width: 6rem;
+            height: 6rem;
+            border-radius: 3rem;
+            /* background-color: aqua; */
+            position: relative;
+            top: 0%;
+            left: 0%;
+            background-size:cover;
+            background-repeat: no-repeat;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            overflow : hidden;
+            img{
+                width: 100%;
+                height: 100%;
 
+            }
         }
+        .btnBox2{
+            /* background-color: red; */
+            position: absolute;
+            width: 8rem;
+            bottom:  0%;
+            right: 0%;
+            display: flex;
+            flex-direction: row;
+            }
+        .btnBox2 label {
+        background-color: #727272;
+        color: #e5e5e5;
+        margin-right: 0.5rem;
+        }
+
+        .btnBox2 label:hover {
+            background-color: #e5e5e5;
+            color: #727272;
+        }
+
     }
 
 `;
@@ -90,83 +133,154 @@ const BlackBG = styled.div`
 `;
 
 
-const EditThumnail = () => {
+const EditThumnail = ({memberData}) => {
+    // 버튼 조작
+    const [btnOpen, setBtnOpen] = useState(false);
+    const handleMoreBtn = () => {
+        setBtnOpen(!btnOpen)}
+    const [btnOpen2, setBtnOpen2] = useState(false);
+    const handleMoreBtn2 = () => {
+        setBtnOpen2(!btnOpen2)}
 
-    const [image, setImage] = useState({ // 이미지 추가부분
+    // 상태값을 분리
+    const [profileImage, setProfileImage] = useState({
         image_file: null,
-        image_url: null
+        previewUrl: null,
+    });
+  
+    const [backgroundImage, setBackgroundImage] = useState({
+        image_file: null,
+        previewUrl: null,
+    });
+  
+// 프로필 이미지 미리보기
+const previewProfileImage = (e) => {
+    e.preventDefault();
+    const fileReader = new FileReader();
+    if (e.target.files[0]) {
+      fileReader.readAsDataURL(e.target.files[0]);
+    }
+    fileReader.onload = () => {
+      setProfileImage({
+        image_file: e.target.files[0],
+        previewUrl: fileReader.result,
       });
-      
-      const [previewUrl, setPreviewUrl] = useState(""); // 이미지 미리보기
+    };
+  };
   
-      // 이미지 미리보기
-      const previewImage = (e) => {
-        e.preventDefault();
-    
-        const fileReader = new FileReader();
-        if (e.target.files[0]) {
-          fileReader.readAsDataURL(e.target.files[0]);
-        }
-        fileReader.onload = () => {
-          setPreviewUrl(fileReader.result);
-          setImage({
-            image_file: e.target.files[0],
-            previewUrl: fileReader.result,
-          });
-        };
-      };
+  // 배경 이미지 미리보기
+  const previewBackgroundImage = (e) => {
+    e.preventDefault();
+    const fileReader = new FileReader();
+    if (e.target.files[0]) {
+      fileReader.readAsDataURL(e.target.files[0]);
+    }
+    fileReader.onload = () => {
+      setBackgroundImage({
+        image_file: e.target.files[0],
+        previewUrl: fileReader.result,
+      });
+    };
+  };
   
-      // 이미지 업로드 함수
-      const uploadProfileImage = async () => {
-        let imageUrl = ""; // 이미지 URL 초기값
-        
-        if (image && image.image_file) {
-          // 이미지가 선택된 경우에만 업로드 로직 수행
-          const storageRef = storage.ref();
-          const fileRef = storageRef.child(`profile_images/${image.image_file.name}`);
-      
-          try {
-            // 이미지 업로드
-            await fileRef.put(image.image_file);
-            imageUrl = await fileRef.getDownloadURL();
-            setImage({ ...image, image_url: imageUrl }); // 업로드한 이미지의 URL을 상태에 저장
-          } catch (error) {
-            console.log(error);
-            alert("이미지 업로드 중 오류가 발생했습니다.");
-            return;
-          }
-        }
-      };
+  // 프로필 이미지 업로드
+  const uploadProfileImage = async () => {
+    let imageUrl = "";
+    if (profileImage && profileImage.image_file) {
+      const storageRef = storage.ref();
+      const fileRef = storageRef.child(`profile_images/${profileImage.image_file.name}`);
+      try {
+        await fileRef.put(profileImage.image_file);
+        imageUrl = await fileRef.getDownloadURL();
+        setProfileImage({ ...profileImage, image_url: imageUrl });
+      } catch (error) {
+        console.log(error);
+        alert("이미지 업로드 중 오류가 발생했습니다.");
+        return;
+      }
+    }
+  };
   
+  // 배경 이미지 업로드
+  const uploadBackgroundImage = async () => {
+    let imageUrl = "";
+    if (backgroundImage && backgroundImage.image_file) {
+      const storageRef = storage.ref();
+      const fileRef = storageRef.child(`profile_images/${backgroundImage.image_file.name}`);
+      try {
+        await fileRef.put(backgroundImage.image_file);
+        imageUrl = await fileRef.getDownloadURL();
+        setBackgroundImage({ ...backgroundImage, image_url: imageUrl });
+      } catch (error) {
+        console.log(error);
+        alert("이미지 업로드 중 오류가 발생했습니다.");
+        return;
+      }
+    }
+  };
+  
+
 
     return (
-        <Container>
-            <div className='Thumnail' >
+        <>
+          { memberData &&
+            <Container>
+              <div className='Thumnail' >
                 <BlackBG/>
+                <img src={ backgroundImage.previewUrl ? backgroundImage.previewUrl : memberData.backgroundImg } alt="Background" />
 
-                <img src={previewUrl} alt="" />
-                <Tooltip title="배경이미지" arrow placement="right">
-                    <label>
+                <div className='btnBox'>
+                  <label style={{backgroundColor:'#e5e5e5', color:'#727272'}}>
+                    <MoreVertIcon onClick={handleMoreBtn}/> 
+                  </label>
+                  { btnOpen && (
+                    <>
+                    <Tooltip title="배경이미지" arrow placement="right">
+                      <label style={{ marginTop: '0.5rem'}}>
                         <AddPhotoAlternateIcon/>
-                        <input type="file" onChange={previewImage} name="file" class="inputfile" style={{ display: 'none' }} />
-                    </label>
-                </Tooltip>
-            </div>
+                        <input type="file" onChange={previewBackgroundImage} name="file" class="inputfile" style={{ display: 'none' }} />
+                      </label>
+                    </Tooltip>
+                    <Tooltip title="저장" arrow placement="right">
+                      <label style={{ marginTop: '0.5rem'}}>
+                        <UploadIcon onClick={uploadBackgroundImage}/>
+                      </label>
+                    </Tooltip>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="profileBlock">
+                <div className='profileIcon'>
+                  <BlackBG/>
+                <img src={ profileImage.previewUrl ? profileImage.previewUrl : memberData.profileImg } alt="Profile" />
 
-            <div className='profileIcon'>
-                <BlackBG/>
-                <img src={profileImage[0]} alt="" />
-                <Tooltip title="프로필" arrow placement="top-end">
-                    <label>
+                </div>
+                <div className='btnBox2'>
+                  <label>
+                    <MoreHorizIcon onClick={handleMoreBtn2}/> 
+                  </label>
+                  { btnOpen2 && (
+                    <>
+                    <Tooltip title="프로필사진" arrow placement="top">
+                      <label >
                         <AddPhotoAlternateIcon/>
-                        <input type="file" name="file" class="inputfile" style={{ display: 'none' }} />
-                    </label>
-                </Tooltip>
-
-            </div>
-
-        </Container>
-    );
-};
+                        <input type="file" onChange={previewProfileImage} name="file" class="inputfile" style={{ display: 'none' }} />
+                      </label>
+                    </Tooltip>
+                    <Tooltip title="저장" arrow placement="top">
+                      <label>
+                        <UploadIcon onClick={uploadProfileImage}/>
+                      </label>
+                    </Tooltip>
+                    </>
+                  )}
+                </div>
+              </div>
+            </Container>
+          }
+        </>
+      );
+    };
 
 export default EditThumnail;

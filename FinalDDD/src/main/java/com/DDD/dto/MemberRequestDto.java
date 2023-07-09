@@ -34,11 +34,13 @@ public class MemberRequestDto { // DB 넣어질 요소
                 .tel(tel)
                 .authority(Authority.ROLE_USER)
                 .isActive(true)
-                .introduce(introduce)
-                .profileImg(profileImg)
-                .backgroundImg(backgroundImg)
+                .instagram(instagram)
+                .profileImg("/default-profile.png")
+                .backgroundImg("/default-BG.jpg")
                 .build();
     }
+
+
     public UsernamePasswordAuthenticationToken toAuthentication() {
         return new UsernamePasswordAuthenticationToken(email, password);
     }

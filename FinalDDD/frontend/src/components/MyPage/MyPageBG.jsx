@@ -43,14 +43,14 @@ const Modal = styled.div`
 const MyPageBG = () => {
   let memberId = Functions.getMemberId();
 
-  const { setShowPage, showPage, memberData, setMemberData, myDiaryData, setMyDiaryData } =
-    useStore();
+  const { memberData, showPage, setMemberData, setMyDiaryData } = useStore();
 
   useEffect(() => {
     const memberFetchDate = async () => {
       const response = await MyPageApi.info(memberId);
       console.log(response);
       setMemberData(response.data);
+      console.log('함수안에있음 콘솔 : ' + memberData)
     };
     memberFetchDate();
   }, [showPage]);
@@ -65,13 +65,16 @@ const MyPageBG = () => {
     diaryFetchDate();
   }, [showPage]);
 
+  console.log('밖에있는 콘솔 : ' + memberData)
+
   return (
     <>
+
       <Container style={showPage === "다이어리" ? { height: "auto" } : null}>
         <Modal>
-          {showPage === "마이페이지" && (
+          {showPage === "마이페이지" &&  (
             <>
-              <EditThumnail />
+              {memberData && <EditThumnail memberData={memberData}/>}
               <SNSBox />
               <Introduce />
             </>
@@ -108,6 +111,8 @@ const MyPageBG = () => {
           )}
         </Modal>
       </Container>
+
+      
     </>
   );
 };

@@ -11,6 +11,9 @@ const useStore = create((set) => ({
     myDiaryData : [],
     setMyDiaryData :(data) => set((state) => ({myDiaryData : data})),
 
+    profileImg : [],
+    setProfileImg : (data) => set((state) => ({profileImg : data})),
+
 
 }));
 
