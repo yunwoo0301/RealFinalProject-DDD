@@ -85,6 +85,12 @@ p{
     flex-direction: column;
     margin: 1rem 0;
   }
+  .errorMsg{
+    font-size: 0.5rem;
+    width: 100%;
+    text-align: right;
+    color: red;
+  }
 `;
 
 const DeliveryMethodWrapper = styled.div`
@@ -113,7 +119,7 @@ width: 100%;
 `;
 
 const PaymentMethodWrapper = styled.div`
-  
+
   width: 100%;
   flex-direction: column;
   display: flex;
@@ -155,16 +161,16 @@ const RightContainer =styled.div`
 
 const DeliveryMethodRadio = styled.input`
   margin: 1rem;
-  
+
 `;
 
 
 const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
   const getId = window.localStorage.getItem("memberId");
-  
+
   const [bookedNo, setBookedNo] = useState('');
   window.localStorage.setItem("bookedNo", bookedNo);
-  
+
   // 예매 관련 상태 및 함수
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
@@ -182,7 +188,7 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
     price = reservationData.exhibitPrice;
   }
   const [totalPrice, setTotalPrice] = useState(price * quantity);
-  
+
   const [buyerInfo, setBuyerInfo] = useState({
     name: "",
     contact: "",
@@ -215,11 +221,36 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
   };
 
   // 예매자 정보
+  const [errorMsg, setErrorMsg] = useState("");
   const handleBuyerInfoChange = (e) => {
     const { name, value } = e.target;
+
+    let formattedValue = value;
+
+    if (name === "contact") {
+      // 전화번호 숫자만 입력받도록 유효성 검사
+      const tel = value.replace(/[^0-9]/g, "");
+
+      // 전화번호 11자리까지 제한
+      const trimmedValue = tel.slice(0, 11);
+
+      // 자동으로 전화번호에 하이픈 입력
+      formattedValue = trimmedValue.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+
+      // 숫자가 아닌 경우에 경고메세지
+      if (value !== tel) {
+        setErrorMsg("숫자 11자리만 입력해주세요");
+      } else {
+        setErrorMsg("");
+      }
+    } else {
+      // 이름과 이메일은 숫자가 아닌 문자열이므로 유효성 검사를 수행하지 않습니다.
+      setErrorMsg("");
+    }
+
     setBuyerInfo((prevBuyerInfo) => ({
       ...prevBuyerInfo,
-      [name]: value,
+      [name]: formattedValue,
     }));
   };
 
@@ -358,11 +389,13 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
               name="name"
               value={buyerInfo.name}
               onChange={handleBuyerInfoChange}/></span>
-        <span><p>연락처</p><input
-              type="text"
+        <span><p>연락처</p>
+        <input type="text"
               name="contact"
               value={buyerInfo.contact}
-              onChange={handleBuyerInfoChange} /></span>
+              onChange={handleBuyerInfoChange} />
+              </span>
+        <span>{errorMsg && <p className="errorMsg">{errorMsg}</p>}</span>
         <span><p>이메일</p><input
               type="text"
               name="email"
