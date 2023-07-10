@@ -197,9 +197,7 @@ public class FreeBoardService {
             FreeBoardDto freeBoardDto = new FreeBoardDto();
             freeBoardDto.setBoardNo(freeBoard.getBoardNo());
             freeBoardDto.setCategory(freeBoard.getCategory());
-            freeBoardDto.setRegion(freeBoard.getRegion());
             freeBoardDto.setTitle(freeBoard.getTitle());
-            freeBoardDto.setImage(freeBoard.getImage());
             freeBoardDto.setWriteDate(freeBoard.getWriteDate());
 
 

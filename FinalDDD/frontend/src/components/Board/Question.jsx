@@ -121,13 +121,20 @@ const Question = () => {
 
     const navigate = useNavigate();
 
-    const handleSearch = (boardList) => {
-        setBoardList(boardList); // 검색 결과를 상태로 설정
-    };
-
     //  값을 불러오기위해 선언, 목록보기
     const [boardList, setBoardList] = useState([]); // boardList 불러오기
-   
+    const [noResults, setNoResults] = useState(false);
+
+    const handleSearch = (boardList) => {
+        if (boardList.length === 0) {
+            setNoResults(true);
+        } else {
+            setBoardList(boardList); // 검색 결과를 상태로 설정
+            setNoResults(false);
+            setCurrentPage(0);
+        }
+    };
+
 
     //보여질 페이지 Item 개수(페이지네이션)
     const ITEMS_PAGE = 13;
@@ -140,7 +147,7 @@ const Question = () => {
     const offset = currentPage * ITEMS_PAGE; // 현재 페이지에서 보여줄 아이템의 시작 인덱스
     const currentPageData = boardList.slice(offset, offset + ITEMS_PAGE);
     const pageCount = Math.ceil(boardList.length / ITEMS_PAGE); // 전체 페이지수
-      
+
 
     // 자유게시판(boardList) 질문하기 목록 불러오기
     useEffect(() => {
@@ -154,7 +161,7 @@ const Question = () => {
             console.log(error);
           }
         };
-    
+
         fetchData();
       }, []);
 
@@ -165,58 +172,74 @@ const Question = () => {
         const getId = window.localStorage.getItem("memberId");
         console.log(isLogin);
         console.log(getId);
-        
+
         if (isLogin === "true") {
             const link = "write/";
             navigate(link);
         } else {
             alert("로그인 완료 시 작성 진행 가능합니다.");
+            navigate('/login'); // 로그인 화면으로 이동 ** 추가
         }
     };
 
-    
+
     return (
         <BoardContainer>
-            <BoardSearch onSearch={handleSearch} />
-            <Section id="board" className="section">
-                <div className="board_box">
-                <table>
-                    <tbody>
-                            <tr>
-                                <th>글번호</th>
-                                <th>카테고리</th>
-                                <th>제목</th>
-                                <th>작성자</th>
-                                <th>조회수</th>
-                                <th>작성일</th>
-                            </tr>
-                            {currentPageData.map((boardList) => (
-                            <tr key={boardList.boardNo}>
-                                <td>{boardList.boardNo}</td>
-                                <td>{boardList.category}</td>
-                                <td>
-                                    {/* 게시판 상세조회로 이동 */}
-
-                                    <Link to={`/boardList/boardView/${boardList.boardNo}`} 
-                                    className="boardView_link">{boardList.title}
-                                    </Link>
-                                </td>
-                                <td>{boardList.author}</td>
-                                <td>{boardList.views}</td>
-
-                                {/* 작성일자 "yyyy-mm-dd" 형식으로 문자열 반환 */}
-                                <td>{new Date(boardList.writeDate).toISOString().split("T")[0]}</td>
-                            </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                <PageNation pageCount={pageCount} onPageChange={handlePageClick}/>
-                <div className="writebtn">
-                    <button onClick={onClickToWrite}>글쓰기</button>
-                </div>
-            </Section>
-        </BoardContainer>
+        <BoardSearch onSearch={handleSearch} />
+        <Section id="board" className="section">
+          <div className="board_box">
+            <table>
+              <tbody>
+                <tr>
+                  <th>글번호</th>
+                  <th>카테고리</th>
+                  <th>제목</th>
+                  <th>작성자</th>
+                  <th>조회수</th>
+                  <th>작성일</th>
+                </tr>
+                {noResults && (
+                  <tr> {/* 검색 결과가 없을 때 */}
+                    <td colSpan="6">
+                      <div className="SearchEmptyMessage">
+                        <p>😦조회된 검색 결과가 없습니다.😦</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {!noResults && // 추가: 검색 결과가 있을 때에만 매핑
+                  currentPageData.map((boardList) => (
+                    <tr key={boardList.boardNo}>
+                      <td>{boardList.boardNo}</td>
+                      <td>{boardList.category}</td>
+                      <td>
+                        <Link
+                          to={`/boardList/boardView/${boardList.boardNo}`}
+                          className="boardView_link"
+                        >
+                          {boardList.title}
+                        </Link>
+                      </td>
+                      <td>{boardList.author}</td>
+                      <td>{boardList.views}</td>
+                      <td>
+                        {new Date(boardList.writeDate).toISOString().split("T")[0]}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+          {!noResults && ( // 추가: 검색 결과가 있을 때에만 페이지네이션 및 글쓰기 버튼 표시
+            <>
+              <PageNation pageCount={pageCount} onPageChange={handlePageClick} />
+              <div className="writebtn">
+                <button onClick={onClickToWrite}>글쓰기</button>
+              </div>
+            </>
+          )}
+        </Section>
+      </BoardContainer>
     );
 }
 

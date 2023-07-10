@@ -179,6 +179,7 @@ const Card = () => {
             navigate(link);
         } else {
             alert("로그인 완료 시 작성 진행 가능합니다.");
+            navigate('/login'); // 로그인 화면으로 이동 ** 추가
         }
     };
 

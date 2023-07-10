@@ -92,15 +92,11 @@ public class FreeBoardController {
     }
 
 
-    // 자유게시판 검색 키워드에 해당하는 리스트 불러오기
+    // 자유게시판 검색 키워드에 해당하는 리스트 불러오기(** 예외사항 추가 수정)
     @GetMapping("/searchList")
     public ResponseEntity<List<FreeBoardDto>> searchListLoad(@RequestParam String keyword) {
-        List<FreeBoardDto> freeBoardList = freeBoardService.searchDataLoad("%%" + keyword + "%%");
-        if (!freeBoardList.isEmpty()) {
-            return new ResponseEntity<>(freeBoardList, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        List<FreeBoardDto> freeBoardList = freeBoardService.searchDataLoad(keyword);
+        return new ResponseEntity<>(freeBoardList, HttpStatus.OK);
     }
 
 
