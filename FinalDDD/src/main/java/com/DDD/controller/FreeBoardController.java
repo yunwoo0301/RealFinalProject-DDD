@@ -51,19 +51,26 @@ public class FreeBoardController {
 
     // 게시글 수정(최종)
     @PutMapping("/boardView/{boardNo}")
-    public ResponseEntity<Boolean> editBoards(@PathVariable Long boardNo, @RequestBody FreeBoardDto freeBoardDto) {
+    public ResponseEntity<Boolean> editBoards(@PathVariable Long boardNo, @RequestBody Map<String, Object> boardData) {
         try {
-            boolean result = freeBoardService.updateBoards(boardNo, freeBoardDto);
+            String category = (String) boardData.get("category");
+            String region = (String) boardData.get("region");
+            String title = (String) boardData.get("title");
+            String contents = (String) boardData.get("contents");
+            String image = (String) boardData.get("image");
+
+            boolean result = freeBoardService.updateBoards(boardNo, category, region, title, contents, image);
 
             if (result) {
                 return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
             }
-        } catch (EntityNotFoundException e) { // 게시물 존재 여부에 따른 예외처리
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
     }
+
 
 
     // 게시글 삭제(최종)

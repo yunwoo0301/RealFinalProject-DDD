@@ -123,23 +123,26 @@ public class FreeBoardService {
     }
 
 
-    // 게시글 수정(최종) + 작성자 인증 제외(프엔 측 작성자 본인만 해당 페이지 접근 가능하도록 조건식 적용)
-    public boolean updateBoards(Long boardNo, FreeBoardDto freeBoardDto) {
-        FreeBoard freeBoard = freeBoardRepository.findById(boardNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+    // 게시글 수정(최종) + 작성자 인증 제외(프엔 측 작성자 본인만 해당 페이지 접근 가능하도록 조건식 적용) 2차 작업
+    public boolean updateBoards(Long boardNo, String category, String region, String title, String contents, String image) {
+        try {
+            FreeBoard freeBoard = freeBoardRepository.findById(boardNo)
+                    .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
 
-        // 게시글 정보 업데이트
-        freeBoard.setCategory(freeBoardDto.getCategory());
-        freeBoard.setRegion(freeBoardDto.getRegion());
-        freeBoard.setTitle(freeBoardDto.getTitle());
-        freeBoard.setImage(freeBoardDto.getImage());
-        freeBoard.setContents(freeBoardDto.getContents());
+            freeBoard.setCategory(category);
+            freeBoard.setRegion(region);
+            freeBoard.setTitle(title);
+            freeBoard.setContents(contents);
+            freeBoard.setImage(image); // images 리스트를 하나의 문자열로 합치기
+            freeBoardRepository.save(freeBoard);
 
-        // 게시글 저장
-        freeBoardRepository.save(freeBoard);
-
+        } catch (Exception e) {
+            System.out.println("게시글 수정 중 오류가 발생했습니다: " + e.getMessage()); // 로깅 추가
+            return false;
+        }
         return true;
     }
+
 
 
     // 게시글 삭제(최종) + 작성자 인증 제외(프엔 측 작성자 본인만 실행하도록 조건식 적용)
