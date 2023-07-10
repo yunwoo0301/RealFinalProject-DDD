@@ -74,7 +74,12 @@ const Container = styled.div`
                 width: 50%;
                 /* background-color: aqua; */
                 float: right;
+
             }
+            .text{
+                color: ${({ isPast }) => (isPast ? 'black' : 'red')};
+                }
+
         }
     }
 `;
@@ -82,6 +87,7 @@ const Container = styled.div`
 
 
 const ReservedDetail = ({exhibitionData, currentPageData, setExhibitionData}) => {
+    const currentDate = new Date();
 
     // 예약 총 개수
     const totalRecords = exhibitionData.length;
@@ -141,7 +147,9 @@ const ReservedDetail = ({exhibitionData, currentPageData, setExhibitionData}) =>
                 {currentPageData.map((e) => (
                         <Container
                             key={e.bookingId}
-                            onClick={() => openMobileTicket(e.bookingId)}>
+                            onClick={() => openMobileTicket(e.bookingId)}
+                            isPast={new Date(e.visitDate) < currentDate} // 방문일이 이미 지났는지 여부에 따라 스타일 변경
+                            >
                             <div className="showImage"><img src={e.imgUrl} alt='exhibition' /></div>
                             <div className='justfyTop'>
                                 <div className='leftBox'>
@@ -149,7 +157,7 @@ const ReservedDetail = ({exhibitionData, currentPageData, setExhibitionData}) =>
                                     <div><span>전시관</span>{e.exhibitLocation}</div>
                                     <div className='flexRow'>
                                         <div className='row2'><span>관람인원</span>{e.paymentDTO.paymentCnt}</div>
-                                        <div className='row2'><span>관람일시</span>{e.visitDate}</div>
+                                        <div className='row2 text'><span>관람일시</span>{e.visitDate}</div>
                                     </div>
                                     <div className='flexRow'>
                                         <div className='row2'><span>금액</span>{e.paymentDTO.paidPrice}</div>

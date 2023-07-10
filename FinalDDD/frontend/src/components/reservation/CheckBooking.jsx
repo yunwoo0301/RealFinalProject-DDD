@@ -236,7 +236,7 @@ const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, c
       useEffect(() => {
         const visitDate = new Date(reservationDatas.visitDate).setHours(0, 0, 0, 0);
         const today = new Date().setHours(0, 0, 0, 0);
-        if (visitDate === today) {
+        if (visitDate <= today) {
             setIsVisitDateToday(false);
         } else {
             setIsVisitDateToday(true);
