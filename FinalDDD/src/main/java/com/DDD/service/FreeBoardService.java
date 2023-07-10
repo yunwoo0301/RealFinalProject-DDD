@@ -123,7 +123,7 @@ public class FreeBoardService {
     }
 
 
-    // 게시글 수정(최종) + 작성자 인증 제외(프엔 측 작성자 본인만 해당 페이지 접근 가능하도록 조건식 적용) 2차 작업
+    // 게시글 수정(최종) + 작성자 인증 제외(프엔 측 작성자 본인만 해당 페이지 접근 가능하도록 조건식 적용)
     public boolean updateBoards(Long boardNo, String category, String region, String title, String contents, String image) {
         try {
             FreeBoard freeBoard = freeBoardRepository.findById(boardNo)
@@ -133,7 +133,7 @@ public class FreeBoardService {
             freeBoard.setRegion(region);
             freeBoard.setTitle(title);
             freeBoard.setContents(contents);
-            freeBoard.setImage(image); // images 리스트를 하나의 문자열로 합치기
+            freeBoard.setImage(image);
             freeBoardRepository.save(freeBoard);
 
         } catch (Exception e) {
