@@ -14,6 +14,17 @@ const ExhibitContainer = styled.div`
     .title {
         margin-left: 3rem;
         text-decoration: underline;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        button{
+          width: 4rem;
+          height: 2rem;
+          background-color: white;
+          border: none;
+          cursor: pointer;
+        }
     }
     table {
         width: 70vw;
@@ -64,6 +75,7 @@ background-color: #f4f8ff;
 `;
 
 const ExhibitManage = () => {
+  const [newData, setNewData] = useState('');
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
@@ -85,19 +97,28 @@ const ExhibitManage = () => {
     setSelectedEndDate(date);
   };
 
+
   // 전시리스트 불러오기
+  const exhibitions = async () => {
+    try {
+      const exhibitListData = await DDDApi.exhibitionList();
+      setExhibitionList(exhibitListData.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
-    const exhibitions = async () => {
-      try {
-        const exhibitListData = await DDDApi.exhibitionList();
-        setExhibitionList(exhibitListData.data);
-        console.log("전시회 이름: " + exhibitListData.data[0].exhibitName);
-      } catch (e) {
-        console.log(e);
-      }
-    };
     exhibitions();
   }, []);
+
+    // 전시리스트 리셋
+    const resetExhibitions = async () => {
+      const resetData = await DDDApi.resetExhibitions();
+      setNewData(resetData.data);
+      if(newData){
+        exhibitions();
+      }
+    }
 
 
   const handlePageChange = (selectedPage) => {
@@ -161,7 +182,10 @@ const ExhibitManage = () => {
 
   return (
     <ExhibitContainer>
-      <h3 className="title">전시 관리</h3>
+      <div className="title">
+      <h3>전시 관리</h3>
+      <button onClick={resetExhibitions}>Reset</button>
+      </div>
       <div className="table-container">
         <div className="select">
           <select
@@ -177,6 +201,7 @@ const ExhibitManage = () => {
             <option value="전라">전라/제주</option>
             <option value="경상도">경상도</option>
           </select>
+
           <div className="date-container">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
