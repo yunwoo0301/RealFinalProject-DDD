@@ -74,7 +74,7 @@ const MyPageBG = () => {
         <Modal>
           {showPage === "마이페이지" &&  (
             <>
-              {memberData && <EditThumnail memberData={memberData}/>}
+              {memberData && <Thumnail memberData={memberData}/>}
               <SNSBox />
               <Introduce />
             </>

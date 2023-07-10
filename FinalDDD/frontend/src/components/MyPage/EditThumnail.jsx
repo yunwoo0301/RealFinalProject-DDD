@@ -8,6 +8,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Functions from '../../util/Functions';
 import { MyPageApi } from '../../api/MyPageApi';
+import AlertModal from "../../util/Alert";
+
 
 const Container = styled.div`
     /* background-color: aqua; */
@@ -200,6 +202,8 @@ const previewProfileImage = (e) => {
       
         if (response.status === 200) {
           console.log('프로필 이미지 업데이트 성공');
+          setOpen(true);
+          setTimeout(handleClose, 1000);
         } else {
           console.log('프로필 이미지 업데이트 실패');
         }
@@ -228,6 +232,8 @@ const previewProfileImage = (e) => {
       
         if (response.status === 200) {
           console.log('프로필 이미지 업데이트 성공');
+          setOpen(true);
+          setTimeout(handleClose, 1000);
         } else {
           console.log('프로필 이미지 업데이트 실패');
         }
@@ -237,6 +243,10 @@ const previewProfileImage = (e) => {
         return;
       }
     }
+  };
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
   };
 
     return (
@@ -291,6 +301,7 @@ const previewProfileImage = (e) => {
                         <UploadIcon onClick={uploadProfileImage}/>
                       </label>
                     </Tooltip>
+                    {open && <AlertModal />}
                     </>
                   )}
                 </div>

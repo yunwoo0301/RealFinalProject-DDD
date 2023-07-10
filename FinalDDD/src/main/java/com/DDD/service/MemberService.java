@@ -6,6 +6,7 @@ import com.DDD.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +23,20 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    // isActive 가져오기
+    public boolean getIsActive(Long memberId) {
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+
+        // If no member is present, throw an exception
+        if (!memberOptional.isPresent()) {
+            throw new UsernameNotFoundException("No user found with email: " + memberId);
+        }
+
+        // If a member is present, return its isActive status
+        Member member = memberOptional.get();
+        return member.isActive();
+    }
 
 
     // 이메일 중복 체크

@@ -35,13 +35,32 @@ public class AuthService {
         return MemberResponseDto.of(memberRepository.save(member));
     }
 
+    public boolean getIsActive(Long memberId) {
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+
+        // If no member is present, throw an exception
+        if (!memberOptional.isPresent()) {
+            throw new UsernameNotFoundException("No user found with email: " + memberId);
+        }
+
+        // If a member is present, return its isActive status
+        Member member = memberOptional.get();
+        return member.isActive();
+    }
+
     public TokenDto login(MemberRequestDto requestDto) {
         UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
-        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
         Long memberId = getMemberIdByEmail(requestDto.getEmail());
+        boolean isActive = getIsActive(memberId);
+        if (!isActive) {
+            throw new RuntimeException("This account is inactive.");
+        }
 
+        // 사용자가 활성 상태라면 인증을 진행합니다.
+        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
         return tokenProvider.generateTokenDto(authentication, memberId); // memberId 인자 추가
     }
+
 
     // 회원 삭제
     public void delete(MemberRequestDto requestDto) {

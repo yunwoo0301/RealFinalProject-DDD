@@ -52,6 +52,9 @@ public class Member {
 //    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private List<FreeBoard> freeBoardList = new ArrayList<>();
 
+    public boolean isActive() {
+        return this.isActive;
+    }
 
     @Builder // * .메소드 형태로 부르는 자바문법과 달리(생성자) 매개변수 전달할 때 파라미터 순서를 지키지 않아도 되는 장점
     public Member( String email, String name, String password, Authority authority, String tel, String nickname, String instagram, String introduce, String profileImg, String backgroundImg, boolean isActive) {

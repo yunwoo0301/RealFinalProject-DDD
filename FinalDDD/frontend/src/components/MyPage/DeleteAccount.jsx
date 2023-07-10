@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MyPageApi } from '../../api/MyPageApi';
 import  Functions from '../../util/Functions'
+import ConfirmModal from '../../util/ConfirmModal';
+import { FcCancel } from 'react-icons/fc';
+import { Backdrop } from '@mui/material';
 
 const Container = styled.div`
     width: 60%;
@@ -73,7 +76,7 @@ const Container = styled.div`
     }
     .btnBlock{
         height: 6rem;
-        width: 100%;
+        width: 80%;
         display: flex;
         justify-content: center;
         /* background-color: red; */
@@ -95,11 +98,23 @@ const Container = styled.div`
         }
     }
 `;
+const ModalBodyStyle = styled.div`
+.warn{
+    font-size: 0.8rem;
+    color: red;
+    line-height: 1.2;
+}
+
+`
 
 const DeleteAccount = () => {
     const memberId = Functions.getMemberId();
     const [inputEmail, setInputEmail ] = useState();
     const [inputPwd, setInputPwd ] = useState();
+    console.log('이메일 ' + inputEmail)
+    console.log('패스워드' + inputPwd)
+
+
 
     const onChangeEmail = (e) => {
         const emailCurrent = e.target.value;
@@ -109,6 +124,7 @@ const DeleteAccount = () => {
     const onChangePwd = (e) => {
         const pwdCurrent = e.target.value;
         setInputPwd(pwdCurrent);
+
       };
 
       const onClickDelete = async(inputEmail, inputPwd ) => {
@@ -125,6 +141,27 @@ const DeleteAccount = () => {
             console.log(e);
           }
     }
+    const [checkAgain, setCheckAgain] = useState(false);
+
+    
+    const deleteProps  ={
+        title: "회원탈퇴",
+        body: (
+        <ModalBodyStyle>
+            정말 탈퇴하시겠습니까?  <br />
+            <div className="warn">삭제하신 ID는 재사용하실 수 없습니다. <br/>
+            </div>
+            <div className="checkBox">
+
+            </div>
+        </ModalBodyStyle>
+        ),
+        button: [
+        <button onClick={()=>setCheckAgain(false)}>닫기</button>,
+        <button onClick={() => onClickDelete(inputEmail, inputPwd)}>탈퇴하기</button>
+        ],
+        icon: <FcCancel/>
+      }
 
 
     return (
@@ -148,9 +185,23 @@ const DeleteAccount = () => {
                     </div>
                 </div>
                 <div className="btnBlock">
-                    <button onClick={onClickDelete}>탈퇴하기</button>
+                    <button onClick={()=>{setCheckAgain(true) }}>탈퇴하기</button>
                     <button>돌아가기</button>
                 </div>
+                <Backdrop
+                        sx={{
+                            backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                            opacity:'0.5',
+                            color: 'black',
+                            zIndex: (theme) => theme.zIndex.drawer + 1,
+                            top: 0, // 팝업을 상단에 위치
+                        }}
+                        open={checkAgain}
+                        onClick={()=>{setCheckAgain(false) }}
+                        >
+                    {checkAgain && <ConfirmModal props={deleteProps}/>}
+                </Backdrop>
+
                 
             </Container>
             
@@ -159,3 +210,8 @@ const DeleteAccount = () => {
 };
 
 export default DeleteAccount;
+
+{/* <div className="btnBlock">
+<button onClick={onClickDelete}>탈퇴하기</button>
+<button>돌아가기</button>
+</div> */}
