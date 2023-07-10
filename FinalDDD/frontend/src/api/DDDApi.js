@@ -26,11 +26,18 @@ const DDDApi = {
         return await axios.post( "/boardList/write", postObj);
     },
 
-    // 게시글 수정
-    editBoards: async (boardNo, updateBoard) => {
-        return await axios.put(`/boardList/boardView/${boardNo}`, updateBoard);
+    // 게시글 수정 **
+    editBoards: async (boardNo, category, region, title, contents, imageUrl) => {
+        const editObj = {
+            boardNo: boardNo,
+            category: category,
+            region: region,
+            title: title,
+            contents: contents,
+            image: imageUrl
+        };
+        return await axios.post(`/boardList/boardView/${boardNo}`, editObj);
     },
-
 
     // 게시글 삭제
     delBoards: async (boardNo) => {

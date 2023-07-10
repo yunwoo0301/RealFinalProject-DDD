@@ -98,12 +98,12 @@ const Section = styled.div`
     .dateview {
         display: flex;
         font-weight: bold;
-        margin-right : 4em;
+        margin-right : 4.5em;
 
         .write_date {
             flex:1;
             text-align: right;
-            margin-right: 50px;
+            margin-right: 1em;
             margin-bottom:2px;
         }
     }
@@ -281,13 +281,13 @@ const TextInfo = styled.div`
 
 
 const BoardView = () => {
-    const [boardView, setBoardView] = useState(null); // URL에서 boardNo를 가져옴(게시판목록)
     const params = useParams();  // url에서 boardNo를 가져오기 위해 uesParams() 사용
     let boardNo = params.no;
     const navigate = useNavigate();
+    const [boardView, setBoardView] = useState(null); // URL에서 boardNo를 가져옴(게시판목록)
     const [commentList, setCommentList] = useState([]); // 댓글용 추가
     const [nickname, setNickname] = useState(""); // 닉네임 초기값 수정
-
+    const [test, setTest] = useState(""); // 기본 이미지 불러오기용
 
 
 
@@ -305,79 +305,6 @@ const BoardView = () => {
 
     // 댓글 작성일자(연도-월-일-시간) 추출
     const formattedDate2 = new Date(boardView?.writeDate).toLocaleString();
-
-        // 본문 불러오기
-        useEffect(() => {
-            const boardViewLoad = async () => {
-                try {
-                    // 게시물 내용 불러오기
-                    const response = await DDDApi.getBoard(boardNo);
-                    if(response.status === 200) {
-                        const data = response.data;
-                        setBoardView(data); // 기존의 게시물 정보 설정
-
-                        // 댓글 내용 불러오기
-                        const commentData = data.comments;
-                        setCommentList(commentData);
-                        const rsp = await MyPageApi.info(getId); // localStorage 상에 닉네임 저장된 api 불러와서 재 렌더링
-                        setNickname(rsp.data.nickname);
-
-
-                        if (boardView && boardView.views != null) {
-                            setBoardView(prevState => ({
-                                ...prevState,
-                                views: prevState.views + 1
-                            }));
-                        }
-
-                    }
-
-                } catch (e) {
-                    console.log(e);
-                }
-            };
-            boardViewLoad();
-        }, [boardNo]);
-
-
-
-
-    // 게시글 삭제
-    const deleteBoard = async () => {
-        try {
-          const confirmed = window.confirm('게시글을 삭제하시겠습니까?');
-          if (!confirmed) {
-            return;
-          }
-
-          const response = await DDDApi.delBoards(boardNo);
-          console.log(response);
-
-          navigate('/boardList'); // 삭제 후 게시판 메인 이동
-        } catch (error) {
-          console.error(error);
-
-          if (error.response) {
-            // 서버로부터 오는 응답 에러 처리
-            console.log("error.response.data 내용 : " + error.response.data);
-            console.log("error.response.status 내용 : " + error.response.status);
-            console.log("error.response.headers 내용 : " + error.response.headers);
-          } else if (error.request) {
-            // 요청이 이루어졌으나 응답을 받지 못한 경우
-            console.log(error.request);
-          } else {
-            // 오류를 발생시킨 요청 설정을 처리하는 중에 오류가 발생한 경우
-            console.log('Error', error.message);
-          }
-          console.log(error.config);
-        }
-      };
-
-      const onClickDelete = () => {
-        deleteBoard();
-      };
-
-
 
 
     // 작성자 정보를 localStorage에 저장
@@ -420,6 +347,85 @@ const BoardView = () => {
     };
 
 
+
+
+    // 본문 불러오기
+    useEffect(() => {
+        const boardViewLoad = async () => {
+            try {
+                // 게시물 내용 불러오기
+                const response = await DDDApi.getBoard(boardNo);
+                if(response.status === 200) {
+                    const data = response.data;
+                    setBoardView(data); // 기존의 게시물 정보 설정
+
+                    // 댓글 내용 불러오기
+                    const commentData = data.comments;
+                    setCommentList(commentData);
+                    const rsp = await MyPageApi.info(getId); // localStorage 상에 닉네임 저장된 api 불러와서 재 렌더링
+                    setNickname(rsp.data.nickname);
+                    setTest(rsp.data.profileImg); // 기본프로필 이미지 불러오기
+
+
+                    if (boardView && boardView.views != null) {
+                        setBoardView(prevState => ({
+                            ...prevState,
+                            views: prevState.views + 1
+
+                        }));
+                    }
+
+                }
+
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        boardViewLoad();
+    }, [boardNo]);
+
+
+
+
+    // 게시글 삭제
+    const deleteBoard = async () => {
+        try {
+          const confirmed = window.confirm('게시글을 삭제하시겠습니까?');
+          if (!confirmed) {
+            return;
+          }
+
+          const response = await DDDApi.delBoards(boardNo);
+          console.log(response);
+
+          navigate('/boardList'); // 삭제 후 게시판 메인 이동
+        } catch (error) {
+          console.error(error);
+
+          if (error.response) {
+            // 서버로부터 오는 응답 에러 처리
+            console.log("error.response.data 내용 : " + error.response.data);
+            console.log("error.response.status 내용 : " + error.response.status);
+            console.log("error.response.headers 내용 : " + error.response.headers);
+
+        } else if (error.request) {
+            // 요청이 이루어졌으나 응답을 받지 못한 경우
+            console.log(error.request);
+
+        } else {
+            // 오류를 발생시킨 요청 설정을 처리하는 중에 오류가 발생한 경우
+            console.log('Error', error.message);
+
+        }
+
+        console.log(error.config);
+
+        }
+    };
+
+
+
+
     // 수정하기 버튼 이동을 위한 추가사항
     const [showModal, setShowModal] = useState(false);
     const [comment, setComment] = useState("");
@@ -436,28 +442,31 @@ const BoardView = () => {
     };
 
 
-        // 댓글 삭제 함수
-        const deleteComment = async (commentNo) => {
-            try {
-                const confirmed = window.confirm("댓글 삭제 시 내용은 저장되지 않습니다. 정말로 삭제하시겠습니까?");
-                if (!confirmed) {
-                    return; // 삭제 취소
-                }
 
-                const response = await DDDApi.commentDelete(commentNo);
-                if (response.status === 200) {
-                    const updatedBoard = { ...boardView }; // 기존의 게시물 정보 복사
-                    updatedBoard.comments = updatedBoard.comments.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
-                    setBoardView(updatedBoard); // 업데이트된 게시물 정보(기존)
-                    const updatedCommentList = commentList.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
-                    setCommentList(updatedCommentList); // 댓글 목록 업데이트
-                }
-                } catch (error) {
-                console.log(error);
-                }
-            };
+    // 댓글 삭제 함수
+    const deleteComment = async (commentNo) => {
+        try {
+            const confirmed = window.confirm("댓글 삭제 시 내용은 저장되지 않습니다. 정말로 삭제하시겠습니까?");
+            if (!confirmed) {
+                return; // 삭제 취소
+            }
 
+            const response = await DDDApi.commentDelete(commentNo);
+            if (response.status === 200) {
+                const updatedBoard = { ...boardView }; // 기존의 게시물 정보 복사
+                updatedBoard.comments = updatedBoard.comments.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
+                setBoardView(updatedBoard); // 업데이트된 게시물 정보(기존)
+                const updatedCommentList = commentList.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
+                setCommentList(updatedCommentList); // 댓글 목록 업데이트
+            }
+            } catch (error) {
+            console.log(error);
+            }
+        };
 
+    const onClickDelete = () => {
+        deleteBoard();
+    };
 
     return(
         <ViewWrap>
@@ -495,6 +504,7 @@ const BoardView = () => {
                         </Select>
                     </FormControl>
                     )}
+
                     {/* 수정 및 삭제 버튼 */}
                     {showEditBtn() ? (
                     <div className="editBtn">
@@ -508,10 +518,13 @@ const BoardView = () => {
                 <TitleView>{boardView?.title}</TitleView>
 
                 {/* 작성자 정보 구간 */}
+                {boardView && (
                 <div className="authorinfo">
-                    <img src={boardView?.profileImg} alt="프로필 이미지" />
+                    {/*기본 프로필 이미지*/}
+                    <img src={test} alt="프로필"/>
                     <div className="author">{boardView?.author}</div>
                 </div>
+                )}
 
                 {/* 작성일 및 조회수 구간 */}
                 {boardView && (
@@ -523,7 +536,6 @@ const BoardView = () => {
 
                 {/* 게시글 내용(이미지+텍스트) 구간 */}
                 <Contents>
-                    {/* <div className="image_area"> */}
                     {boardView && (
                     <div className="image_area">
                         {boardView.image ? (
@@ -533,7 +545,6 @@ const BoardView = () => {
                         )}
                     </div>
                     )}
-                {/* </div> */}
                     <div className="text_area">{boardView?.contents}</div>
                 </Contents>
             </div>
@@ -584,4 +595,5 @@ const BoardView = () => {
         </ViewWrap>
     )
 };
+
 export default BoardView;
