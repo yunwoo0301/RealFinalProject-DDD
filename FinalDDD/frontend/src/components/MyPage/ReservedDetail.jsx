@@ -87,7 +87,7 @@ const Container = styled.div`
 
 
 const ReservedDetail = ({exhibitionData, currentPageData, setExhibitionData}) => {
-    const currentDate = new Date();
+    const currentDate = new Date().toISOString().slice(0, 10);
 
     // 예약 총 개수
     const totalRecords = exhibitionData.length;
@@ -108,13 +108,15 @@ const ReservedDetail = ({exhibitionData, currentPageData, setExhibitionData}) =>
 
 
     // 결제일시 날짜형식변경
-    function formatDate(dateString) {
+    const formatDate = (dateString) => {
         const date = new Date(dateString);
+        date.setHours(0, 0, 0, 0); // 시간 정보를 0으로 설정하여 시간을 제거
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
       }
+
 
 
     // 예매 상세 페이지 속 예매취소확인모달
@@ -148,7 +150,7 @@ const ReservedDetail = ({exhibitionData, currentPageData, setExhibitionData}) =>
                         <Container
                             key={e.bookingId}
                             onClick={() => openMobileTicket(e.bookingId)}
-                            isPast={new Date(e.visitDate) < currentDate} // 방문일이 이미 지났는지 여부에 따라 스타일 변경
+                            isPast={e.visitDate < currentDate} // 방문일이 이미 지났는지 여부에 따라 스타일 변경
                             >
                             <div className="showImage"><img src={e.imgUrl} alt='exhibition' /></div>
                             <div className='justfyTop'>

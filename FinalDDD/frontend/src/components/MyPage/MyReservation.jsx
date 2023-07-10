@@ -109,23 +109,23 @@ const MyReservation = () => {
   // 관람임박순
     // 관람일자와 오늘 날짜를 비교하여 지난 예약은 리스트맨 끝으로 이동
     const sortBookedList = (list) => {
-      const currentDate = new Date();
+      const currentDate = new Date().toISOString().slice(0, 10);
 
       const upcomingReservations = list.filter((item) => {
-        const visitDate = new Date(item.visitDate);
+        const visitDate = item.visitDate;
         return visitDate >= currentDate;
       });
 
       const pastReservations = list.filter((item) => {
-        const visitDate = new Date(item.visitDate);
+        const visitDate = item.visitDate;
         return visitDate < currentDate;
       });
 
       // 임박순으로 정렬
       upcomingReservations.sort((a, b) => {
-        const aVisitDate = new Date(a.visitDate);
-        const bVisitDate = new Date(b.visitDate);
-        return aVisitDate - bVisitDate;
+        const aVisitDate = a.visitDate.slice(0, 10);
+        const bVisitDate = b.visitDate.slice(0, 10);
+        return aVisitDate.localeCompare(bVisitDate);
       });
 
       return [...upcomingReservations, ...pastReservations];
