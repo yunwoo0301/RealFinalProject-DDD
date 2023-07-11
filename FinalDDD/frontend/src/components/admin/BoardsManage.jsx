@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import DDDApi from "../../api/DDDApi";
+import { Pagination } from "@mui/material";
+
 
 const MembersContainer = styled.div`
   width: 80vw;
@@ -15,6 +18,9 @@ const MembersContainer = styled.div`
   table{
     width: 70vw;
     border-collapse: collapse;
+   tbody{
+    text-align: center;
+   }
   }
 
   .reply{
@@ -41,6 +47,11 @@ const TableContainer = styled.div`
         float: left;
     }
   }
+  .paginationContainer{
+    margin-top: 1rem;
+  }
+
+
 `;
 
 const TableHeader = styled.th`
@@ -64,287 +75,309 @@ const ButtonWrapper = styled.div`
     margin-bottom: 1rem;
     width: 80%;
     margin-left: 9em;
-
     button {
+      margin-left: 1rem;
+        margin-top: 0.1rem;
         background: none;
         border: none;
         color: #050e3d;
         font-weight: bold;
         float: right;
         cursor: pointer;
-        margin-left: 1rem;
-        
+
     }
 
     button:hover {
         color: #5EADF7;
         text-decoration: underline;
     }
+
+    input{
+      margin-left: 2rem;
+      float: right;
+    }
+
 `;
 
 
 const BoardsManage = () => {
-    const boardData = [
-        {
-          category: "추천수다",
-          posts: [
-            {
-              id: 1,
-              date: "2023-06-20",
-              author: "User1",
-              title: "첫 번째 글",
-              contents: "첫 번째 글 내용입니다.",
-              views: 10,
-              comments: [
-                {
-                  postId: 1,
-                  id: 1,
-                  author: "댓글 작성자1",
-                  content: "댓글 내용123423423",
-                  timestamp: "2023-06-13 12:34:00",
-                },
-                {
-                  postId: 1,
-                  id: 2,
-                  author: "댓글 작성자2",
-                  content: "댓글 내용22423423423",
-                  timestamp: "2023-06-13 12:35:00",
-                },
-              ],
-            },
-            {
-              id: 6,
-              date: "2023-06-15",
-              author: "User2",
-              title: "여섯 번째 글",
-              contents: "여섯 번째 글 내용입니다.",
-              views: 8,
-              comments: [
-                {
-                  postId: 6,
-                  id: 3,
-                  author: "댓글 작성자2",
-                  content: "댓글 내용32423232",
-                  timestamp: "2023-06-13 12:35:00",
-                }
-              ],
-            },
-          ],
-        },
-        {
-          category: "질문하기",
-          posts: [
-            {
-              id: 3,
-              date: "2023-06-18",
-              author: "User3",
-              title: "질문 글",
-              contents: "질문 글 내용입니다.",
-              views: 8,
-              comments: [
-                {
-                postId: 3,
-                id: 4,
-                author: "댓글 작성자2",
-                content: "댓글 내용22342311321",
-                timestamp: "2023-06-13 12:35:00",
-              }
-              ],
-            },
-          ],
-        },
-        {
-          category: "동행찾기",
-          posts: [
-            {
-              id: 4,
-              date: "2023-06-17",
-              author: "User4",
-              title: "동행 글",
-              contents: "동행 글 내용입니다.",
-              views: 12,
-              comments: [
-                {
-                postId: 4,
-                id: 5,
-                author: "댓글 작성자2",
-                content: "댓글 내용244444444444",
-                timestamp: "2023-06-13 12:35:00",
-              }
-              ],
-            },
-            {
-              id: 5,
-              date: "2023-06-16",
-              author: "User5",
-              title: "다섯 번째 글",
-              contents: "다섯 번째 글 내용입니다.",
-              views: 7,
-              comments: [
-                {
-                    postId: 5,
-                    id: 6,
-                    author: "댓글 작성자2",
-                    content: "댓글 내용2223333232322",
-                    timestamp: "2023-06-13 12:35:00",
-                  }
-              ],
-            },
-          ],
-        },
-    ];
-    
-    const [selectedRows, setSelectedRows] = useState([]); // 체크박스
+  const categories = ["추천수다", "질문하기", "동행찾기"];
+  const [selectedRows1, setSelectedRows1] = useState([]); // 게시판 관리 테이블의 체크박스 선택 상태
+  const [selectedRows2, setSelectedRows2] = useState([]); // 댓글 관리 테이블의 체크박스 선택 상태
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [commentList, setCommentList] = useState([]);
+  const [boardData, setBoardData] = useState([]);
 
-  const [selectedCategory, setSelectedCategory] = useState(boardData[0].category);
+    // 페이지네이션
+    const [currentPage1, setCurrentPage1] = useState(1);
+    const [itemsPerPage1] = useState(5);
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+    const [currentPage2, setCurrentPage2] = useState(1);
+    const [itemsPerPage2] = useState(5);
+
+    const indexOfLastItem1 = currentPage1 * itemsPerPage1;
+    const indexOfFirstItem1 = indexOfLastItem1 - itemsPerPage1;
+    const currentBoardData = boardData
+      .filter((board) => board.category === selectedCategory || selectedCategory === "")
+      .slice(indexOfFirstItem1, indexOfLastItem1);
+
+    const indexOfLastItem2 = currentPage2 * itemsPerPage2;
+    const indexOfFirstItem2 = indexOfLastItem2 - itemsPerPage2;
+    const currentCommentList = commentList.slice(indexOfFirstItem2, indexOfLastItem2);
+
+    const handlePageChange1 = (event, page) => {
+      setCurrentPage1(page);
+    };
+
+    const handlePageChange2 = (event, page) => {
+      setCurrentPage2(page);
+    };
+
+    // 검색기능 추가
+    const [searchKeyword, setSearchKeyword] = useState(""); // 글쓰기
+
+    const handleSearchChange = (e) => {
+      setSearchKeyword(e.target.value);
+    };
+
+    const [searchComment, setSearchComment] = useState(""); // 댓글
+
+    const handleSearchComment = (e) =>{
+      setSearchComment(e.target.value);
+    };
+
+    const filteredBoardData = currentBoardData.filter((board) => {
+      const boardTitle = board.title.toLowerCase();
+      const author = board.author.toLowerCase();
+      const keyword = searchKeyword.toLowerCase();
+
+      return boardTitle.includes(keyword) || author.includes(keyword);
+    });
+
+
+    const filteredCommentList = currentCommentList.filter((comment) => {
+      const boardTitle = comment.boardTitle.toLowerCase();
+      const nickname = comment.nickname.toLowerCase();
+      const keyword = searchComment.toLowerCase();
+
+      return boardTitle.includes(keyword) || nickname.includes(keyword);
+    });
+
+
+
+
+
+  // 날짜 형식 변환 함수
+  const formatDate = (date) => {
+    const writeDate = new Date(date);
+    const year = writeDate.getFullYear();
+    const month = (writeDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = writeDate.getDate().toString().padStart(2, '0');
+    const hours = writeDate.getHours().toString().padStart(2, '0');
+    const minutes = writeDate.getMinutes().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
-  const selectedBoard = boardData.find(
-    (board) => board.category === selectedCategory
-  );
-     // 전체 선택 처리
-     const handleSelectAllRows = () => {
-        if (selectedRows.length === selectedBoard.posts.length) {
-          // 모든 행이 선택된 상태인 경우, 모든 행 선택 해제
-          setSelectedRows([]);
-        } else {
-          // 그 외의 경우, 모든 행 선택
-          setSelectedRows(selectedBoard.posts.map((item) => item.id));
-        }
-      };
+  // 댓글 전체 조회
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const commentsData = await DDDApi.boardCommentsList();
+        setCommentList(commentsData.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getComments();
+  }, []);
 
-// 개별 행 선택 처리
-    const handleSelectRow = (id) => {
-    if (selectedRows.includes(id)) {
-    // 이미 선택된 행인 경우, 선택 해제
-    setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+  // 글 전체조회
+  useEffect(() => {
+    const getBoards = async () => {
+      try {
+        const boardsData = await Promise.all(
+          categories.map((category) => DDDApi.getFreeBoardsByCategory(category))
+        );
+
+        // 각 카테고리 데이터를 하나의 배열로 합치기
+        const mergedData = boardsData.flatMap((board) => board.data);
+        setBoardData(mergedData); // 전체 데이터 배열을 boardData에 저장
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getBoards();
+
+  }, []);
+
+  const handleCategoryChange = (e) => {
+    const category = e.target.value;
+    setSelectedCategory(category);
+    setCurrentPage1(1);
+    setCurrentPage2(1);
+  };
+
+  const handleSelectAllRows1 = () => {
+    if (selectedRows1.length === boardData.length) {
+      setSelectedRows1([]);
     } else {
-    // 그 외의 경우, 선택
-    setSelectedRows([...selectedRows, id]);
+      setSelectedRows1(boardData.map((board) => board.boardNo));
     }
-};
-    // 댓글 10글자이상이면 줄여서 10글자 이후는 ...으로 표시
-    const renderContent = (content) => {
-        if (content.length > 10) {
-          return content.substring(0, 10) + '...';
-        }
-        return content;
-      };
+  };
+
+  const handleSelectRow1 = (boardNo) => {
+    if (selectedRows1.includes(boardNo)) {
+      setSelectedRows1(selectedRows1.filter((no) => no !== boardNo));
+    } else {
+      setSelectedRows1([...selectedRows1, boardNo]);
+    }
+  };
+
+  const handleSelectAllRows2 = () => {
+    if (selectedRows2.length === commentList.length) {
+      setSelectedRows2([]);
+    } else {
+      setSelectedRows2(commentList.map((comment) => comment.commentNo));
+    }
+  };
+
+  const handleSelectRow2 = (commentNo) => {
+    if (selectedRows2.includes(commentNo)) {
+      setSelectedRows2(selectedRows2.filter((no) => no !== commentNo));
+    } else {
+      setSelectedRows2([...selectedRows2, commentNo]);
+    }
+  };
+
+
+
+
+
 
   return (
     <MembersContainer>
       <div className="boards">
         <h3>게시판 관리</h3>
         <TableContainer>
-        <div className="select">
-        <select id="category" value={selectedCategory} onChange={handleCategoryChange}>
-          {boardData.map((board) => (
-            <option key={board.category} value={board.category}>
-              {board.category}
-            </option>
-          ))}
-        </select>
-        <ButtonWrapper>
-            <button>삭제</button>
-            <button>수정</button>
-        </ButtonWrapper>
-        </div>
-        <table>
-          <thead>
-            <TableRow>
-            <TableHeader>
-            <input
-                type="checkbox"
-                checked={selectedRows.length === selectedBoard.posts.length}
-                onChange={handleSelectAllRows}
-            />
-            </TableHeader>
-            <TableHeader>작성일</TableHeader>
-            <TableHeader>작성자</TableHeader>
-            <TableHeader>작성제목</TableHeader>
-            <TableHeader>조회수</TableHeader>
-            <TableHeader>댓글수</TableHeader>
-            </TableRow>
-          </thead>
-          <tbody>
-          {selectedBoard &&
-            selectedBoard.posts.map((post) => (
-                <TableRow key={post.id}>
-                    <td>
-                    <input
-                        type="checkbox"
-                        checked={selectedRows.includes(post.id)}
-                        onChange={() => handleSelectRow(post.id)}
-                    />
-                    </td>
-                <td>{post.date}</td>
-                <td>{post.author}</td>
-                <td>{post.title}</td>
-                <td>{post.views}</td>
-                <td>{post.comments.length}</td>
-                </TableRow>
+          <div className="select">
+          <select id="category" value={selectedCategory} onChange={handleCategoryChange}>
+            <option value="">전체</option>
+            {[...new Set(boardData.map((board) => board.category))].map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
             ))}
-        </tbody>
-        </table>
-      </TableContainer>
+          </select>
+            <ButtonWrapper>
+            <button>삭제</button>
+            <input type="text" className='searchBar' height={'1rem'}
+                      value={searchKeyword} onChange={handleSearchChange} />
+            </ButtonWrapper>
+          </div>
+          <table>
+            <thead>
+              <TableRow>
+                <TableHeader>
+                 <input
+                    type="checkbox"
+                    checked={selectedRows1.length === boardData.length}
+                    onChange={handleSelectAllRows1}
+                  />
+                </TableHeader>
+                <TableHeader>카테고리</TableHeader>
+                <TableHeader>작성자</TableHeader>
+                <TableHeader>작성제목</TableHeader>
+                <TableHeader>작성일</TableHeader>
+              </TableRow>
+            </thead>
+            <tbody>
+            {filteredBoardData
+              .filter((board) => board.category === selectedCategory || selectedCategory === "")
+              .map((board) => (
+                <TableRow key={board.boardNo}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedRows1.includes(board.boardNo)}
+                      onChange={() => handleSelectRow1(board.boardNo)}
+                    />
+                  </td>
+                  <td>{board.category}</td>
+                  <td>{board.author}</td>
+                  <td>{board.title}</td>
+                  <td>{formatDate(board.writeDate)}</td>
+                </TableRow>
+              ))}
+          </tbody>
+          </table>
+          <div className="paginationContainer">
+          <Pagination
+            count={Math.ceil(
+              (boardData.filter((board) => board.category === selectedCategory || selectedCategory === "").length) /
+                itemsPerPage1
+            )}
+            page={currentPage1}
+            onChange={handlePageChange1}
+          />
+          </div>
+        </TableContainer>
       </div>
       <div className="reply">
-      <h3>댓글 관리</h3>
-      <TableContainer>
-        <div className="select">
-        <ButtonWrapper>
-            <button>삭제</button>
-            <button>수정</button>
-        </ButtonWrapper>
-        </div>
-        <table>
-          <thead>
-            <TableRow>
-            <TableHeader>
-            <input
-                type="checkbox"
-                checked={selectedRows.length === selectedBoard.posts.length}
-                onChange={handleSelectAllRows}
-            />
-            </TableHeader>
-              <TableHeader>카테고리</TableHeader>
-              <TableHeader>글 제목</TableHeader>
-              <TableHeader>댓글 작성자</TableHeader>
-              <TableHeader>댓글 내용</TableHeader>
-              <TableHeader>댓글 작성 시간</TableHeader>
-            </TableRow>
-          </thead>
-          <tbody>
-  {boardData.map((category) =>
-    category.posts.map((post) =>
-      post.comments.map((comment) => (
-        <TableRow key={comment.id}>
-            <td>
-                <input
+        <h3>댓글 관리</h3>
+        <TableContainer>
+          <div className="select">
+            <ButtonWrapper>
+              <button>삭제</button>
+              <input type="text" className='searchBar' height={'1rem'}
+                      value={searchComment} onChange={handleSearchComment} />
+            </ButtonWrapper>
+          </div>
+          <table>
+            <thead>
+              <TableRow>
+                <TableHeader>
+                  <input
                     type="checkbox"
-                    checked={selectedRows.includes(post.id)}
-                    onChange={() => handleSelectRow(post.id)}
-                />
-            </td>
-            <td>{category.category}</td>
-            <td>{post.title}</td>
-            <td>{comment.author}</td>
-            <td>{renderContent(comment.content)}</td>
-            <td>{comment.timestamp}</td>
-        </TableRow>
-      ))
-    )
-  )}
-
-
-
-          </tbody>
-        </table>
-      </TableContainer>
-    </div>
+                    checked={selectedRows2.length === commentList.length}
+                    onChange={handleSelectAllRows2}
+                  />
+                </TableHeader>
+                <TableHeader>카테고리</TableHeader>
+                <TableHeader>글 제목</TableHeader>
+                <TableHeader>댓글 작성자</TableHeader>
+                <TableHeader>댓글 내용</TableHeader>
+                <TableHeader>댓글 작성 시간</TableHeader>
+              </TableRow>
+            </thead>
+            <tbody>
+              {filteredCommentList.map((comment) => (
+                <TableRow key={comment.commentNo}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedRows2.includes(comment.commentNo)}
+                      onChange={() => handleSelectRow2(comment.commentNo)}
+                    />
+                  </td>
+                  <td>{comment.categoryName}</td>
+                  <td>{comment.boardTitle}</td>
+                  <td>{comment.nickname}</td>
+                  <td>{comment.content}</td>
+                  <td>{formatDate(comment.writeDate)}</td>
+                </TableRow>
+              ))}
+            </tbody>
+          </table>
+          <div className="paginationContainer">
+          <Pagination
+            count={Math.ceil(commentList.length / itemsPerPage2)}
+            page={currentPage2}
+            onChange={handlePageChange2}
+          />
+          </div>
+        </TableContainer>
+      </div>
     </MembersContainer>
   );
 };
