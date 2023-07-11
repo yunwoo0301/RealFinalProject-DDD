@@ -7,6 +7,7 @@ import com.DDD.entity.Member;
 import com.DDD.jwt.TokenProvider;
 import com.DDD.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,14 +30,31 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final EmailService emailService;
 
+    @Transactional
     public MemberResponseDto signup(MemberRequestDto requestDto) {
         if (memberRepository.existsByEmail(requestDto.getEmail())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
+        } else {
+            Member member = requestDto.toMember(passwordEncoder);
+            String emailCheckToken = UUID.randomUUID().toString();
+            member.setEmailCheckToken(emailCheckToken);
+            memberRepository.save(member);
+
+            // Compose email content
+            String subject = "Email Confirmation";
+            String body = "Click this link to confirm your email: " +
+                    "<a href=\"http://localhost:8111/user/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>";
+
+            // Send email
+            emailService.sendMail(member.getEmail(), subject, body);
+            log.info("AuthService의 email : "+ member.getEmail());
+            log.info("AuthService의 email token : "+ emailCheckToken);
+            return MemberResponseDto.of(member);
         }
-        Member member = requestDto.toMember(passwordEncoder);
-        return MemberResponseDto.of(memberRepository.save(member));
     }
+
 
     public boolean getIsActive(Long memberId) {
         Optional<Member> memberOptional = memberRepository.findById(memberId);

@@ -22,8 +22,8 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/mypage/{memberId}")
-//@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/mypage/{memberId}")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MyPageController {
     private final MemberService memberService;
     private final AuthService authService;

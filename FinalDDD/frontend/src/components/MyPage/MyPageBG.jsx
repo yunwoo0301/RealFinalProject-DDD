@@ -53,7 +53,7 @@ const MyPageBG = () => {
       console.log('함수안에있음 콘솔 : ' + memberData)
     };
     memberFetchDate();
-  }, [showPage]);
+  }, [showPage, memberId]);
 
   useEffect(() => {
     const diaryFetchDate = async () => {
@@ -63,7 +63,7 @@ const MyPageBG = () => {
       console.log(newMyDiaryData);
     };
     diaryFetchDate();
-  }, [showPage]);
+  }, [showPage, memberId]);
 
   console.log('밖에있는 콘솔 : ' + memberData)
 

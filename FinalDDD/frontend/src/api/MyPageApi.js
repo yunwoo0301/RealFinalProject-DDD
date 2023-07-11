@@ -24,7 +24,7 @@ const MyPageApi = {
     info: async (memberId) => {
         try {
         Functions.setAuthorizationHeader(); // 헤더에 토큰을 넣는 함수
-        return await axios.get(`/mypage/${memberId}`); // 요청 리턴
+        return await axios.get(`/api/mypage/${memberId}`); // 요청 리턴
         } catch (error) {
         console.log("error입니다. ");
         }

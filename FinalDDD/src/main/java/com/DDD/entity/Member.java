@@ -1,12 +1,14 @@
 package com.DDD.entity;
 
 import com.DDD.constant.Authority;
+import com.DDD.repository.MemberRepository;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "member")
@@ -49,6 +51,8 @@ public class Member {
     @ManyToOne
     private Diary diary;
 
+    private String emailCheckToken;
+
 //    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private List<FreeBoard> freeBoardList = new ArrayList<>();
 
@@ -57,7 +61,9 @@ public class Member {
     }
 
     @Builder // * .메소드 형태로 부르는 자바문법과 달리(생성자) 매개변수 전달할 때 파라미터 순서를 지키지 않아도 되는 장점
-    public Member( String email, String name, String password, Authority authority, String tel, String nickname, String instagram, String introduce, String profileImg, String backgroundImg, boolean isActive) {
+    public Member( String email, String name, String password, Authority authority, String tel, String nickname,
+                   String instagram, String introduce, String profileImg, String backgroundImg, boolean isActive,
+                    String emailCheckToken) {
         this.email = email;
         this.name = name;
         this.password = password;
@@ -69,6 +75,7 @@ public class Member {
         this.profileImg = profileImg;
         this.backgroundImg = backgroundImg;
         this.isActive = isActive;
+        this.emailCheckToken = emailCheckToken;
     }
 
 }
