@@ -180,15 +180,15 @@ const BoardsManage = () => {
   };
 
   // 댓글 전체 조회
+  const getComments = async () => {
+    try {
+      const commentsData = await DDDApi.boardCommentsList();
+      setCommentList(commentsData.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
-    const getComments = async () => {
-      try {
-        const commentsData = await DDDApi.boardCommentsList();
-        setCommentList(commentsData.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
     getComments();
   }, []);
 
@@ -242,14 +242,32 @@ const BoardsManage = () => {
     }
   };
 
-  const handleSelectRow2 = (commentNo) => {
-    if (selectedRows2.includes(commentNo)) {
-      setSelectedRows2(selectedRows2.filter((no) => no !== commentNo));
-    } else {
-      setSelectedRows2([...selectedRows2, commentNo]);
-    }
-  };
+    const handleSelectRow2 = (commentNo) => {
+      if (selectedRows2.includes(commentNo)) {
+        setSelectedRows2(selectedRows2.filter((no) => no !== commentNo));
+      } else {
+        setSelectedRows2([...selectedRows2, commentNo]);
+      }
+    };
 
+ const deleteSelectedComments = async () => {
+   for (const commentNo of selectedRows2) {
+     await deleteComments(commentNo);
+   }
+   setSelectedRows2((prevSelectedRows) => {
+     const remainingCommentNos = commentList
+       .filter((comment) => !selectedRows2.includes(comment.commentNo))
+       .map((comment) => comment.commentNo);
+     const nextCommentNo = remainingCommentNos[0];
+     return nextCommentNo ? [nextCommentNo] : [];
+   });
+ };
+
+ // 댓글 삭제
+   const deleteComments = async (commentNo) => {
+     await DDDApi.commentDelete(commentNo);
+     getComments();
+   };
 
 
 
@@ -328,7 +346,7 @@ const BoardsManage = () => {
         <TableContainer>
           <div className="select">
             <ButtonWrapper>
-              <button>삭제</button>
+              <button onClick={deleteSelectedComments }>삭제</button>
               <input type="text" className='searchBar' height={'1rem'}
                       value={searchComment} onChange={handleSearchComment} />
             </ButtonWrapper>
