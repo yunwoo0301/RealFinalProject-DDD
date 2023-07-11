@@ -16,7 +16,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/comments")
+@RequestMapping("/api/comments")
 //@CrossOrigin(origins = "http://localhost:3000")
 public class BoardCommentController {
     private final BoardCommentService boardCommentService;

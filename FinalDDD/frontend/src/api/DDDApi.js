@@ -4,12 +4,12 @@ import axios from "axios";
 const DDDApi = {
     // 자유게시판 카테고리별 리스트 조회 
     getFreeBoardsByCategory : async (category) => {
-        return await axios.get(`/boardList/${category}`);
+        return await axios.get(`/api/boardList/${category}`);
     },
 
     // 특정 게시판 번호의 게시물 상세 조회(+댓글 포함)
     getBoard: async(boardNo) => {
-        return await axios.get(`/boardList/boardView/${boardNo}`);
+        return await axios.get(`/api/boardList/boardView/${boardNo}`);
     },
 
     // 게시글 작성
@@ -23,7 +23,7 @@ const DDDApi = {
             image: imageUrl,
             contents: contents
         };
-        return await axios.post( "/boardList/write", postObj);
+        return await axios.post( "/api/boardList/write", postObj);
     },
 
     // 게시글 수정 **
@@ -36,23 +36,23 @@ const DDDApi = {
             contents: contents,
             image: imageUrl
         };
-        return await axios.post(`/boardList/boardView/${boardNo}`, editObj);
+        return await axios.post(`/api/boardList/boardView/${boardNo}`, editObj);
     },
 
     // 게시글 삭제
     delBoards: async (boardNo) => {
-        return await axios.delete(`/boardList/boardView/${boardNo}`);
+        return await axios.delete(`/api/boardList/boardView/${boardNo}`);
     },
 
 
     // 마이페이지 내 게시글 조회
     getBoardsByMember: async (memberId) => {
-        return await axios.get(`/boardList/members/${memberId}/boards`);
+        return await axios.get(`/api/boardList/members/${memberId}/boards`);
     },
 
     // 마이페이지 내 댓글 조회
     commentLoad: async (memberId) => {
-        return await axios.get(`/comments/members/${memberId}/comments`);
+        return await axios.get(`/api/comments/members/${memberId}/comments`);
     },
 
 
@@ -61,7 +61,7 @@ const DDDApi = {
         const url = `/boardList/searchList?keyword=${keyword}`;
         console.log(url); // 해당 페이지 url 확인 위해
         return await axios.get(url);
-        // return await axios.get(DDD_DOMAIN + `/boardList/searchList?keyword=${keyword}`, HEADER); 
+        // return await axios.get(DDD_DOMAIN + `/api/boardList/searchList?keyword=${keyword}`, HEADER);
     },
 
     // 댓글 작성
@@ -71,12 +71,12 @@ const DDDApi = {
             getId: getId,
             boardNo: boardNo
         }
-        return await axios.post( "/comments/commentWrite", commentObj);
+        return await axios.post( "/api/comments/commentWrite", commentObj);
     },
 
     // 댓글 삭제 
     commentDelete : async (commentNo) => {
-        return await axios.delete(`/comments/commentDelete/${commentNo}`);
+        return await axios.delete(`/api/comments/commentDelete/${commentNo}`);
     },
 
 

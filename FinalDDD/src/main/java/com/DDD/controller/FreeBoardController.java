@@ -17,7 +17,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/boardList") // CRUD 작업이 필요할 시 GetMapping 보다는 requestMapping 으로
+@RequestMapping("/api/boardList") // CRUD 작업이 필요할 시 GetMapping 보다는 requestMapping 으로
 //@CrossOrigin(origins = "http://localhost:3000")
 public class FreeBoardController {
     @Autowired
@@ -50,7 +50,7 @@ public class FreeBoardController {
 
 
     // 게시글 수정(최종)
-    @PutMapping("/boardView/{boardNo}")
+    @PostMapping("/boardView/{boardNo}")
     public ResponseEntity<Boolean> editBoards(@PathVariable Long boardNo, @RequestBody Map<String, Object> boardData) {
         try {
             String category = (String) boardData.get("category");
