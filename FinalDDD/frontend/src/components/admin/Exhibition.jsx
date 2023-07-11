@@ -5,8 +5,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from "@mui/material/TextField";
 import DDDApi from "../../api/DDDApi";
-import PageNation from "../../util/PageNation";
 import dayjs from "dayjs";
+import  {AiOutlineCheckCircle} from "react-icons/ai";
+import ConfirmModal from "../../util/ConfirmModal";
+import { Pagination } from "@mui/material";
 
 const ExhibitContainer = styled.div`
     width: 80vw;
@@ -53,6 +55,13 @@ const ExhibitContainer = styled.div`
     gap: 1rem;
   }
 
+  .paginationContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+
 `;
 const TableHeader = styled.th`
   background-color: #050E3D;
@@ -81,12 +90,24 @@ const ExhibitManage = () => {
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [filteredExhibition, setFilteredExhibition] = useState([]);
   const [exhibitionList, setExhibitionList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 10;
   const currentDate = dayjs(); // 현재 날짜 가져오기
 
-  const handleLocationChange = (event) => {
-    setSelectedLocation(event.target.value);
+
+  // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredExhibition.slice(indexOfFirstItem, indexOfLastItem);
+  const handlePageChange = (e, page) => {
+    setCurrentPage(page);
+  };
+
+
+
+  const handleLocationChange = (e) => {
+    setSelectedLocation(e.target.value);
   };
 
   const handleStartDateChange = (date) => {
@@ -117,22 +138,12 @@ const ExhibitManage = () => {
       setNewData(resetData.data);
       if(newData){
         exhibitions();
+        setOpenModal(false);
       }
     }
 
 
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
-  };
 
-
-  const pageCount = Math.ceil(filteredExhibition.length / itemsPerPage);
-
-
-  const paginatedExhibitions = filteredExhibition.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
 
 
   useEffect(() => {
@@ -177,14 +188,36 @@ const ExhibitManage = () => {
     });
 
     setFilteredExhibition(filteredExhibitions);
-    setCurrentPage(0); // 필터링이 변경될 때 현재 페이지를 재설정
   }, [selectedLocation, selectedStartDate, selectedEndDate, exhibitionList, currentDate]);
+
+
+  // 리셋모달창
+  const [openModal, setOpenModal] =useState(false);
+  const openToReset = () => {
+    setOpenModal(true);
+  }
+  const closeModal = () =>{
+    setOpenModal(false);
+  }
+
+  const props = {
+    icon: <AiOutlineCheckCircle/>,
+    body: (
+      <div>
+        전시목록을 다시 불러오시겠습니까?
+      </div>
+    ),
+    button:[<button onClick={resetExhibitions}>확인</button>,
+    <button onClick={closeModal}>취소</button>]
+  }
+
 
   return (
     <ExhibitContainer>
+      {openModal && <ConfirmModal props={props}/>}
       <div className="title">
       <h3>전시 관리</h3>
-      <button onClick={resetExhibitions}>Reset</button>
+      <button onClick={openToReset}>Reset</button>
       </div>
       <div className="table-container">
         <div className="select">
@@ -246,7 +279,7 @@ const ExhibitManage = () => {
             </TableRow>
           </thead>
           <tbody>
-            {paginatedExhibitions.map((exhibition) => {
+            {currentItems.map((exhibition) => {
               const startDate = new Date(exhibition.startDate);
               const endDate = new Date(exhibition.endDate);
               const totalDays = Math.ceil(
@@ -266,7 +299,13 @@ const ExhibitManage = () => {
             })}
           </tbody>
         </table>
-        <PageNation pageCount={pageCount} onPageChange={handlePageChange} />
+      </div>
+      <div className="paginationContainer">
+      <Pagination
+        count={Math.ceil(filteredExhibition.length / itemsPerPage)}
+        page={currentPage}
+        onChange={handlePageChange}
+      />
       </div>
     </ExhibitContainer>
   );
