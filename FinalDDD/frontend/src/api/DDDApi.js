@@ -145,10 +145,18 @@ const DDDApi = {
     cancelReservation: async(selectedData) => {
         return await axios.post(`/booking/cancel?bookingId=${selectedData}`);
     },
+
     // 전시회리스트 리셋
     resetExhibitions: async() => {
         return await axios.get("/exhibitions/list");
-    }
+    },
+
+    // 댓글리스트(관리자)
+    boardCommentsList: async() => {
+        return await axios.get("/api/comments/commentList");
+    },
+
+
 
 
 
