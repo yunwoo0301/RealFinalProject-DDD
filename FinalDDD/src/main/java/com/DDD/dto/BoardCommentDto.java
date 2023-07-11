@@ -16,4 +16,7 @@ public class BoardCommentDto {
     private Long id; // 회원번호
     private String profileImg; // 프로필사진
     private String nickname; // 닉네임
+
+    private String categoryName; // 카테고리이름
+    private String boardTitle; // 글제목
 }

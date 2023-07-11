@@ -98,6 +98,28 @@ public class BoardCommentService {
         return boardCommentDtos;
     }
 
+
+    // 댓글전체조회(관리자)
+    public List<BoardCommentDto> findAllCommentList() {
+        List<BoardCommentDto> boardCommentDtos = new ArrayList<>();
+        List<BoardComment> boardComments = boardCommentRepository.findAll();
+
+        for (BoardComment boardComment : boardComments) {
+            BoardCommentDto boardCommentDto = new BoardCommentDto();
+            boardCommentDto.setCommentNo(boardComment.getCommentNo());
+            boardCommentDto.setBoardNo(boardComment.getFreeBoard().getBoardNo());
+            boardCommentDto.setCategoryName(boardComment.getFreeBoard().getCategory());
+            boardCommentDto.setBoardTitle(boardComment.getFreeBoard().getTitle());
+            boardCommentDto.setContent(boardComment.getContent());
+            boardCommentDto.setNickname(boardComment.getMember().getNickname());
+            boardCommentDto.setWriteDate(boardComment.getWriteDate());
+
+            boardCommentDtos.add(boardCommentDto);
+        }
+
+        return boardCommentDtos;
+    }
+
 }
 
 

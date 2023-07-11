@@ -54,4 +54,11 @@ public class BoardCommentController {
         List<BoardCommentDto> boardCommentDtos = boardCommentService.getCommentsByMember(id);
         return ResponseEntity.ok(boardCommentDtos);
     }
+
+    // 댓글전체조회
+    @GetMapping("/commentList")
+    public List<BoardCommentDto> findAllCommentList() {
+        return boardCommentService.findAllCommentList();
+    }
+
 }
