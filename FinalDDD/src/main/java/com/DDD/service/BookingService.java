@@ -137,4 +137,25 @@ public class BookingService {
             return false;
         }
     }
+
+    // 예매전체조회(관리자)
+    public List<BookingDTO> findAllBooking() {
+        List<BookingDTO> bookingDTOS = new ArrayList<>();
+        List<Booking> bookings = bookingRepository.findAll();
+
+        for (Booking e : bookings) {
+            BookingDTO bookingDTO = new BookingDTO();
+            bookingDTO.setBookingId(e.getBookingId());
+            bookingDTO.setMemberName(e.getMember().getName());
+            bookingDTO.setBookedName(e.getBookedName());
+            bookingDTO.setBookingDate(e.getBookingDate());
+            bookingDTO.setExhibitName(e.getExhibitions().getExhibitName());
+            bookingDTO.setVisitDate(e.getVisitDate());
+
+            bookingDTOS.add(bookingDTO);
+        }
+
+        return bookingDTOS;
+
+    }
 }

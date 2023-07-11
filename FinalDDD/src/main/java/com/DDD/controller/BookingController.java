@@ -65,4 +65,10 @@ public class BookingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("❌예매취소를 수행하는 동안 에러가났습니당!❌");
         }
     }
+
+    // 예매 전체목록조회(관리자)
+    @GetMapping("/allBookings")
+    public List<BookingDTO> findAllBooking() {
+        return bookingService.findAllBooking();
+    }
 }
