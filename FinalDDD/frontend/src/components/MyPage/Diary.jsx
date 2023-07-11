@@ -18,7 +18,6 @@ const DiaryBox = styled.div`
     margin: 1.2rem 0 0 2.5rem;
     font-size: 1rem;
     font-weight: bold;
-    cursor: pointer;
   }
 `;
 

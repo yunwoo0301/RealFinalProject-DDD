@@ -15,14 +15,6 @@ const Container = styled.div`
     height: 100vh;
     background-color: white;
 `;
-const BlackBG = styled.div`
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    opacity: .6;
-`;
 
 const Login = () => {
     // isLogin 상태 가져오기
@@ -70,7 +62,6 @@ const Login = () => {
                 <div>
                     <Container>
                         <BGItmes/>
-                        <BlackBG/>
                     </Container>
                     {showLogin === 0 && <LoginModal showPw={handleLoginModal1} showAgree={handleLoginModal2} />}
                     {showLogin === 1 && <ForgotPwModal showLogin={handleLoginModal0} />}

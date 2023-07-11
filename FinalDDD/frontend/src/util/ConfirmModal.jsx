@@ -11,8 +11,8 @@ const Container = styled.div`
 const Modal = styled.div`
   position: fixed;
   width: 30%;
-  min-width: 500px;
-  min-height: 200px;
+  min-width: ${props => props.minWidth || "500px"};
+  min-height: ${props => props.minHeight || "200px"};
   background-color: white;
   top: 50%;
   left: 50%;
@@ -69,11 +69,11 @@ const Modal = styled.div`
   }
 `;
 
-const ConfirmModal = ({props}) => {
+const ConfirmModal = ({props,  minWidth, minHeight}) => {
   return (
     <>
       <Container>
-        <Modal>
+        <Modal minWidth={minWidth} minHeight={minHeight}>
           <div className="checkIcon">
             {props.icon}
           </div>
