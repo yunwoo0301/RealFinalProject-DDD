@@ -156,6 +156,11 @@ const DDDApi = {
         return await axios.get("/api/comments/commentList");
     },
 
+    // 예매리스트(관리자)
+    bookingList: async() => {
+        return await axios.get("/booking/allBookings");
+    },
+
 
 
 
