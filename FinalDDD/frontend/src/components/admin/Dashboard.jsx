@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Chart from "./Charts";
 import {DisplayData} from "../../components/main/DisplayData";
+import DDDApi from "../../api/DDDApi";
 
 const DashboardContainer = styled.div`
     width: 80vw;
@@ -48,7 +49,7 @@ const DashboardContainer = styled.div`
         gap: 2em;
     }
     .charts{
-        width: 29rem;
+        width: 80%;
         margin-left: 1rem;
         margin-top: 1rem;
         height: 20em;
@@ -88,23 +89,23 @@ const DashboardContainer = styled.div`
     }
     }
     .exhibit-container{
-        margin-top: 1rem;
+        margin: 1rem;
         border-radius: 2rem;
         background-color: #e3e3e3;
-        width: 60em;
+        width: 70rem;
         display: flex;
         flex-direction: column;
-        
+
         >h4{
             margin-top: .5rem;
             margin-bottom: 0;
             text-align: center;
         }
-        
+
     }
     .exhibit-status{
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
     }
     .exhibits > img{
@@ -115,33 +116,162 @@ const DashboardContainer = styled.div`
 
     .exhibits {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
         margin-right: 2rem;
         gap: 1rem;
-        >p{ 
+        >p{
             font-size: 1rem;
         }
     }
     .exhibit-list{
         display: flex;
         flex-direction: column;
+        padding: 1rem;
         >p{
             font-size: 1rem;
         }
     }
-
-
-
-
-
-
-
+    .contents{
+        display: flex;
+        flex-direction: row;
+    }
 `;
 
 
 
 const DashBoard = () => {
+    const [bookingList, setBookingList] = useState([]);
+    // 날짜형식
+    const formatDate = (date) => {
+        const writeDate = new Date(date);
+        const year = writeDate.getFullYear();
+        const month = (writeDate.getMonth() + 1).toString().padStart(2, "0");
+        const day = writeDate.getDate().toString().padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+      };
+
+    // 전체 예매리스트
+    useEffect(() => {
+        const getBookings = async () => {
+            const result = await DDDApi.bookingList();
+            setBookingList(result.data);
+        };
+        getBookings();
+        }, []);
+    // 대시보드로 제일예매가 많이 된 전시정보 전달
+    const [dashboardData, setDashboardData] = useState({ exhibitName: "", imgUrl: "" });
+    // 오늘 날짜인 예약 개수
+    const [todayBookingCount, setTodayBookingCount] = useState(0);
+    useEffect(() => {
+        const today = new Date();
+        const formattedToday = formatDate(today); // 오늘 날짜를 형식에 맞게 변환
+
+        // 가장 많이 중복된 exhibitNo를 찾는 로직
+       const duplicateExhibitNo = findDuplicateExhibitNo(bookingList);
+
+       // duplicateExhibitNo가 존재하면 해당 전시회의 exhibitName과 imgUrl 추출
+       let exhibitName = "";
+       let imgUrl = "";
+       if (duplicateExhibitNo) {
+         const duplicateBookings = bookingList.filter(
+           (item) => item.exhibitNo === duplicateExhibitNo
+         );
+
+        // 오늘 날짜인 예약만 추출
+    const todayBookings = duplicateBookings.filter(
+        (item) => item.bookingDate === formattedToday
+      );
+
+      setTodayBookingCount(todayBookings.length); // 오늘 날짜인 예약 개수 설정
+         if (duplicateBookings.length > 0) {
+           exhibitName = duplicateBookings[0].exhibitName;
+           imgUrl = duplicateBookings[0].imgUrl;
+         }
+       }
+
+    // DashBoard 컴포넌트로 exhibitName과 imgUrl 전달
+    setDashboardData({ exhibitName, imgUrl });
+     }, [bookingList]);
+
+    const findDuplicateExhibitNo = (list) => {
+    const counts = {};
+    let maxCount = 0;
+    let duplicateExhibitNo = null;
+
+    for (const item of list) {
+        const exhibitNo = item.exhibitNo;
+        counts[exhibitNo] = (counts[exhibitNo] || 0) + 1;
+        if (counts[exhibitNo] > maxCount) {
+        maxCount = counts[exhibitNo];
+        duplicateExhibitNo = exhibitNo;
+        }
+    }
+    return duplicateExhibitNo;
+     };
+
+// 전시리스트 불러오기
+const [exhibitionList, setExhibitionList] = useState([]);
+const [thisWeekStartExhibitions, setThisWeekStartExhibitions] = useState([]);
+const [thisWeekEndExhibitions, setThisWeekEndExhibitions] = useState([]);
+const [ongoingExhibitions, setOngoingExhibitions] = useState(0);
+
+const exhibitions = async () => {
+  try {
+    const exhibitListData = await DDDApi.exhibitionList();
+    setExhibitionList(exhibitListData.data);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+useEffect(() => {
+  exhibitions();
+}, []);
+
+useEffect(() => {
+  const today = new Date();
+  const startOfWeek = getStartOfWeek(today);
+  const endOfWeek = getEndOfWeek(today);
+  const formattedToday = formatDate(today);
+
+  const thisWeekStartExhibitions = exhibitionList.filter((exhibition) => {
+    const startDate = new Date(exhibition.startDate);
+    return startDate >= startOfWeek && startDate <= endOfWeek;
+  });
+
+  const thisWeekEndExhibitions = exhibitionList.filter((exhibition) => {
+    const endDate = new Date(exhibition.endDate);
+    return endDate >= startOfWeek && endDate <= endOfWeek;
+  });
+
+  // 오늘 날짜에 해당하는 전시 중인 전시 개수
+  const todayOngoingExhibitionsCount = thisWeekStartExhibitions.filter(
+    (exhibition) =>
+      exhibition.startDate <= formattedToday && formattedToday <= exhibition.endDate
+  ).length;
+
+  setOngoingExhibitions(todayOngoingExhibitionsCount);
+  setThisWeekStartExhibitions(thisWeekStartExhibitions);
+  setThisWeekEndExhibitions(thisWeekEndExhibitions);
+}, [exhibitionList]);
+
+const getStartOfWeek = (date) => {
+  const firstDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + 1));
+  return new Date(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth(), firstDayOfWeek.getDate(), 0, 0, 0);
+};
+
+const getEndOfWeek = (date) => {
+  const lastDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + 7));
+  return new Date(lastDayOfWeek.getFullYear(), lastDayOfWeek.getMonth(), lastDayOfWeek.getDate(), 23, 59, 59);
+};
+
+
+
+
+
+
     // 일자별 요약 테이블 임시데이터
     const data = [
         {
@@ -161,22 +291,22 @@ const DashBoard = () => {
             posts: 21,
           },
       ];
-    
+
       const recentData = data.slice(-10).reverse(); // 최신순으로 정렬된 최근 10개 데이터 추출
-    
+
       // 전시현황
-const todayDate = "2023-06-11";
-const finishDate = "2023-06-10";
+    const todayDate = "2023-06-11";
+    const finishDate = "2023-06-10";
 
-const todayStartExhibit = DisplayData.filter(
-  (exhibit) => exhibit.date === todayDate
-);
+    const todayStartExhibit = DisplayData.filter(
+    (exhibit) => exhibit.date === todayDate
+    );
 
-const todayFinishExhibit = DisplayData.filter(
-  (exhibit) => exhibit.date === finishDate
-);
+    const todayFinishExhibit = DisplayData.filter(
+    (exhibit) => exhibit.date === finishDate
+    );
 
-const popularExhibit = [...DisplayData].sort((a, b) => b.like - a.like);
+    const popularExhibit = [...DisplayData].sort((a, b) => b.like - a.like);
 
 
   return(
@@ -189,8 +319,8 @@ const popularExhibit = [...DisplayData].sort((a, b) => b.like - a.like);
             <div className="noti-list">
             <p>신규회원 : </p>
             <p>탈퇴회원 : </p>
-            <p>전시 중 : </p>
-            <p>예매완료 : </p>
+            <p>전시 중 : {ongoingExhibitions} </p>
+            <p>예매완료 : {todayBookingCount} </p>
             <p>게시글 수 : </p>
             </div>
         </div>
@@ -199,71 +329,48 @@ const popularExhibit = [...DisplayData].sort((a, b) => b.like - a.like);
             <h4>이번달 가입현황</h4>
             <Chart/>
         </div>
-        <div className="dailyData">
-            <h4>일자별 요약</h4>
-            <div className="table-container">
-            <table>
-                <thead>
-                    <tr>
-                    <th style={{ width: "20%" }}>일자</th>
-                    <th style={{ width: "16%" }}>방문자</th>
-                    <th style={{ width: "16%" }}>가입수</th>
-                    <th style={{ width: "16%" }}>전시 중</th>
-                    <th style={{ width: "16%" }}>예매완료</th>
-                    <th style={{ width: "16%" }}>게시글 수</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {recentData.map((item) => (
-                    <tr key={item.date}>
-                        <td>{item.date.slice(5)}</td>
-                        <td>{item.visitors}</td>
-                        <td>{item.newMembers}</td>
-                        <td>{item.exhibitions}</td>
-                        <td>{item.bookings}</td>
-                        <td>{item.posts}</td>
-                    </tr>
-                    ))}
-                </tbody>
-                </table>
-            </div>
-
-        </div>
         </div>
         <div className="exhibit-container">
         <h4>전시 현황</h4>
             <hr/>
         <div className="exhibit-status">
-            
-            <div className="exhibit-list">
-            <p>금일 시작하는 전시</p>
-            {todayStartExhibit.map((exhibit, index) => (
-                <div className="exhibits" key={index}>
-                    <img src={exhibit.imgUrl} alt={exhibit.name} />
-                    <p>{exhibit.name}</p>
-                </div>
+
+        <div className="exhibit-list">
+        <p>이번 주 시작하는 전시</p>
+        <div className="contents">
+            {thisWeekStartExhibitions.map((exhibit) => (
+            <div className="exhibits" key={exhibit.exhibitNo}>
+                <img src={exhibit.imgUrl} alt={exhibit.name} />
+                <p>{exhibit.exhibitName}</p>
+            </div>
             ))}
             </div>
-            <div className="exhibit-list">
-                <p>금일 끝나는 전시</p>
-                {todayFinishExhibit.map((exhibit, index) => (
-                <div className="exhibits" key={index}>
-                    <img src={exhibit.imgUrl} alt={exhibit.name} />
-                    <p>{exhibit.name}</p>
-                </div>
-                ))}
+        </div>
+        <div className="exhibit-list">
+        <p>이번 주 끝나는 전시</p>
+        <div className="contents">
+            {thisWeekEndExhibitions.map((exhibit) => (
+            <div className="exhibits" key={exhibit.exhibitNo}>
+                <img src={exhibit.imgUrl} alt={exhibit.name} />
+                <p>{exhibit.exhibitName}</p>
+            </div>
+            ))}
+            </div>
+            </div>
             </div>
             <div className="exhibit-list">
-                <p>예매가 많은 순</p>
+                <p>예매가 제일 잘되는 전시</p>
+            <div className="contents">
                 <div className="exhibits">
                 <img
-                    src={popularExhibit[0].imgUrl}
-                    alt={popularExhibit[0].name}
+                    src={dashboardData.imgUrl}
+                    alt={dashboardData.exhibitName}
                 />
-                <p>{popularExhibit[0].name}</p>
+                <p>{dashboardData.exhibitName}</p>
                 </div>
             </div>
-    </div>
+
+            </div>
     </div>
     </div>
 
