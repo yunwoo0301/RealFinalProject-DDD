@@ -6,6 +6,8 @@ import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -24,6 +26,7 @@ public class MemberRequestDto { // DB 넣어질 요소
     private String introduce;
     private boolean isActive;
     private Authority authority;
+    private LocalDateTime regDate;
 
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
@@ -37,6 +40,7 @@ public class MemberRequestDto { // DB 넣어질 요소
                 .instagram(instagram)
                 .profileImg("/default-profile.png")
                 .backgroundImg("/default-BG.jpg")
+                .regDate(regDate)
                 .build();
     }
 
