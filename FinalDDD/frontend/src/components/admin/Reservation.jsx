@@ -1,8 +1,8 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import styled from "styled-components";
 import InfoModal from "../exhibition/InfoModal";
-import exhibitionData from "../exhibition/exhibitionData";
 import PageNation from "../../util/PageNation";
+import DDDApi from "../../api/DDDApi";
 
 const ReservContainer = styled.div`
     width: 80vw;
@@ -84,36 +84,28 @@ const ReservationManage = () => {
     const [selectedRows, setSelectedRows] = useState([]); //가짜데이터 생성
     const [selectedMember, setSelectedMember] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [data, setData] = useState(generateFakeData(20).map(item => ({ ...item, exhibitionIndex: Math.floor(Math.random() * exhibitionData.length) + 1 })));
+    const [bookingList, setBookingList] = useState([]);
 
 
-       // 가짜 데이터 생성 함수
-    function generateFakeData(count) {
-    const fakeData = [];
-
-    for (let i = 1; i <= count; i++) {
-        const reservDate = "2023-06-2"; // 기본 가입일
-    
-        fakeData.push({
-        id: i,
-        name: `회원${i}`,
-        reservDate: reservDate+i,
-        visitDate: "2023-07-10",
-        });
-    }
-    
-    return fakeData;
-    }
+    // 전체 예매리스트
+    useEffect(() => {
+        const getBookings = async() => {
+           const result = await DDDApi.bookingList();
+           setBookingList(result.data);
+           console.log("예매리스트  : ", result.data);
+        };
+        getBookings();
+    }, []);
 
 
     // 전체 선택 처리
     const handleSelectAllRows = () => {
-        if (selectedRows.length === data.length) {
+        if (selectedRows.length === bookingList.length) {
         // 모든 행이 선택된 상태인 경우, 모든 행 선택 해제
         setSelectedRows([]);
         } else {
         // 그 외의 경우, 모든 행 선택
-        setSelectedRows(data.map((item) => item.id));
+        setSelectedRows(bookingList.map((item) => item.id));
         }
     };
 
@@ -137,6 +129,18 @@ const handleSelectRow = (id) => {
     const closeModal = () => {
     setIsModalOpen(false);
     };
+
+      // 날짜 형식 변환 함수
+    const formatDate = (date) => {
+    const writeDate = new Date(date);
+    const year = writeDate.getFullYear();
+    const month = (writeDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = writeDate.getDate().toString().padStart(2, '0');
+    const hours = writeDate.getHours().toString().padStart(2, '0');
+    const minutes = writeDate.getMinutes().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    };
   // 페이지네이션
     //보여질 페이지 개수
     const ITEMS_PAGE = 10;
@@ -145,10 +149,10 @@ const handleSelectRow = (id) => {
         setCurrentPage(selectedPage.selected);
     };
 
-    const pageCount = Math.ceil(data.length / ITEMS_PAGE); // 전체 페이지 수
+    const pageCount = Math.ceil(bookingList.length / ITEMS_PAGE); // 전체 페이지 수
     const offset = currentPage * ITEMS_PAGE; // 현재 페이지에서 보여줄 아이템의 시작 인덱스
-    const currentPageData = data.slice(offset, offset + ITEMS_PAGE);
-    
+    const currentPageData = bookingList.slice(offset, offset + ITEMS_PAGE);
+
 
 
 
@@ -161,11 +165,17 @@ const handleSelectRow = (id) => {
             <hr />
             {selectedMember && (
                 <div>
-                    <p>예매일 : {selectedMember.reservDate}</p>
-                    <p>예매자 : {selectedMember.name}</p>
-                    <img src={exhibitionData[selectedMember.exhibitionIndex - 1]?.imgUrl} alt="전시이미지" />
-                    <p>전시명 : {exhibitionData[selectedMember.exhibitionIndex - 1]?.name}</p>
+                    <p>예매일 : {formatDate(selectedMember.bookingDate)}</p>
+                    <p>예매자(실제방문자) : {selectedMember.bookedName}</p>
+                    <p>방문자 전화번호 : {selectedMember.bookedTel}</p>
+                    <p>전시명 : {selectedMember.exhibitName}</p>
                     <p>방문일 : {selectedMember.visitDate}</p>
+                    <p>방문인원 : {selectedMember.paymentDTO.paymentCnt}</p>
+                    <h3>결제 정보</h3>
+                    <hr />
+                    <p>결제일 : {selectedMember.paymentDTO.paymentDate}</p>
+                    <p>결제수단 : {selectedMember.paymentDTO.paymentType}</p>
+                    <p>결제금액 : {selectedMember.paymentDTO.paidPrice}</p>
 
                 </div>
             )}
@@ -175,7 +185,6 @@ const handleSelectRow = (id) => {
             <h3 className="title">예매 관리</h3>
             <div className="table-container">
             <ButtonWrapper>
-                <button>수정</button>
                 <button>삭제</button>
             </ButtonWrapper>
             <div className="member-table">
@@ -185,13 +194,13 @@ const handleSelectRow = (id) => {
                     <TableHeader>
                         <input
                         type="checkbox"
-                        checked={selectedRows.length === data.length}
+                        checked={selectedRows.length === bookingList.length}
                         onChange={handleSelectAllRows}
                         />
                     </TableHeader>
                     <TableHeader style={{ width: "10%" }}>예매번호</TableHeader>
                     <TableHeader style={{ width: "20%" }}>예매자</TableHeader>
-                    <TableHeader style={{ width: "15%" }}>예매일</TableHeader>
+                    <TableHeader style={{ width: "15%" }}>예매일시</TableHeader>
                     <TableHeader style={{ width: "30%" }}>전시명</TableHeader>
                     <TableHeader style={{ width: "15%" }}>전시방문일</TableHeader>
                     </TableRow>
@@ -202,14 +211,14 @@ const handleSelectRow = (id) => {
                         <td>
                         <input
                             type="checkbox"
-                            checked={selectedRows.includes(item.id)}
-                            onChange={() => handleSelectRow(item.id)}
+                            checked={selectedRows.includes(item.bookingId)}
+                            onChange={() => handleSelectRow(item.bookingId)}
                         />
                         </td>
-                        <td onClick={() => openModal(item)}>{item.id}</td>
-                        <td onClick={() => openModal(item)}>{item.name}</td>
-                        <td onClick={() => openModal(item)}>{item.reservDate}</td>
-                        <td>{exhibitionData[item.exhibitionIndex - 1]?.name}</td>
+                        <td onClick={() => openModal(item)}>{item.bookingId}</td>
+                        <td onClick={() => openModal(item)}>{item.memberName}</td>
+                        <td onClick={() => openModal(item)}>{formatDate(item.bookingDate)}</td>
+                        <td>{item.exhibitName}</td>
                         <td>{item.visitDate}</td>
                     </TableRow>
                     ))}

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const ModalStyle = styled.div`
 
+z-index: 99;
     .modal {
         display: none;
         position: fixed;
@@ -10,7 +11,6 @@ const ModalStyle = styled.div`
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 99;
         background-color: rgba(0, 0, 0, 0.3);
     }
 
@@ -27,7 +27,7 @@ const ModalStyle = styled.div`
         border: 0;
     }
     section {
-        width: 800px;
+        width: 50%;
         margin: 0 auto;
         border-radius: 0.2rem;
         background-color: #fff;
@@ -38,14 +38,14 @@ const ModalStyle = styled.div`
     section > header {
         position: relative;
         /* padding: 16px 64px 16px 16px; */
-        font-weight: 700;
+        font-weight: 500;
     }
     section > header button {
         position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 30px;
-        font-size: 30px;
+        top: 1rem;
+        right: 1rem;
+        width: 2rem;
+        font-size: 1.5rem;
         font-weight: 900;
         text-align: center;
         color: #999;
