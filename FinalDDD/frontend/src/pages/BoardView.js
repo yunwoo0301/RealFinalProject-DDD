@@ -144,7 +144,7 @@ const TitleView = styled.h3`
     margin-left: 4px;
     padding: 12px;
     font-size: 1.1em;
-    border: 1px solid #ccc;
+    border: 1px solid #8a8a8a;
     border-radius: 12px;
 `;
 
@@ -152,7 +152,7 @@ const Contents = styled.div`
     width: 92%;
     display: flex;
     flex-direction: column;
-    border: 1px solid #ccc;
+    border: 1px solid #8a8a8a;
     border-radius: 12px;
     padding: 30px 18px;
     margin-top: 20px;
@@ -188,7 +188,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     /*align-items: center;
     justify-content: center;*/
-    border: 1px solid #ccc;
+    border: 1px solid #8a8a8a;
     border-radius: 12px;
     padding: 15px 18px;
     margin-top: 20px;
@@ -234,16 +234,11 @@ const Wrapper = styled.div`
         }
 
         .user {
-            font-size: 13px;
+            font-size: .8em;
             margin-top: 1em;
         }
 
     }
-
-    .deleteBtn {
-
-    }
-
 
     .rightmenu {
         font-size: 14px;
@@ -270,11 +265,11 @@ const TextInfo = styled.div`
     align-items: flex-start;
     width: 98%;
     margin: .3em;
-    border: 1px solid #ccc;
+    border: 1px solid #8a8a8a;
     border-radius: 10px;
     padding: 7px;
     color: #6d6767;
-
+    font-size: .8em;
 
 `;
 
@@ -287,25 +282,11 @@ const BoardView = () => {
     const [boardView, setBoardView] = useState(null); // URL에서 boardNo를 가져옴(게시판목록)
     const [commentList, setCommentList] = useState([]); // 댓글용 추가
     const [nickname, setNickname] = useState(""); // 닉네임 초기값 수정
+
     const [test, setTest] = useState(""); // 기본 이미지 불러오기용
-
-
-
-    // 게시물 삭제, 수정 팝업(마지막에 넣을 예정)
-    //  const [modalOpen, setModalOpen] = useState(false); // 모달에 띄워줄 메세지 문구
-    //  const [modalOption, setModalOption] = useState('');
-
-    //  const closeModal = () => {
-    //     setModalOpen(false);
-    // };
-
 
     // 게시글 작성일자(연도-월-일)로 추출
     const formattedDate = boardView?.writeDate.substring(0, 10);
-
-    // 댓글 작성일자(연도-월-일-시간) 추출
-    const formattedDate2 = new Date(boardView?.writeDate).toLocaleString();
-
 
     // 작성자 정보를 localStorage에 저장
     window.localStorage.setItem('author', boardView?.author);
@@ -327,9 +308,6 @@ const BoardView = () => {
     console.log("getId 타입:", typeof getId); // string
 
 
-
-    console.log("getId:", getId);
-
     // 로그인 상태 확인
     console.log(isLogin);
 
@@ -347,10 +325,19 @@ const BoardView = () => {
     };
 
 
+    // 업데이트 함수 추가(댓글 작성 시 바로 업데이하기 위함용) **
+    const [regComment, setRegComment] = useState(false);
+    const regComm = () => {
+        console.log("댓글 업데이트 함수호출 : ");
+        setRegComment(true);
+    }
+
+
 
 
     // 본문 불러오기
     useEffect(() => {
+
         const boardViewLoad = async () => {
             try {
                 // 게시물 내용 불러오기
@@ -367,27 +354,24 @@ const BoardView = () => {
                     setTest(rsp.data.profileImg); // 기본프로필 이미지 불러오기
 
 
-                    if (boardView && boardView.views != null) {
+                    if (boardView && boardView.views != null) { // 게시글 조회수 구간
                         setBoardView(prevState => ({
                             ...prevState,
                             views: prevState.views + 1
 
                         }));
                     }
-
                 }
-
             } catch (e) {
                 console.log(e);
             }
         };
         boardViewLoad();
-    }, [boardNo]);
+    }, [boardNo, regComment]);
 
 
 
-
-    // 게시글 삭제
+    // 게시글 삭제 함수
     const deleteBoard = async () => {
         try {
           const confirmed = window.confirm('게시글을 삭제하시겠습니까?');
@@ -467,6 +451,7 @@ const BoardView = () => {
     const onClickDelete = () => {
         deleteBoard();
     };
+
 
     return(
         <ViewWrap>
@@ -568,7 +553,7 @@ const BoardView = () => {
 
                         {/* 작성일, 삭제 버튼 영역 */}
                         <div className="rightmenu">
-                            <div className="comment_write">{formattedDate2}</div>
+                            <div className="comment_write">{new Date(comment.writeDate).toLocaleString()}</div>
 
                             {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
                             {nickname === comment.nickname && (
@@ -589,8 +574,11 @@ const BoardView = () => {
             <BoardComment
                 boardNo={boardNo}
                 nickname = {nickname}
-                setCommentList = {setCommentList}
-                commentList = {commentList}/>
+                commentList={commentList}
+                setCommentList={setCommentList}
+                regComment = {regComm}
+                setRegComment={setRegComment}
+            />
             </Section>
         </ViewWrap>
     )

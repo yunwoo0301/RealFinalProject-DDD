@@ -56,12 +56,9 @@ const DDDApi = {
     },
 
 
-    // 자유게시판 검색 목록 출력
+    // 자유게시판 검색 목록 출력(최종)
     searchListLoad: async (keyword) => {
-        const url = `/boardList/searchList?keyword=${keyword}`;
-        console.log(url); // 해당 페이지 url 확인 위해
-        return await axios.get(url);
-        // return await axios.get(DDD_DOMAIN + `/api/boardList/searchList?keyword=${keyword}`, HEADER);
+        return await axios.get(`/api/boardList/searchList?keyword=${keyword}`);
     },
 
     // 댓글 작성
