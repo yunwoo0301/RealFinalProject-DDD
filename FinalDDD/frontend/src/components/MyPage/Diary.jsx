@@ -99,13 +99,13 @@ const Diary = () => {
   
   return (
     <>
-      <DiaryBox>
+{  myDiaryData &&    <DiaryBox>
         <p
           className="title"> 다이어리 </p>
                   
 
             <DiaryImage ref={diaryImageRef} onClick={() => { setShowPage("다이어리");}}>
-              { myDiaryData.length > 1 ?
+              { myDiaryData.length > 0 ?
                 ( myDiaryData.map((item, index) => (
                   <div className="textBox" key={index}>
                     {/* <div className="image22"> {item.diaryId}</div> */}
@@ -120,7 +120,7 @@ const Diary = () => {
                 )
               }
             </DiaryImage>
-      </DiaryBox>
+      </DiaryBox>}
     </>
   );
 };

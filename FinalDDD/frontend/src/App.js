@@ -31,7 +31,7 @@ function App() {
         <Route path="/boardList/write" element={<WriteBoard/>}/>
         <Route path="/boardList/boardView/:no" element={<BoardView/>}/>
         <Route path="/boardList/boardView/:no/editBoard" element={<EditBoard/>}/>
-        <Route path="/mypage/:memberId" element={<MyPage/>}/>
+        <Route path="/api/mypage/:memberId" element={<MyPage/>}/>
         <Route path="/admin" element={<AdminMain/>}/>
         <Route path="/login/check-email-token" element={<VerifyEmail/>}/>
         <Route path="/ratediary" element={<RateDiary/>}/>

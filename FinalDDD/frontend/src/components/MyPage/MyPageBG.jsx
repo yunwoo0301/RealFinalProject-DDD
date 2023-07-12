@@ -12,6 +12,7 @@ import useStore from "../../store";
 import Functions from "../../util/Functions";
 import { MyPageApi, DiaryApi } from "../../api/MyPageApi";
 import EditThumnail from "./EditThumnail";
+import { useParams } from "react-router-dom";
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -41,9 +42,11 @@ const Modal = styled.div`
 `;
 
 const MyPageBG = () => {
-  let memberId = Functions.getMemberId();
+  // let memberId = Functions.getMemberId();
+  const { memberId } = useParams();
 
-  const { memberData, showPage, setMemberData, setMyDiaryData } = useStore();
+  const { memberData, showPage, setMemberData,  setMyDiaryData, myDiaryData} = useStore();
+  // const [ myDiaryData,  ] = useState();
 
   useEffect(() => {
     const memberFetchDate = async () => {
@@ -65,7 +68,8 @@ const MyPageBG = () => {
     diaryFetchDate();
   }, [showPage, memberId]);
 
-  console.log('밖에있는 콘솔 : ' + memberData)
+  // console.log('밖에있는 콘솔 : ' + memberData)
+  // console.log('밖에있는 콘솔 : ' + myDiaryData)
 
   return (
     <>
@@ -76,7 +80,7 @@ const MyPageBG = () => {
             <>
               {memberData && <Thumnail memberData={memberData}/>}
               <SNSBox />
-              <Introduce />
+              {memberData && <Introduce memberData={memberData} myDiaryData={myDiaryData}/>} 
             </>
           )}
           {showPage === "다이어리" && (

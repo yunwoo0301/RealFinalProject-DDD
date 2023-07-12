@@ -42,7 +42,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/members/**", "/exhibitions/**", "/booking/**", "/pay/**", "/exhibitComment/**", "/**", "/static/**").permitAll()
                 .antMatchers("/boardList/**", "/comments/**").permitAll()
-                .antMatchers("/login/**").permitAll()
+                .antMatchers("/login/**", "/api/mypage/**").permitAll()
                 .anyRequest().authenticated()
 //                .antMatchers("/", "/static/**")
 //                .permitAll()

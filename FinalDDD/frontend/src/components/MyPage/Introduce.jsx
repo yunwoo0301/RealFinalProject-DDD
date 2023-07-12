@@ -6,6 +6,7 @@ import NaviBox from "./NaviBox.jsx";
 import { useParams } from "react-router-dom";
 import { MyPageApi } from "../../api/MyPageApi.js";
 import useStore from "../../store";
+import Functions from "../../util/Functions";
 
 const Container = styled.div`
   /* background-color  : beige; */
@@ -48,12 +49,13 @@ const TextBox = styled.div`
 `;
 
 
-const Introduce = () => {
-  const { setShowPage, memberData, myDiaryData } = useStore();
+const Introduce = ({memberData, myDiaryData}) => {
+  const { setShowPage } = useStore();
   const { memberId } = useParams();
-  console.log(myDiaryData)
+  const LoginMemberId = Functions.getMemberId();
+  // console.log(myDiaryData)
   console.log(memberData)
-
+  
   return (
     <>
       <Container>
@@ -66,7 +68,7 @@ const Introduce = () => {
                     }
         </TextBox>
         <hr />
-        <Diary />
+        {myDiaryData && <Diary />}
         <hr />
         <span
           className="text"
@@ -79,7 +81,7 @@ const Introduce = () => {
         <br />
         {/* <hr/>
                 <span className='text' onClick={()=>{props.setShowPage('내게시물')}}>채팅</span> <br/> */}
-        {memberData.id == memberId && (
+        {LoginMemberId == memberId ? (
           <>
             <hr />
             <span
@@ -101,7 +103,7 @@ const Introduce = () => {
               내 정보 수정
             </span>
           </>
-        )}
+        ) : null}
       </Container>
     </>
   );

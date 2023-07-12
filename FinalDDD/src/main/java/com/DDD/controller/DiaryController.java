@@ -17,7 +17,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("mypage/{memberId}/diary")
+@RequestMapping("/api/mypage/{memberId}/diary")
 //@CrossOrigin(origins = "http://localhost:3000")
 public class DiaryController {
     private final MemberService memberService;
