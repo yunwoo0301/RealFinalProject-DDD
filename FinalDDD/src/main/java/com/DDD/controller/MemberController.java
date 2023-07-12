@@ -1,6 +1,7 @@
 package com.DDD.controller;
 
 
+import com.DDD.dto.MemberDto;
 import com.DDD.dto.MemberRequestDto;
 import com.DDD.dto.MemberResponseDto;
 import com.DDD.dto.TokenDto;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -67,6 +69,12 @@ public class MemberController {
         String nickname = nicknameDupData.get("nickname");
         boolean isDuplicate = memberService.nicknameDupCk(nickname);
         return ResponseEntity.ok(isDuplicate);
+    }
+
+    // 멤버전체조회(관리자)
+    @GetMapping("/allMembers")
+    public List<MemberDto> findAllMembers() {
+        return memberService.findAllMembers();
     }
 
 

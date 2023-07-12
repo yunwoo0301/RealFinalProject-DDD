@@ -170,6 +170,26 @@ public class MemberService {
         return map;
     }
 
+    //  회원전체조회(관리자)
+    public List<MemberDto> findAllMembers() {
+        List<MemberDto> memberDtos = new ArrayList<>();
+        List<Member> members = memberRepository.findAll();
+
+        for (Member e : members) {
+            MemberDto memberDto = new MemberDto();
+            memberDto.setId(e.getId());
+            memberDto.setEmail(e.getEmail());
+            memberDto.setName(e.getName());
+            memberDto.setTel(e.getTel());
+            memberDto.setRegDate(String.valueOf(e.getRegDate()));
+            memberDto.setDeleteDate(String.valueOf(e.getDeleteDate()));
+
+            memberDtos.add(memberDto);
+        }
+        return memberDtos;
+    }
+
+
 
 
 }

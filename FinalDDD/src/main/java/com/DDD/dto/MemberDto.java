@@ -21,6 +21,9 @@ public class MemberDto {
     private boolean isActive;
     private Authority authority;
 
+    private String regDate;
+    private String deleteDate;
+
     // 회원테이블에서 Id로 Nickname 추출함
     public static MemberDto fromMember(Member member) {
         MemberDto memberDto = new MemberDto();
