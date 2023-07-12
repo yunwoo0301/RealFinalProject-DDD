@@ -49,7 +49,13 @@ const LoginApi = {
             nickname: inputNick, 
         }
         return await axios.post( "/login/nicknamedup", nicknamedupCheck);
+    },
+
+    // 멤버 전체조회
+    getAllMembers: async() => {
+        return await axios.get("/login/allMembers");
     }
+
 
 
     

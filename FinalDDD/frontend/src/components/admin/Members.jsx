@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import InfoModal from "../exhibition/InfoModal";
 import PageNation from "../../util/PageNation";
+import LoginApi from "../../api/LoginApi";
 
 const MembersContainer = styled.div`
     width: 80vw;
     height: 100vh;
-    
+
 
     .title {
         margin-left: 3rem;
@@ -56,7 +57,7 @@ const ButtonWrapper = styled.div`
         font-weight: bold;
         cursor: pointer;
         margin-left: 1rem;
-        
+
     }
 
     button:hover {
@@ -75,45 +76,27 @@ const ModalContainer = styled.div`
 
 const Members = () => {
     const [selectedRows, setSelectedRows] = useState([]); // 체크박스
-    const [data, setData] = useState(generateFakeData(22)); //가짜데이터 생성
     const [selectedMember, setSelectedMember] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [memberList, setMemberList] = useState([]);
 
-    // 가짜 데이터 생성 함수
-    function generateFakeData(count) {
-        const fakeData = [];
-
-        for (let i = 1; i <= count; i++) {
-          let withdrawalDate = null; // 기본 탈퇴일
-          const joinDate = "2023-06-20"; // 기본 가입일
-      
-          // 탈퇴 여부가 "Y"인 경우 탈퇴일을 변경
-          if (i % 3 === 0) {
-            withdrawalDate = `Y(${"2023-06-04"})`; // 가입일을 "Y(탈퇴일)" 형식으로 설정
-          }
-      
-          fakeData.push({
-            id: i,
-            joinDate: joinDate,
-            memberNumber: `M${i}`,
-            email: `user${i}@:DDD.com`,
-            name: `회원${i}`,
-            phoneNumber: `123-456-${i.toString().padStart(4, "0")}`,
-            withdrawalDate: withdrawalDate,
-          });
+    // 멤버리스트가져오기
+    useEffect(() => {
+        const getMembers = async() => {
+            const result = await LoginApi.getAllMembers();
+            setMemberList(result.data);
         }
-      
-        return fakeData;
-      }
+       getMembers();
+    }, [])
 
     // 전체 선택 처리
     const handleSelectAllRows = () => {
-        if (selectedRows.length === data.length) {
+        if (selectedRows.length === memberList.length) {
         // 모든 행이 선택된 상태인 경우, 모든 행 선택 해제
         setSelectedRows([]);
         } else {
         // 그 외의 경우, 모든 행 선택
-        setSelectedRows(data.map((item) => item.id));
+        setSelectedRows(memberList).map((item) => item.id);
         }
     };
 
@@ -146,9 +129,9 @@ const handleSelectRow = (id) => {
         setCurrentPage(selectedPage.selected);
     };
 
-    const pageCount = Math.ceil(data.length / ITEMS_PAGE); // 전체 페이지 수
+    const pageCount = Math.ceil(memberList.length / ITEMS_PAGE); // 전체 페이지 수
     const offset = currentPage * ITEMS_PAGE; // 현재 페이지에서 보여줄 아이템의 시작 인덱스
-    const currentPageData = data.slice(offset, offset + ITEMS_PAGE);
+    const currentPageData = memberList.slice(offset, offset + ITEMS_PAGE);
 
 
 
@@ -161,10 +144,10 @@ return (
           <hr />
           {selectedMember && (
             <div>
-                <p>가입일 : {selectedMember.joinDate}</p>
-                <p>아이디 : {selectedMember.memberNumber}</p>
+                <p>가입일 : {selectedMember.regDate}</p>
+                <p>아이디 : {selectedMember.id}</p>
                 <p>이메일 : {selectedMember.email}</p>
-                <p>전화번호 : {selectedMember.phoneNumber}</p>
+                <p>전화번호 : {selectedMember.tel}</p>
 
             </div>
           )}
@@ -184,7 +167,7 @@ return (
                 <TableHeader>
                     <input
                     type="checkbox"
-                    checked={selectedRows.length === data.length}
+                    checked={selectedRows.length === memberList.length}
                     onChange={handleSelectAllRows}
                     />
                 </TableHeader>
@@ -206,12 +189,12 @@ return (
                         onChange={() => handleSelectRow(item.id)}
                     />
                     </td>
-                    <td onClick={() => openModal(item)}>{item.memberNumber}</td>
+                    <td onClick={() => openModal(item)}>{item.id}</td>
                     <td onClick={() => openModal(item)}>{item.email}</td>
                     <td onClick={() => openModal(item)}>{item.name}</td>
-                    <td>{item.phoneNumber}</td>
-                    <td>{item.joinDate}</td>
-                    <td>{item.withdrawalDate}</td>
+                    <td>{item.tel}</td>
+                    <td>{item.regDate}</td>
+                    <td>{item.deleteDate}</td>
                 </TableRow>
                 ))}
             </tbody>
