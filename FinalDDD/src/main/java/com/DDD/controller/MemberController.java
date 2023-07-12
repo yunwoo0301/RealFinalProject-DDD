@@ -77,6 +77,14 @@ public class MemberController {
         return memberService.findAllMembers();
     }
 
+    // 이메일변경(관리자)
+    @PostMapping("/changeEmail")
+    public ResponseEntity<Boolean> changeEmail(@RequestBody Map<String, String> emailData) {
+        Long id = Long.valueOf(emailData.get("id"));
+        String email = emailData.get("email");
+        return ResponseEntity.ok(memberService.newEmail(id, email));
+    }
+
 
 
 }

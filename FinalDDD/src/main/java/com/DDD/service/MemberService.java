@@ -189,6 +189,18 @@ public class MemberService {
         return memberDtos;
     }
 
+    // 이메일 변경(관리자)
+    public boolean newEmail(Long id, String email) {
+        return memberRepository.findById(id)
+                .map(member -> {
+                    member.setEmail(email);
+                    Member savedMember = memberRepository.save(member);
+                    log.info(savedMember.toString());
+                    return true;
+                })
+                .orElse(false);
+    }
+
 
 
 
