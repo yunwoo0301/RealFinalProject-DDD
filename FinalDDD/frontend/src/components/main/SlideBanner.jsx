@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import DDDApi from '../../api/DDDApi';
+import useStore from "../../store";
 
 
 const SlideContainer = styled.div`
@@ -57,6 +58,7 @@ const SlideContainer = styled.div`
 const RollDiv = () => {
   const { t } = useTranslation();
   const [exhibitionList, setExhibitionList] = useState([]);
+  const { setStealExhibition } = useStore();
   console.log("anchors" + exhibitionList[0]?.imgUrl);
 
   const intervalRef = useRef(null);
@@ -80,6 +82,7 @@ const RollDiv = () => {
       try {
         const exhibitListData = await DDDApi.exhibitionList();
         setExhibitionList(exhibitListData.data);
+        setStealExhibition(exhibitListData.data); // 평가하기를 위해 데이터 저장
         console.log("전시리스트 + ", exhibitListData.data);
         console.log("첫번째 리스트" + exhibitListData.data[0]?.imgUrl);
       } catch (e) {
