@@ -11,8 +11,8 @@ const Container = styled.div`
 const Modal = styled.div`
   position: fixed;
   width: 30%;
-  min-width: ${props => props.minWidth || "500px"};
-  min-height: ${props => props.minHeight || "200px"};
+  min-width: 500px;
+  min-height: 200px;
   background-color: white;
   top: 50%;
   left: 50%;
@@ -22,6 +22,7 @@ const Modal = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 
   .checkIcon {
     /* background-color: blue; */
@@ -59,9 +60,8 @@ const Modal = styled.div`
       height: 2.3rem;
       border-radius: 3rem;
       margin: 0 6px;
-      background-color: ${props => (!props.disabled ? '#5eadf7' : '#b0abab')};
-      color :${props => (!props.disabled ? '#ffffff' : '#050E3D')};
       background-color: #5eadf7;
+      color :#ffffff;
       border: 1px solid #f4f8ff;
       font-size: 0.8rem;
       cursor: pointer;
@@ -69,11 +69,11 @@ const Modal = styled.div`
   }
 `;
 
-const ConfirmModal = ({props,  minWidth, minHeight}) => {
+const ConfirmModal = ({props}) => {
   return (
     <>
       <Container>
-        <Modal minWidth={minWidth} minHeight={minHeight}>
+        <Modal>
           <div className="checkIcon">
             {props.icon}
           </div>

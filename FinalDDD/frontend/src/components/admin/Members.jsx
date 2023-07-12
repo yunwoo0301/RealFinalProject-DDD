@@ -87,7 +87,6 @@ const Members = () => {
     const getMembers = async() => {
         const result = await LoginApi.getAllMembers();
         setMemberList(result.data);
-        console.log("회원정보 조회 ", result.data);
     }
     useEffect(() => {
        getMembers();
@@ -107,7 +106,9 @@ const Members = () => {
         const sendData = await LoginApi.changeEmail(id, newEmail);
         if(sendData) {
             setOpenChange(false);
+            setSelectedRows([]);
             getMembers();
+
         }
     }
 
@@ -116,19 +117,26 @@ const Members = () => {
     const openToChange = () => {
         setOpenChange(true)
     }
+    const closeToChange = () => {
+        setOpenChange(false);
+    }
 
     // 이메일 변경모달에 값 전달
     const props = {
         icon: <MdOutlineChangeCircle/>,
         body: (
-            <>
+          <>
             <h4>이메일 변경</h4>
-            <p>현재 이메일 : {selectedMember && selectedMember.email}</p>
+            <p>현재 이메일: {selectedMember ? selectedMember.email : newEmail}</p>
             <input type="text" value={newEmail} onChange={changeNewEmail}/>
-            </>
+          </>
         ),
-        button: <button onClick={changeEmail}>확인</button>
-    }
+        button: [
+          <button onClick={changeEmail}>확인</button>,
+          <button onClick={closeToChange}>취소</button>
+        ]
+      };
+
 
     // 전체 선택 처리
     const handleSelectAllRows = () => {
@@ -147,16 +155,18 @@ const handleSelectRow = (id, email) => {
     if (selectedRows.includes(id)) {
       // 이미 선택된 행인 경우, 선택 해제
       setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
-      setId(null);
-      setNewEmail('');
+      setSelectedMember(null); // 선택된 회원 정보 초기화
+      setId(null); // 아이디 값 초기화
+      setNewEmail(''); // newEmail 초기화
     } else {
       // 그 외의 경우, 선택
-      setSelectedRows([...selectedRows, id]);
-      setId(id);
-      setNewEmail(email);
+      setSelectedRows([id]);
+      const member = memberList.find((item) => item.id === id);
+      setSelectedMember(member); // 선택된 회원 정보 설정
+      setId(id); // 아이디 값 설정
+      setNewEmail(member.email); // 선택된 회원의 이메일 값을 newEmail 상태에 저장
     }
   };
-
 
   // 모달 열기
     const openModal = (member) => {
