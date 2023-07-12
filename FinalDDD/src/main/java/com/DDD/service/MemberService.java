@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -159,6 +160,7 @@ public class MemberService {
         }
         if(passwordEncoder.matches(password, member.get().getPassword())){
             member.get().setActive(false);
+            member.get().setDeleteDate(LocalDateTime.now());
             Member savedMember = memberRepository.save(member.get());
             log.info(savedMember.toString());
             map.put("memberDelete", "Deleted successfully");

@@ -27,6 +27,7 @@ public class MemberRequestDto { // DB 넣어질 요소
     private boolean isActive;
     private Authority authority;
     private LocalDateTime regDate;
+    private LocalDateTime deleteDate;
 
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
@@ -41,6 +42,7 @@ public class MemberRequestDto { // DB 넣어질 요소
                 .profileImg("/default-profile.png")
                 .backgroundImg("/default-BG.jpg")
                 .regDate(regDate)
+                .deleteDate(deleteDate)
                 .build();
     }
 
