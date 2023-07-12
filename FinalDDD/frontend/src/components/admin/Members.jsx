@@ -3,6 +3,9 @@ import styled from "styled-components";
 import InfoModal from "../exhibition/InfoModal";
 import PageNation from "../../util/PageNation";
 import LoginApi from "../../api/LoginApi";
+import ConfirmModal from "../../util/ConfirmModal";
+import {MdOutlineChangeCircle} from "react-icons/md";
+
 
 const MembersContainer = styled.div`
     width: 80vw;
@@ -81,13 +84,51 @@ const Members = () => {
     const [memberList, setMemberList] = useState([]);
 
     // 멤버리스트가져오기
+    const getMembers = async() => {
+        const result = await LoginApi.getAllMembers();
+        setMemberList(result.data);
+        console.log("회원정보 조회 ", result.data);
+    }
     useEffect(() => {
-        const getMembers = async() => {
-            const result = await LoginApi.getAllMembers();
-            setMemberList(result.data);
-        }
        getMembers();
     }, [])
+
+
+    // 관리자권한 이메일변경
+    const [newEmail, setNewEmail] = useState('');
+    const [id, setId] = useState(null);
+
+    const changeNewEmail = (e) => {
+        setNewEmail(e.target.value);
+    }
+
+
+    const changeEmail = async() => {
+        const sendData = await LoginApi.changeEmail(id, newEmail);
+        if(sendData) {
+            setOpenChange(false);
+            getMembers();
+        }
+    }
+
+    // 이메일 변경 모달오픈
+    const [openChange, setOpenChange] = useState(false);
+    const openToChange = () => {
+        setOpenChange(true)
+    }
+
+    // 이메일 변경모달에 값 전달
+    const props = {
+        icon: <MdOutlineChangeCircle/>,
+        body: (
+            <>
+            <h4>이메일 변경</h4>
+            <p>현재 이메일 : {selectedMember && selectedMember.email}</p>
+            <input type="text" value={newEmail} onChange={changeNewEmail}/>
+            </>
+        ),
+        button: <button onClick={changeEmail}>확인</button>
+    }
 
     // 전체 선택 처리
     const handleSelectAllRows = () => {
@@ -100,16 +141,23 @@ const Members = () => {
         }
     };
 
+
 // 개별 행 선택 처리
-const handleSelectRow = (id) => {
+const handleSelectRow = (id, email) => {
     if (selectedRows.includes(id)) {
-    // 이미 선택된 행인 경우, 선택 해제
-    setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+      // 이미 선택된 행인 경우, 선택 해제
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+      setId(null);
+      setNewEmail('');
     } else {
-    // 그 외의 경우, 선택
-    setSelectedRows([...selectedRows, id]);
+      // 그 외의 경우, 선택
+      setSelectedRows([...selectedRows, id]);
+      setId(id);
+      setNewEmail(email);
     }
-};
+  };
+
+
   // 모달 열기
     const openModal = (member) => {
     setSelectedMember(member);
@@ -137,6 +185,7 @@ const handleSelectRow = (id) => {
 
 return (
     <MembersContainer>
+        {openChange && <ConfirmModal props={props}/>}
         <ModalContainer>
         {isModalOpen && (
         <InfoModal open={isModalOpen} close={closeModal}>
@@ -157,7 +206,7 @@ return (
         <h3 className="title">회원 관리</h3>
         <div className="table-container">
         <ButtonWrapper>
-            <button>수정</button>
+            <button onClick={openToChange}>수정</button>
             <button>삭제</button>
         </ButtonWrapper>
         <div className="member-table">
@@ -186,7 +235,7 @@ return (
                     <input
                         type="checkbox"
                         checked={selectedRows.includes(item.id)}
-                        onChange={() => handleSelectRow(item.id)}
+                        onChange={() => handleSelectRow(item.id, item.emailß)}
                     />
                     </td>
                     <td onClick={() => openModal(item)}>{item.id}</td>

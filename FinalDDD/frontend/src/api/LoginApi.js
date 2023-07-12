@@ -54,6 +54,15 @@ const LoginApi = {
     // 멤버 전체조회
     getAllMembers: async() => {
         return await axios.get("/login/allMembers");
+    },
+
+     // 관리자 이메일 수정
+    changeEmail: async(id, newEmail) => {
+        const emailData = {
+            id: id,
+            email: newEmail
+        }
+        return await axios.post("/login/changeEmail", emailData);
     }
 
 
