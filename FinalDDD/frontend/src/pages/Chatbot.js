@@ -2,13 +2,20 @@ import React from 'react';
 import ChatBot from 'react-simple-chatbot';
 import styled, { ThemeProvider } from 'styled-components';
 
-
 const ChatContainer = styled.div`
     width: 100%;
     z-index: 99;
     margin-left: 2rem;
     .answer{
         font-size: 0.8rem;
+    }
+    .xbutton{
+        border: none;
+        font-size: 2rem;
+        float: right;
+        background-color: transparent;
+        margin-right: 1.7rem;
+        cursor: pointer;
     }
 `;
 
@@ -28,6 +35,14 @@ const theme = {
 }
 
 const Chatbot = () => {
+
+    const [isOpen, setIsOpen] = React.useState(true);
+
+    const handleClose = () => {
+        setIsOpen(false);
+    };
+
+
     const steps = [
         {
             id: '0',
@@ -262,16 +277,22 @@ const Chatbot = () => {
 
     return (
         <ChatContainer>
-        <ThemeProvider theme={theme}>
-            <ChatBot
-                headerTitle="❣️문의하기❣️ 문의하실 내용을 선택해주세요"
-                steps={steps}
-                hideUserAvatar={true}
-                hideBotAvatar={true}
-                inputStyle={inputStyle}
-                hideSubmitButton={true}
-            />
-        </ThemeProvider>
+        {isOpen && (
+                <button className="xbutton" onClick={handleClose}>&times;</button>
+            )}
+        {isOpen && (
+                <ThemeProvider theme={theme}>
+                    <ChatBot
+                        headerTitle="❣️문의하기❣️ - 문의하실 내용을 선택해주세요."
+                        steps={steps}
+                        placeholder={"문의하실 내용을 클릭해주세요."}
+                        hideUserAvatar={true}
+                        hideBotAvatar={true}
+                        inputStyle={inputStyle}
+                        hideSubmitButton={true}
+                    />
+                </ThemeProvider>
+            )}
         </ChatContainer>
     )
 

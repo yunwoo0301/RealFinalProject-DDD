@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import NavigateBar from "./Navigate";
 import useStore from "../../store";
 import {FcDecision} from 'react-icons/fc'
+import SwipeableTemporaryDrawer from "../header/newNavi";
 
 const IconBox = styled.div`
     display: flex;
@@ -135,7 +136,8 @@ const Icons = () => {
 
 
             <div className="navi">
-                <NavigateBar/>
+{/*                 <NavigateBar/> */}
+                <SwipeableTemporaryDrawer/>
             </div>
         </IconBox>
 
