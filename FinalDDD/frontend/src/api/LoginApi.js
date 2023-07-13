@@ -6,23 +6,12 @@ import { getToken } from "../store"; // token값 받아오기
 const LoginApi = {
     login : async(email, password) => {
 
-
-
         const loginCheck = {
             email : email,
             password : password
         };
-        return await axios.post( "/login", loginCheck); // config 부분 같이 날리기
+        return await axios.post(`${DDD_DOMAIN}/login/`, loginCheck, HEADER); // config 부분 같이 날리기
     },
-
-    // login : async(email, password) => {
-
-    //     const loginCheck = {
-    //         email : email,
-    //         password : password
-    //     };
-    //     return await axios.post(DDD_DOMAIN + "/login", loginCheck, HEADER);
-    // },
     
     signup : async(inputEmail, inputPwd, inputNick, inputName, inputTel, inputIns) => {
         const signupCheck = {
@@ -36,6 +25,13 @@ const LoginApi = {
         
         return await axios.post( "/login/signup", signupCheck);
     },
+
+    findPassword : async(inputEmail) => {
+        const findPasswordCheck = {
+            email : inputEmail
+        }
+        return await axios.post(DDD_DOMAIN + "/login/forgot", findPasswordCheck);
+        },
     
     emaildup :async(inputEmail) => {
         const emaildupCheck = {
