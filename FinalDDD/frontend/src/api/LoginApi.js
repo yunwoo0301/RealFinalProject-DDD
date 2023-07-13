@@ -32,6 +32,13 @@ const LoginApi = {
         }
         return await axios.post("/login/forgot", findPasswordCheck);
         },
+
+    emailSend : async(inputEmail) => {
+        const emailSendCheck = {
+            email : inputEmail
+        }
+    return await axios.post("/login/check-email-token?", emailSendCheck);
+    },
     
     emaildup :async(inputEmail) => {
         const emaildupCheck = {
