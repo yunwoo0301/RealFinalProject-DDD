@@ -20,8 +20,8 @@ const Section = styled.div`
     height: calc(100vh - 40px);
     float: center;
     position: relative;
-    
-    
+
+
     .board_box {
         margin: 1rem;
 
@@ -50,54 +50,54 @@ const Section = styled.div`
         margin-bottom: 20px;
         font-size: 16px;
         font-weight: lighter;
-        border-collapse: collapse; 
+        border-collapse: collapse;
         width: 100%;
         background-color: #4555AE;
         border-bottom: solid 1px #4555AE;
         text-align: center;
         table-layout: fixed;
-       
-        th{padding: 10px 6px; color: white; background-color: #050E3D;} 
-        
+
+        th{padding: 10px 6px; color: white; background-color: #050E3D;}
+
         tr{
             background-color: white;
             &:nth-child(2n) td, &:nth-child(2n){
                 background-color: #fbfbfb;
             }
         }
-        
+
         td {
-            padding: 10px 6px; 
-            background-color: white; 
-            border-left: solid 1px #bbb; 
-            border-top: solid 1px #ddd; 
-            font-weight: 400; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
+            padding: 10px 6px;
+            background-color: white;
+            border-left: solid 1px #bbb;
+            border-top: solid 1px #ddd;
+            font-weight: 400;
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
         }
         th:first-child, td:first-child {border-left: none; width: 70px;} // 글번호(열)
         td:first-child, td:nth-child(5), td:last-child { letter-spacing: -1px;}
-        th:nth-child(2), td:nth-child(2) {width: 70px; letter-spacing: -.4px;} // 카테고리(열) 
+        th:nth-child(2), td:nth-child(2) {width: 70px; letter-spacing: -.4px;} // 카테고리(열)
         td:nth-child(3) {text-align: center;} // 제목(열)
         th:nth-child(4), td:nth-child(4){width: 120px;} // 작성자(열) 크기 조절
         th:nth-child(5), td:nth-child(5){width: 60px;} // 조회수(열)
         th:last-child, td:last-child{width: 100px;} // 작성일(열)
-        
+
         tr:hover, tr:hover td, tr:hover a {
-            color: #4555AE; 
-            background-color: #efefef; 
+            color: #4555AE;
+            background-color: #efefef;
             cursor: pointer;
         }
         .bi-heart-fill {
-            padding-right:5px; 
+            padding-right:5px;
             color:#FC5C7D;
         }
     }
     .writebtn {
         display: flex;
         margin-bottom: 1em 0em ;
-    
+
         button {
             margin: -1em 1em ;
             margin-left: auto;
@@ -155,7 +155,9 @@ const Question = () => {
           try {
             const category = 'Question'; // 조회할 카테고리 이름 지정
             const response = await DDDApi.getFreeBoardsByCategory(category);
-            setBoardList(response.data);
+            const filteredData = response.data.filter(boardList => boardList.category === category);
+            // setBoardList(response.data);
+            setBoardList(filteredData);
             console.log(response.data);
           } catch (error) {
             console.log(error);
@@ -211,7 +213,8 @@ const Question = () => {
                   currentPageData.map((boardList) => (
                     <tr key={boardList.boardNo}>
                       <td>{boardList.boardNo}</td>
-                      <td>{boardList.category}</td>
+                      <td>{boardList.category === 'Question' ? '질문하기' : boardList.category}</td>
+                      {/* <td>{boardList.category}</td> */}
                       <td>
                         <Link
                           to={`/boardList/boardView/${boardList.boardNo}`}
