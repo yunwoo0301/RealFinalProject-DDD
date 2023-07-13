@@ -6,11 +6,10 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const Button = styled.button`
-    float: right;
     font-size: 1.7rem;
     border: none;
     background-color: transparent;
-    margin-top: 0.5rem;
+    margin: 0.6rem 0.4rem;
     cursor: pointer;
 `;
 

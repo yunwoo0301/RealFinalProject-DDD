@@ -6,17 +6,16 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import NavigateBar from "./Navigate";
 import useStore from "../../store";
-import {FcDecision} from 'react-icons/fc'
 import SwipeableTemporaryDrawer from "../header/newNavi";
 
 const IconBox = styled.div`
     display: flex;
     justify-content: center;
-    margin-right: 1rem;
     align-items: flex-start;
 
-    .ticket-icon, .navi, .login-icon {
-        margin: 0.3rem 0.8rem 0 0.3rem;
+
+    .ticket-icon,  .login-icon {
+        margin: 0.3rem 0.8rem 0.3rem;
         font-size: 1.5rem;
         border-radius: 2rem;
         /* background-color: red; */
@@ -41,11 +40,11 @@ const IconBox = styled.div`
             border-radius: inherit;
         }
     }
-    .ticket-icon:hover, .navi:hover, .login-icon:hover{
+    /* .ticket-icon:hover, .navi:hover, .login-icon:hover{
         background-color: #f4f8ff;
         height: 2.4rem;
         width: 2.4rem;
-    }
+    } */
 
 
     @media (max-width: 768px) {
