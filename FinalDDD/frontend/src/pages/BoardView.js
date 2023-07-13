@@ -5,7 +5,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import postimage from "./../resources/게시판기본이미지.gif";
 import BoardComment from "../components/Board/BoardComment";
 import DDDApi from "../api/DDDApi";
 import { MyPageApi } from "../api/MyPageApi";
@@ -180,7 +179,7 @@ const Contents = styled.div`
 `;
 
 
-/* 여기서부터는 댓글 영역 CSS*/
+/* 여기서부터는 댓글 영역 CSS */
 
 const Wrapper = styled.div`
     width: 92%;
@@ -324,8 +323,7 @@ const BoardView = () => {
         return isLogin && isAuthorMatched;
     };
 
-
-    // 업데이트 함수 추가(댓글 작성 시 바로 업데이하기 위함용) **
+    // 업데이트 함수 추가 **
     const [regComment, setRegComment] = useState(false);
     const regComm = () => {
         console.log("댓글 업데이트 함수호출 : ");
@@ -505,6 +503,11 @@ const BoardView = () => {
                 {/* 작성자 정보 구간 */}
                 {boardView && (
                 <div className="authorinfo">
+                    {/* {boardView?.profileImg ? (
+                    <img src={boardView?.profileImg} alt="프로필 이미지" />
+                    ) : (
+                    <img src={profile} alt="기본 이미지" />
+                    )} */}
                     {/*기본 프로필 이미지*/}
                     <img src={test} alt="프로필"/>
                     <div className="author">{boardView?.author}</div>
@@ -522,14 +525,14 @@ const BoardView = () => {
                 {/* 게시글 내용(이미지+텍스트) 구간 */}
                 <Contents>
                     {boardView && (
-                    <div className="image_area">
-                        {boardView.image ? (
-                        <img src={boardView.image} alt="업로드 이미지" />
-                        ) : (
-                        <img src={postimage} alt="기본 이미지" />
+                            <div className="image_area">
+                                {boardView.image ? (
+                                    <img src={boardView.image} alt="업로드 이미지" />
+                                ) : (
+                                    <img src="/default-image.png" alt="기본 이미지" />
+                                )}
+                            </div>
                         )}
-                    </div>
-                    )}
                     <div className="text_area">{boardView?.contents}</div>
                 </Contents>
             </div>

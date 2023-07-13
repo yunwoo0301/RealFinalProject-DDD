@@ -1,8 +1,9 @@
 package com.DDD.dto;
 
+
+import com.DDD.entity.FreeBoard;
 import com.DDD.entity.Member;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+
 public class FreeBoardDto {  // 프론트엔드와 주고 받을 때 사용
     private Long boardNo; // 게시판 번호
     private String author; // 작성자 닉네임
@@ -27,4 +29,6 @@ public class FreeBoardDto {  // 프론트엔드와 주고 받을 때 사용
     private boolean isOk; // 검색 결과 여부
 
     private List<BoardCommentDto> comments; // 댓글 리스트 추가
+
 }
+

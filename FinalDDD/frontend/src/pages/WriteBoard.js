@@ -290,7 +290,7 @@ const WriteBoard = () => {
       return;
     }
     
-    let imageUrl = ""; // 이미지 URL 초기값
+    let imageUrl = "/default-profile.png"; // 이미지 URL 초기값
     
     if (image && image.image_file) {
       // 이미지가 선택된 경우에만 업로드 로직 수행

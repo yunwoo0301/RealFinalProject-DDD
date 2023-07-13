@@ -69,16 +69,4 @@ public class FreeBoard {
     }
 
 
-
-    @Builder
-    public FreeBoard(FreeBoardDto dto, Member member) {
-        this.member = member;
-        this.category = dto.getCategory();
-        this.region = dto.getRegion();
-        this.title = dto.getTitle();
-        this.contents = dto.getContents();
-        this.image = dto.getImage();
-        this.views = dto.getViews();
-        this.writeDate = LocalDateTime.now();
-    }
 }
