@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
+import LoginApi from "../../api/LoginApi";
 
 const ChartContainer = styled.div`
   margin: 0 auto;
-  width: 100%;
+  width: 1000px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -12,30 +13,47 @@ const ChartContainer = styled.div`
 
 
 const Chart = () => {
-  const data = [
-    { date: "2023-06-01", count: 10 },
-    { date: "2023-06-02", count: 20 },
-    { date: "2023-06-03", count: 15 },
-    { date: "2023-06-04", count: 30 },
-    { date: "2023-06-05", count: 25 },
-    { date: "2023-06-06", count: 12 },
-    { date: "2023-06-07", count: 18 },
-    { date: "2023-06-08", count: 5 },
-    { date: "2023-06-09", count: 3 },
-    { date: "2023-06-10", count: 14 },
-    { date: "2023-06-11", count: 9 },
-  ];
+  // 멤버리스트가져오기
+  const [chartData, setChartData] = useState([]);
+
+  const getMembers = async () => {
+  const result = await LoginApi.getAllMembers();
+
+  // regDate별 갯수 계산
+  const regDateCounts = {};
+  result.data.forEach((member) => {
+    const regDate = member.regDate;
+    if (regDateCounts[regDate]) {
+      regDateCounts[regDate] += 1;
+    } else {
+      regDateCounts[regDate] = 1;
+    }
+  });
+
+  // 차트 자료 생성
+  const chartData = Object.entries(regDateCounts).map(([date, count]) => ({
+    date,
+    count,
+  }));
+
+  setChartData(chartData);
+  };
+
+  useEffect(() => {
+    getMembers();
+  }, []);
+
 
   const minValue = 0;
-  const maxValue = Math.max(...data.map((item) => item.count));
+  const maxValue = Math.max(...chartData.map((item) => item.count));
   const countRange = maxValue - minValue;
 
-  const graphWidth = 400; // 그래프 너비
+  const graphWidth = 700; // 그래프 너비
   const graphHeight = 200; // 그래프 높이
-  const scaleX = graphWidth / (Math.min(data.length, 10)); // x축
+  const scaleX = graphWidth / (Math.min(chartData.length, 10)); // x축
   const scaleY = graphHeight / (countRange + 5); // y축
 
-  const recentData = data.slice(-10); // 최근 10일치 데이터 추출
+  const recentData = chartData.slice(-10); // 최근 10일치 데이터 추출
 
   return (
     <ChartContainer>
@@ -86,7 +104,7 @@ const Chart = () => {
             <React.Fragment key={item.date}>
               <line x1={x} y1={graphHeight} x2={x} y2={graphHeight + 5} stroke="gray" strokeWidth={1} />
               <span
-                style={{ position: "absolute", left: x+30, top: "100%", transform: "translateX(-50%)", fontSize: "12px", color: "black" }}
+                style={{ position: "absolute", left: x+140, top: "100%", transform: "translateX(-50%)", fontSize: "12px", color: "black" }}
               >
                 {item.date.slice(-2)}일
               </span>
