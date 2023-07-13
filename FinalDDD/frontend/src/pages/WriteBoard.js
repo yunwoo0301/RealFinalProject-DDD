@@ -18,7 +18,7 @@ const Wrap = styled.div`
     .btn_area {
         text-align: right;
         margin-right: .9em;
- 
+
         .savebtn { // 등록 버튼 속성
                 /* display :inline-block; */
                 cursor: pointer;
@@ -31,8 +31,8 @@ const Wrap = styled.div`
                 transition: all .1s ease-in;
                 font-weight: 600;
                 font-size: 14px;
-        
-                
+
+
                 &:hover {background-color: #5EADF7;
                     color: #F4F8FF;}
             }
@@ -55,7 +55,7 @@ const Wrap = styled.div`
             button:nth-child(1) {
                 margin-right: 16px;
             }
-                
+
     }
 `;
 
@@ -67,12 +67,12 @@ const Section = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    
+
     div { // 헤더 및 카테고리 박스
         width: 100%;
         padding: 10px 30px;
     }
-    .board_header { // 게시물 작성 영역    
+    .board_header { // 게시물 작성 영역
         h2 {
             font-size: 1.8em;
             margin-top: 30px;
@@ -81,7 +81,7 @@ const Section = styled.div`
     }
 
     table {
-        border-collapse: collapse; 
+        border-collapse: collapse;
         width: 100%;
         background-color: #4555AE;
         border-bottom: solid 1px #4555AE;
@@ -90,7 +90,7 @@ const Section = styled.div`
         th {padding: 10px; color: white;}
         td {padding: 10px; background-color: white; border-left: solid 1px #bbb; border-top: solid 1px #ddd;}
         td:first-child {border-left: none; width: 115px;
-            
+
             select { // 게시판 카테고리 셀렉박스
                 text-align:center;
                 background: none;
@@ -101,19 +101,19 @@ const Section = styled.div`
             }
         }
         td:nth-child(2) {width: 100px; text-align: left; padding-left: 20px;
-        
+
             select{ // 지역선택 카테고리 셀렉박스
-                text-align:center; 
+                text-align:center;
                 background: none;
                 border: none;
                 outline: none;
                 font-size: 16px;
                 font-weight: 600;
             }
-        }  
-        
+        }
+
         td:nth-child(3) {width: 41em; text-align: left; padding-left: 20px;
-        
+
         }
 
     }
@@ -154,7 +154,7 @@ const Section = styled.div`
         }
 
         .imguploaderBtn {
-            
+
 
             button {
                 /* font-size: 14px;
@@ -206,7 +206,7 @@ const TextWrap = styled.div`
 
 const WriteBoard = () => {
     const isLogin = window.localStorage.getItem("isLogin");
-    const getId = localStorage.getItem("memberId") 
+    const getId = localStorage.getItem("memberId")
     console.log("getId:", getId);
     console.log(isLogin);
 
@@ -214,8 +214,8 @@ const WriteBoard = () => {
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [region, setRegion] = useState(null);
-    
-     
+
+
     // 이미지 업로드 초기값 설정
     const [image, setImage] = useState({ // 이미지 추가부분
       image_file: null,
@@ -230,31 +230,31 @@ const WriteBoard = () => {
           category: category,
           region: region,
           title: title,
-          contents: contents  
+          contents: contents
         });
       }, [category, region, title, contents]);
 
 
-  
+
     // 게시판 카테고리 선택
     const onChangerCtg = (e) => {
       setCategory(e.target.value);
     };
-  
+
     // 지역 선택
     const onChangerRegion = (e) => {
       setRegion(e.target.value);
     };
-  
+
     // 게시글 제목 변경
     const onChangeTitle = (e) => {
       setTitle(e.target.value);
     };
-  
+
     // 이미지 미리보기
     const previewImage = (e) => {
       e.preventDefault();
-  
+
       const fileReader = new FileReader();
       if (e.target.files[0]) {
         fileReader.readAsDataURL(e.target.files[0]);
@@ -270,7 +270,7 @@ const WriteBoard = () => {
 
     /* 이미지 업로드 1차 작업 건 */
     // const handleUploadClick = () => {
-      
+
     //     const storageRef = storage.ref();
     //     const fileRef = storageRef.child(image.image_file.name);
     //     fileRef.put(image.image_file).then(() => {
@@ -289,14 +289,14 @@ const WriteBoard = () => {
       alert("제목, 카테고리, 내용을 모두 입력해 주세요.");
       return;
     }
-    
+
     let imageUrl = "/default-profile.png"; // 이미지 URL 초기값
-    
+
     if (image && image.image_file) {
       // 이미지가 선택된 경우에만 업로드 로직 수행
       const storageRef = storage.ref();
       const fileRef = storageRef.child(image.image_file.name);
-  
+
       try {
         // 이미지 업로드
         await fileRef.put(image.image_file);
@@ -307,7 +307,7 @@ const WriteBoard = () => {
         return;
       }
     }
-  
+
     try {
       const resultNo = await DDDApi.boardWrite(
         getId,
@@ -317,10 +317,10 @@ const WriteBoard = () => {
         imageUrl,
         contents
       );
-      
+
       const linkNo = resultNo.data;
       console.log("Result Number:", linkNo);
-      
+
       if (linkNo) {
         alert("문의글 작성이 완료되었습니다.");
         navigate('/boardList');
@@ -330,7 +330,7 @@ const WriteBoard = () => {
       alert("문의글 작성 중 오류가 발생했습니다.");
     }
   };
-  
+
 
     return (
       <Wrap>
@@ -350,9 +350,9 @@ const WriteBoard = () => {
                       <option value={category} selected>
                         카테고리
                       </option>
-                      <option value="추천수다">추천수다</option>
-                      <option value="질문하기">질문하기</option>
-                      <option value="동행찾기">동행찾기</option>
+                      <option value="Recommend">추천수다</option>
+                      <option value="Question">질문하기</option>
+                      <option value="DDDmate">동행찾기</option>
                     </select>
                   </td>
 
@@ -399,12 +399,12 @@ const WriteBoard = () => {
               {/* 이미지 미리보기 및 업로드 */}
               <div className="addBoard-wrapper">
                 {previewUrl && <img src={previewUrl} alt="Preview" />}
-                {image.image_url && <img src={image.image_url} alt="Uploaded" />} 
+                {image.image_url && <img src={image.image_url} alt="Uploaded" />}
                 </div>
           </div>
 
           </Section>
-          
+
           <TextWrap>
             <CKEditor
             editor={ClassicEditor}
@@ -418,7 +418,7 @@ const WriteBoard = () => {
             }}
             />
           </TextWrap>
-        
+
         <div className="btn_area">
             <button className="savebtn" onClick={onClickSave}>등록하기</button>
             <Link to='/boardList'>

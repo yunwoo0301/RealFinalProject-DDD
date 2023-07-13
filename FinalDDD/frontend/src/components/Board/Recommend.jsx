@@ -154,7 +154,7 @@ const Recommend = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const category = '추천수다'; // 조회할 카테고리 이름 지정
+            const category = 'Recommend'; // 조회할 카테고리 이름 지정
             const response = await DDDApi.getFreeBoardsByCategory(category);
             setBoardList(response.data);
             console.log(response.data);

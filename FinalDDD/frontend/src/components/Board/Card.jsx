@@ -133,7 +133,7 @@ const Card = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const category = '동행찾기'; // 조회할 카테고리 이름 지정
+            const category = 'DDDmate'; // 조회할 카테고리 이름 지정
             const response = await DDDApi.getFreeBoardsByCategory(category);
             setBoardList(response.data);
             setFilterRegion(response.data); // 지역별 필터링 추가
