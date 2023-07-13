@@ -11,10 +11,11 @@ import {FcDecision} from 'react-icons/fc'
 const IconBox = styled.div`
     display: flex;
     justify-content: center;
-    align-items: center;
+    margin-right: 1rem;
+    align-items: flex-start;
 
     .ticket-icon, .navi, .login-icon {
-        margin: 0.3rem 0.3rem 0 0.3rem;
+        margin: 0.3rem 0.8rem 0 0.3rem;
         font-size: 1.5rem;
         border-radius: 2rem;
         /* background-color: red; */
@@ -25,10 +26,14 @@ const IconBox = styled.div`
         align-items: center;
         text-align: center;
         cursor: pointer;
-        transition: all 0.2s ease-in;
+        transition: all 0.1s ease-in;
     }
 
-    .login-icon {
+    .login-icon,  .logout {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+
         img{
             width: 100%;
             height: 100%;
@@ -56,6 +61,29 @@ const IconBox = styled.div`
         }
     }
 `;
+const LoginIconBox = styled.div`
+  justify-content: center;
+  margin: 0.3rem 0.8rem 0 0.3rem;
+  /* background-color: red; */
+
+  .logout {
+    margin-top: 1rem;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.6rem;
+    font-weight: bold;
+    background-color: #5eadf7;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  &:hover .logout {
+    display: block;
+  }
+`;
+
+
 
 const Icons = () => {
     const { profileImg } = useStore();
@@ -71,6 +99,16 @@ const Icons = () => {
     const {t} = useTranslation();
 
 
+    const removeLocalstorage = () =>{
+        localStorage.removeItem("isLogin");
+        localStorage.removeItem("storageEmail");
+        localStorage.removeItem("memberId");
+        localStorage.removeItem("accessToken");
+        navigate('/')
+    }
+
+
+
     return (
 
         <IconBox>
@@ -78,12 +116,23 @@ const Icons = () => {
                 <HiOutlineTicket/>
             </div>
 
+        <LoginIconBox>
             <div className="login-icon" onClick={onClickToLogin}>
-                {loginState ?  (<img src={profileImg} alt="😫" />) : (<BsPersonCircle/>)}
-//                 {loginState ?
-//                 (<img src="https://firebasestorage.googleapis.com/v0/b/real-final-project-ddd.appspot.com/o/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png?alt=media&token=7d664c18-037d-4e60-9415-32f26fb0d430" alt="😫" />) :
-//                 (<FcDecision/>)}
-            </div>
+                    {loginState ?  (<img src={profileImg} alt="😫" />) : (<BsPersonCircle/>)}
+                    {/* {loginState ?
+                    (<img src="https://firebasestorage.googleapis.com/v0/b/real-final-project-ddd.appspot.com/o/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png?alt=media&token=7d664c18-037d-4e60-9415-32f26fb0d430" alt="😫" />) :
+                    (<FcDecision/>)} */}
+
+                </div>
+
+                    { loginState ?
+                    <div className="logout" onClick={removeLocalstorage}>
+                        {/* <FcDecision/> */}
+                        로그아웃 </div> : null}
+        </LoginIconBox>
+
+
+
 
             <div className="navi">
                 <NavigateBar/>
