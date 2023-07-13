@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {CiLogin} from "react-icons/ci";
 import {BiKey} from "react-icons/bi";
 import AdminImg from "../../resources/프로필.png";
+import { useNavigate } from "react-router-dom";
 
 const Navcontainer = styled.div`
     width: 18rem;
@@ -27,6 +28,9 @@ const Navcontainer = styled.div`
         align-items: center;
         justify-content: center;
         gap: 1.5rem;
+        .logout{
+            cursor: pointer;
+        }
         }
         .photo-container > img{
             width: 5.5rem;
@@ -45,7 +49,7 @@ const Navcontainer = styled.div`
             width: 100%;
             padding: 1.5rem;
             margin: 0;
-            transition: background-color 0.3s, color 0.3s; 
+            transition: background-color 0.3s, color 0.3s;
             &.active {
                 background-color: white;
                 color: #050e3d;
@@ -56,12 +60,12 @@ const Navcontainer = styled.div`
         background-color: white;
         color: #050e3d;
         }
-        
+
     }
 
     .menu {
         width: 84.5%;
-        
+
     }
 `;
 
@@ -69,9 +73,20 @@ const Navcontainer = styled.div`
 
 
 const AdminNav = ({activeMenuItem, setCurrentMenuItem}) => {
+    const navigate = useNavigate();
+
     const handleMenuItem = (menuItem) => {
         setCurrentMenuItem(menuItem);
     };
+
+    // 로그아웃
+    const removeLocalstorage = () =>{
+        localStorage.removeItem("isLogin");
+        localStorage.removeItem("storageEmail");
+        localStorage.removeItem("memberId");
+        localStorage.removeItem("accessToken");
+        navigate('/')
+    }
 
 
 
@@ -83,8 +98,12 @@ const AdminNav = ({activeMenuItem, setCurrentMenuItem}) => {
                 </div>
                 <h2>ADMIN</h2>
                 <div>
-                <CiLogin/>
+                <div className="logout">
+                <CiLogin onClick={removeLocalstorage }/>
+                </div>
+                <div>
                 <BiKey/>
+                </div>
                 </div>
             </div>
             <div className="menu">

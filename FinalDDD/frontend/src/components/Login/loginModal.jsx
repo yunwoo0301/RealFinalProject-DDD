@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import LoginApi from "../../api/LoginApi";
 import { useNavigate } from "react-router-dom";
-import useStore from "../../store";
 
 const Container = styled.div`
   position: absolute;
@@ -155,15 +154,20 @@ const LoginModal = (props) => {
         window.localStorage.setItem("accessToken", accessToken);
         window.localStorage.setItem("memberId", memberId);
         // console.log(window.localStorage.getItem('accessToken'));
-        window.localStorage.getItem('storageEmail')
+        const getEmail = window.localStorage.getItem('storageEmail')
         console.log('데이터로 받은 멤버아이디' + window.localStorage.getItem('storageEmail'))
         console.log('데이터로 받은 멤버아이디' + memberId)
         //console.log("getitem으로 받은 멤버아이디" + window.localStorage.getItem("memberId"));
 
         if (response.status === 200) {
+          if(getEmail === "admin") {
+            naviagte("/admin");
+            window.localStorage.setItem("isLogin", true);
+          }else {
                 naviagte("/");
                 // 로그인 시, isLogin true 반환
                 window.localStorage.setItem("isLogin", true);
+              }
             } else {
                 const errorMessage = getErrorMessage(response.status);
                 setErrorMsg(errorMessage);
