@@ -8,6 +8,9 @@ import Select from '@mui/material/Select';
 import BoardComment from "../components/Board/BoardComment";
 import DDDApi from "../api/DDDApi";
 import { MyPageApi } from "../api/MyPageApi";
+import ConfirmModal from "../util/ConfirmModal";
+import { FcCancel } from "react-icons/fc";
+import { Backdrop } from "@mui/material";
 
 
 const ViewWrap = styled.div`
@@ -272,6 +275,13 @@ const TextInfo = styled.div`
 
 `;
 
+const ModalBodyStyle = styled.div`
+.warn{
+    font-size: 0.8rem;
+    color: red;
+    line-height: 1.2;
+}
+`;
 
 
 const BoardView = () => {
@@ -426,12 +436,36 @@ const BoardView = () => {
 
 
     // 댓글 삭제 함수
+    // const deleteComment = async (commentNo) => {
+    //     try {
+
+    //         // const confirmed = window.confirm("댓글 삭제 시 내용은 저장되지 않습니다. 정말로 삭제하시겠습니까?");
+    //         // if (!confirmed) {
+    //         //     return; // 삭제 취소
+    //         // }
+
+    //         const response = await DDDApi.commentDelete(commentNo);
+    //         if (response.status === 200) {
+    //             const updatedBoard = { ...boardView }; // 기존의 게시물 정보 복사
+    //             updatedBoard.comments = updatedBoard.comments.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
+    //             setBoardView(updatedBoard); // 업데이트된 게시물 정보(기존)
+    //             const updatedCommentList = commentList.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
+    //             setCommentList(updatedCommentList); // 댓글 목록 업데이트
+
+    //         }
+    //         } catch (error) {
+    //         console.log(error);
+    //         }
+    //     };
+
+    // 댓글 삭제 함수
     const deleteComment = async (commentNo) => {
         try {
-            const confirmed = window.confirm("댓글 삭제 시 내용은 저장되지 않습니다. 정말로 삭제하시겠습니까?");
-            if (!confirmed) {
-                return; // 삭제 취소
-            }
+
+            // const confirmed = window.confirm("댓글 삭제 시 내용은 저장되지 않습니다. 정말로 삭제하시겠습니까?");
+            // if (!confirmed) {
+            //     return; // 삭제 취소
+            // }
 
             const response = await DDDApi.commentDelete(commentNo);
             if (response.status === 200) {
@@ -440,18 +474,53 @@ const BoardView = () => {
                 setBoardView(updatedBoard); // 업데이트된 게시물 정보(기존)
                 const updatedCommentList = commentList.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
                 setCommentList(updatedCommentList); // 댓글 목록 업데이트
+
+            } else {
+                console.log("댓글 삭제 실패")
             }
-            } catch (error) {
+        } catch (error) {
             console.log(error);
             }
         };
 
+
+
+
+
+
+    // 게시글 삭제 함수
     const onClickDelete = () => {
         deleteBoard();
     };
 
+    // 댓글 삭제 모달 함수
+    const [checkAgain, setCheckAgain] = useState(false);
+    const [delSelect, setDelSelect] = useState(null); // 삭제할 댓글의 상태 변수
+
+    const commentDelete  ={
+        title: "댓글삭제",
+        body: (
+        <ModalBodyStyle>
+            댓글을 삭제하시겠습니까?  <br />
+            <div className="warn">삭제하신 댓글은 저장되지 않습니다. <br/>
+            </div>
+            <div className="checkBox">
+
+            </div>
+        </ModalBodyStyle>
+        ),
+        button: [
+        <button onClick={()=> deleteComment(delSelect)}>확인</button>,
+        <button onClick={()=> setCheckAgain(false)}>취소</button>
+        ],
+        icon: <FcCancel/>
+      }
+
+
+
 
     return(
+        <>
         <ViewWrap>
             <Section className="section">
             <div className="board_header">
@@ -473,7 +542,7 @@ const BoardView = () => {
                     </FormControl>
 
                     {/* 지역 카테고리 추천수다 & 질문하기 선택 시 노출X */}
-                    {boardView?.category !== '추천수다' && boardView?.category !== '질문하기' && (
+                    {boardView?.category !== 'Recommend' && boardView?.category !== 'Question' && (
                     <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <InputLabel id="demo-simple-select-readonly-label">지역선택</InputLabel>
                         <Select
@@ -487,7 +556,6 @@ const BoardView = () => {
                         </Select>
                     </FormControl>
                     )}
-
                     {/* 수정 및 삭제 버튼 */}
                     {showEditBtn() ? (
                     <div className="editBtn">
@@ -508,6 +576,7 @@ const BoardView = () => {
                     ) : (
                     <img src={profile} alt="기본 이미지" />
                     )} */}
+
                     {/*기본 프로필 이미지*/}
                     <img src={test} alt="프로필"/>
                     <div className="author">{boardView?.author}</div>
@@ -533,8 +602,8 @@ const BoardView = () => {
                                 )}
                             </div>
                         )}
-                        {/* HTML <p>태그 없애는 변환코드(문자열) */}
                     <div className="text_area" dangerouslySetInnerHTML={{__html: boardView?.contents}}></div>
+                    {/* <div className="text_area">{boardView?.contents}</div> */}
                 </Contents>
             </div>
 
@@ -561,7 +630,9 @@ const BoardView = () => {
 
                             {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
                             {nickname === comment.nickname && (
-                            <div className="deleteBtn" onClick={() => deleteComment(comment.commentNo)}
+                            <div className="deleteBtn" onClick={()=> {setCheckAgain(true);
+                                // deleteComment(comment.commentNo);}}
+                                setDelSelect(comment.commentNo);}}
                             style={{ cursor: 'pointer', fontWeight: 'bold' }}>삭제</div>)}
 
                             </div>
@@ -585,6 +656,21 @@ const BoardView = () => {
             />
             </Section>
         </ViewWrap>
+
+        <Backdrop
+            sx={{
+                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                opacity:'0.5',
+                color: 'black',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0, // 팝업을 상단에 위치
+            }}
+            open={checkAgain}
+            onClick={()=>{setCheckAgain(false) }}
+            >
+        {checkAgain && <ConfirmModal props={commentDelete}/>}
+    </Backdrop>
+        </>
     )
 };
 
