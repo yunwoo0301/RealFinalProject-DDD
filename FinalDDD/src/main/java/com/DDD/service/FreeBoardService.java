@@ -249,4 +249,25 @@ public class FreeBoardService {
 
         return freeBoardDtos;
     }
+
+    // 게시글 전체조회(관리자)
+    public List<FreeBoardDto> findAllArticles() {
+        List<FreeBoardDto> freeBoardDtos = new ArrayList<>();
+        List<FreeBoard> freeBoards = freeBoardRepository.findAll();
+
+        for (FreeBoard e : freeBoards) {
+            FreeBoardDto freeBoardDto = new FreeBoardDto();
+            freeBoardDto.setAuthor(e.getMember().getName());
+            freeBoardDto.setBoardNo(e.getBoardNo());
+            freeBoardDto.setContents(e.getContents());
+            freeBoardDto.setTitle(e.getTitle());
+            freeBoardDto.setWriteDate(e.getWriteDate());
+            freeBoardDto.setCategory(e.getCategory());
+
+            freeBoardDtos.add(freeBoardDto);
+        }
+        return  freeBoardDtos;
+    }
+
+
 }

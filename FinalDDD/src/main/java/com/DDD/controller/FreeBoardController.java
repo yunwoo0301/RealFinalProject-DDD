@@ -113,5 +113,11 @@ public class FreeBoardController {
         List<FreeBoardDto> freeBoardDtos = freeBoardService.getBoardsByMember(id);
         return ResponseEntity.ok(freeBoardDtos);
     }
+
+    // 게시글전체조회(관리자)
+    @GetMapping("/allArticles")
+    public List<FreeBoardDto> findAllArticles() {
+        return freeBoardService.findAllArticles();
+    }
 }
 
