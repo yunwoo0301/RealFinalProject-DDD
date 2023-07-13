@@ -147,10 +147,10 @@ const BoardsManage = () => {
 
     const filteredBoardData = currentBoardData.filter((board) => {
       const boardTitle = board.title.toLowerCase();
-      const author = board.author.toLowerCase();
+      const contents = board.contents.toLowerCase();
       const keyword = searchKeyword.toLowerCase();
 
-      return boardTitle.includes(keyword) || author.includes(keyword);
+      return boardTitle.includes(keyword) || contents.includes(keyword);
     });
 
 
@@ -192,18 +192,17 @@ const BoardsManage = () => {
   }, []);
 
   // 글 전체조회
+  const getBoards = async () => {
+    try {
+      const result = await DDDApi.articleList();
+      setBoardData(result.data);
+
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
-    const getBoards = async () => {
-      try {
-        const result = await DDDApi.articleList();
-        setBoardData(result.data);
-
-      } catch (e) {
-        console.log(e);
-      }
-    };
     getBoards();
-
   }, []);
 
   const handleCategoryChange = (e) => {
@@ -258,6 +257,19 @@ const BoardsManage = () => {
     getComments();
   };
 
+  // 글 삭제 로직
+  const deleteSelectedArticles = () => {
+    selectedRows1.forEach((boardNo) => {
+      deleteArticles(boardNo);
+    })
+  }
+
+  // 글삭제
+  const deleteArticles = async(boardNo) => {
+    await DDDApi.delBoards(boardNo);
+    getBoards();
+  }
+
 
 
 
@@ -278,7 +290,7 @@ const BoardsManage = () => {
             ))}
           </select>
             <ButtonWrapper>
-            <button>삭제</button>
+            <button onClick={deleteSelectedArticles }>삭제</button>
             <input type="text" className='searchBar' height={'1rem'}
                       value={searchKeyword} onChange={handleSearchChange} />
             </ButtonWrapper>
