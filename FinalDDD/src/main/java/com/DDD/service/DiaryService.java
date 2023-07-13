@@ -141,6 +141,33 @@ public class DiaryService {
         return true;
     }
 
+    // 다이어리 삭제
+    public boolean deleteDiary(Long memberId, Long exhibitNo) {
+        Member member = memberRepository.findById(memberId) //입력받은 id값으로 memberId의 데이터를 불러옴
+                .orElseThrow(() -> new IllegalArgumentException("Invalid member Id:" + memberId)); // 없을 경우 예외처리
+
+        log.info("member 찾음 : " + memberId);
+
+        Exhibitions exhibitions = exhibitionsRepository.findByExhibitNo(exhibitNo); // 입력받은 exhibitNo 값으로 exhibitions을 찾음
+        if (exhibitions == null) { // null일 경우 전시회가 없는것으로 예외처리
+            throw new IllegalArgumentException("Invalid exhibition number:" + exhibitNo);
+        }
+        log.info("exhibitions 찾음 : " + exhibitNo);
+
+        // 여기에서 memberId와 exhibitNo를 동시에 만족하는 다이어리를 찾아본다.
+        Diary diary = diaryRepository.findByMemberAndExhibitions(member, exhibitions);
+
+        if(diary == null) { // if the diary does not exist, return false
+            log.error("No diary found for member: " + memberId + " and exhibition: " + exhibitNo);
+            return false;
+        }
+
+        diaryRepository.delete(diary);
+
+        return true;
+    }
+
+
 
 
 

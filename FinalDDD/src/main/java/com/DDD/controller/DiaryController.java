@@ -61,6 +61,13 @@ public class DiaryController {
         String comment = infoData.get("comment");
         return ResponseEntity.ok(diaryService.changeComment(memberId, exhibitNo, comment));
     }
+    @PostMapping("/{exhibitNo}/delete")
+    public ResponseEntity<Boolean> deleteDiary(@RequestBody Map<String, String> infoData) {
+        Long memberId = Long.valueOf(infoData.get("memberId"));
+        Long exhibitNo = Long.valueOf(infoData.get("exhibitionNo"));
+        return ResponseEntity.ok(diaryService.deleteDiary(memberId, exhibitNo));
+    }
+
 
 
 

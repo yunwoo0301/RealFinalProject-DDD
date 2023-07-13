@@ -48,12 +48,22 @@ public class MemberController {
             Member member = memberOpt.get();
             if(member.getEmailCheckToken().equals(token)){
                 member.setActive(true);
+                member.setEmailCheckToken(null); // after validation you can null the token
                 memberRepository.save(member);
                 return "인증이 완료되었습니다.";
             }
         }
         return "인증에 실패하였습니다.";
     }
+
+
+    @PostMapping("/forgot")
+    public ResponseEntity<Boolean> forgotPw(@RequestBody Map<String, String> forgotEmail) {
+        String email = forgotEmail.get("email");
+        boolean sendNewPassword = memberService.forgotEmail(email);
+        return ResponseEntity.ok(sendNewPassword);
+    }
+
 
 
 
