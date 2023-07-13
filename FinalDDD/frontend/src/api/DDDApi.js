@@ -158,6 +158,12 @@ const DDDApi = {
         return await axios.get("/booking/allBookings");
     },
 
+    // 게시글전체조회(관리자)
+    articleList: async() => {
+        return await axios.get("/api/boardList/allArticles");
+    }
+
+
 
 
 

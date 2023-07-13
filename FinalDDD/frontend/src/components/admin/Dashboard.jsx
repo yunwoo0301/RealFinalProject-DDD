@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Chart from "./Charts";
-import {DisplayData} from "../../components/main/DisplayData";
 import DDDApi from "../../api/DDDApi";
+import LoginApi from "../../api/LoginApi";
 
 const DashboardContainer = styled.div`
     width: 80vw;
@@ -92,7 +92,7 @@ const DashboardContainer = styled.div`
         margin: 1rem;
         border-radius: 2rem;
         background-color: #e3e3e3;
-        width: 70rem;
+        width: 60rem;
         display: flex;
         flex-direction: column;
 
@@ -211,102 +211,115 @@ const DashBoard = () => {
     return duplicateExhibitNo;
      };
 
-// 전시리스트 불러오기
-const [exhibitionList, setExhibitionList] = useState([]);
-const [thisWeekStartExhibitions, setThisWeekStartExhibitions] = useState([]);
-const [thisWeekEndExhibitions, setThisWeekEndExhibitions] = useState([]);
-const [ongoingExhibitions, setOngoingExhibitions] = useState(0);
+    // 전시리스트 불러오기
+    const [exhibitionList, setExhibitionList] = useState([]);
+    const [thisWeekStartExhibitions, setThisWeekStartExhibitions] = useState([]);
+    const [thisWeekEndExhibitions, setThisWeekEndExhibitions] = useState([]);
+    const [ongoingExhibitions, setOngoingExhibitions] = useState([]);
 
-const exhibitions = async () => {
-  try {
-    const exhibitListData = await DDDApi.exhibitionList();
-    setExhibitionList(exhibitListData.data);
-  } catch (e) {
-    console.log(e);
-  }
-};
+    const exhibitions = async () => {
+    try {
+        const exhibitListData = await DDDApi.exhibitionList();
+        setExhibitionList(exhibitListData.data);
+    } catch (e) {
+        console.log(e);
+    }
+    };
 
-useEffect(() => {
-  exhibitions();
-}, []);
+    useEffect(() => {
+    exhibitions();
+    }, []);
 
-useEffect(() => {
-  const today = new Date();
-  const startOfWeek = getStartOfWeek(today);
-  const endOfWeek = getEndOfWeek(today);
-  const formattedToday = formatDate(today);
+    useEffect(() => {
+    const today = new Date();
+    const startOfWeek = getStartOfWeek(today);
+    const endOfWeek = getEndOfWeek(today);
+    const formattedToday = formatDate(today);
 
-  const thisWeekStartExhibitions = exhibitionList.filter((exhibition) => {
-    const startDate = new Date(exhibition.startDate);
-    return startDate >= startOfWeek && startDate <= endOfWeek;
-  });
+    const thisWeekStartExhibitions = exhibitionList.filter((exhibition) => {
+        const startDate = new Date(exhibition.startDate);
+        return startDate >= startOfWeek && startDate <= endOfWeek;
+    });
 
-  const thisWeekEndExhibitions = exhibitionList.filter((exhibition) => {
-    const endDate = new Date(exhibition.endDate);
-    return endDate >= startOfWeek && endDate <= endOfWeek;
-  });
+    const thisWeekEndExhibitions = exhibitionList.filter((exhibition) => {
+        const endDate = new Date(exhibition.endDate);
+        return endDate >= startOfWeek && endDate <= endOfWeek;
+    });
 
-  // 오늘 날짜에 해당하는 전시 중인 전시 개수
-  const todayOngoingExhibitionsCount = thisWeekStartExhibitions.filter(
-    (exhibition) =>
-      exhibition.startDate <= formattedToday && formattedToday <= exhibition.endDate
-  ).length;
+    // 오늘 날짜에 해당하는 전시 중인 전시 개수
+    const todayOngoingExhibitionsCount = exhibitionList.filter(
+        (exhibition) =>
+        exhibition.startDate <= formattedToday && formattedToday <= exhibition.endDate
+    ).length;
 
-  setOngoingExhibitions(todayOngoingExhibitionsCount);
-  setThisWeekStartExhibitions(thisWeekStartExhibitions);
-  setThisWeekEndExhibitions(thisWeekEndExhibitions);
-}, [exhibitionList]);
+    setOngoingExhibitions(todayOngoingExhibitionsCount);
+    setThisWeekStartExhibitions(thisWeekStartExhibitions);
+    setThisWeekEndExhibitions(thisWeekEndExhibitions);
+    }, [exhibitionList]);
 
-const getStartOfWeek = (date) => {
-  const firstDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + 1));
-  return new Date(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth(), firstDayOfWeek.getDate(), 0, 0, 0);
-};
+    const getStartOfWeek = (date) => {
+    const firstDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + 1));
+    return new Date(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth(), firstDayOfWeek.getDate(), 0, 0, 0);
+    };
 
-const getEndOfWeek = (date) => {
-  const lastDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + 7));
-  return new Date(lastDayOfWeek.getFullYear(), lastDayOfWeek.getMonth(), lastDayOfWeek.getDate(), 23, 59, 59);
-};
+    const getEndOfWeek = (date) => {
+    const lastDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + 7));
+    return new Date(lastDayOfWeek.getFullYear(), lastDayOfWeek.getMonth(), lastDayOfWeek.getDate(), 23, 59, 59);
+    };
+
+     // 멤버리스트가져오기
+     const [regDateCnt, setRegDateCnt] = useState(0);
+     const [deleteDateCnt, setDeleteDateCnt] = useState(0);
+
+     const getMembers = async() => {
+        const result = await LoginApi.getAllMembers();
+
+    // 오늘 날짜 계산
+    const today = new Date().toISOString().slice(0, 10);
+
+    // regDate가 오늘 날짜인 데이터 개수 구하기
+    const regDateCount = result.data.filter((item) => item.regDate === today).length;
+
+    // deleteDate가 오늘 날짜인 데이터 개수 구하기
+    const deleteDateCount = result.data.filter((item) => item.deleteDate === today).length;
+
+    setRegDateCnt(regDateCount);
+    setDeleteDateCnt(deleteDateCount);
+
+    }
+    useEffect(() => {
+       getMembers();
+    }, [])
+
+    // 게시글 수 구하기
+    const [todayArticles, setTodayArticles] = useState(0);
+
+      // 글 전체조회
+    useEffect(() => {
+    const getBoards = async () => {
+      try {
+        const result = await DDDApi.articleList();
+
+        // 오늘 날짜 계산
+        const today = new Date().toISOString().slice(0, 10);
+
+        // writeDate가 오늘 날짜인 데이터 개수 구하기
+        const todayWriteDateCount = result.data.filter((item) => item.writeDate === today).length;
+        setTodayArticles(todayWriteDateCount);
+
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getBoards();
+
+    }, []);
 
 
 
 
 
 
-    // 일자별 요약 테이블 임시데이터
-    const data = [
-        {
-          date: "2023-06-01",
-          visitors: 10,
-          newMembers: 5,
-          exhibitions: 3,
-          bookings: 7,
-          posts: 12,
-        },
-        {
-            date: "2023-06-03",
-            visitors: 102,
-            newMembers: 53,
-            exhibitions: 3,
-            bookings: 10,
-            posts: 21,
-          },
-      ];
-
-      const recentData = data.slice(-10).reverse(); // 최신순으로 정렬된 최근 10개 데이터 추출
-
-      // 전시현황
-    const todayDate = "2023-06-11";
-    const finishDate = "2023-06-10";
-
-    const todayStartExhibit = DisplayData.filter(
-    (exhibit) => exhibit.date === todayDate
-    );
-
-    const todayFinishExhibit = DisplayData.filter(
-    (exhibit) => exhibit.date === finishDate
-    );
-
-    const popularExhibit = [...DisplayData].sort((a, b) => b.like - a.like);
 
 
   return(
@@ -317,11 +330,11 @@ const getEndOfWeek = (date) => {
             <h4>오늘의 알림</h4>
             <hr />
             <div className="noti-list">
-            <p>신규회원 : </p>
-            <p>탈퇴회원 : </p>
-            <p>전시 중 : {ongoingExhibitions} </p>
-            <p>예매완료 : {todayBookingCount} </p>
-            <p>게시글 수 : </p>
+            <p>신규회원 : {regDateCnt}</p>
+            <p>탈퇴회원 : {deleteDateCnt}</p>
+            <p>전시 중 : {ongoingExhibitions}</p>
+            <p>예매완료 : {todayBookingCount}</p>
+            <p>게시글 수 : {todayArticles}</p>
             </div>
         </div>
         <div className="second-row">

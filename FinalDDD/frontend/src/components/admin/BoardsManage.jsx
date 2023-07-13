@@ -101,7 +101,6 @@ const ButtonWrapper = styled.div`
 
 
 const BoardsManage = () => {
-  const categories = ["추천수다", "질문하기", "동행찾기"];
   const [selectedRows1, setSelectedRows1] = useState([]); // 게시판 관리 테이블의 체크박스 선택 상태
   const [selectedRows2, setSelectedRows2] = useState([]); // 댓글 관리 테이블의 체크박스 선택 상태
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -196,13 +195,9 @@ const BoardsManage = () => {
   useEffect(() => {
     const getBoards = async () => {
       try {
-        const boardsData = await Promise.all(
-          categories.map((category) => DDDApi.getFreeBoardsByCategory(category))
-        );
+        const result = await DDDApi.articleList();
+        setBoardData(result.data);
 
-        // 각 카테고리 데이터를 하나의 배열로 합치기
-        const mergedData = boardsData.flatMap((board) => board.data);
-        setBoardData(mergedData); // 전체 데이터 배열을 boardData에 저장
       } catch (e) {
         console.log(e);
       }
@@ -242,32 +237,27 @@ const BoardsManage = () => {
     }
   };
 
-    const handleSelectRow2 = (commentNo) => {
-      if (selectedRows2.includes(commentNo)) {
-        setSelectedRows2(selectedRows2.filter((no) => no !== commentNo));
-      } else {
-        setSelectedRows2([...selectedRows2, commentNo]);
-      }
-    };
+  const handleSelectRow2 = (commentNo) => {
+    if (selectedRows2.includes(commentNo)) {
+      setSelectedRows2(selectedRows2.filter((no) => no !== commentNo));
+    } else {
+      setSelectedRows2([...selectedRows2, commentNo]);
+    }
+  };
 
- const deleteSelectedComments = async () => {
-   for (const commentNo of selectedRows2) {
-     await deleteComments(commentNo);
-   }
-   setSelectedRows2((prevSelectedRows) => {
-     const remainingCommentNos = commentList
-       .filter((comment) => !selectedRows2.includes(comment.commentNo))
-       .map((comment) => comment.commentNo);
-     const nextCommentNo = remainingCommentNos[0];
-     return nextCommentNo ? [nextCommentNo] : [];
-   });
- };
+  // 댓글 삭제 로직
+  const deleteSelectedComments = () => {
+    selectedRows2.forEach((commentNo) => {
+      deleteComments(commentNo);
+    });
+  };
 
- // 댓글 삭제
-   const deleteComments = async (commentNo) => {
-     await DDDApi.commentDelete(commentNo);
-     getComments();
-   };
+  // 댓글 삭제
+  const deleteComments = async (commentNo) => {
+    await DDDApi.commentDelete(commentNo);
+    getComments();
+  };
+
 
 
 
@@ -306,6 +296,7 @@ const BoardsManage = () => {
                 <TableHeader>카테고리</TableHeader>
                 <TableHeader>작성자</TableHeader>
                 <TableHeader>작성제목</TableHeader>
+                <TableHeader>작성내용</TableHeader>
                 <TableHeader>작성일</TableHeader>
               </TableRow>
             </thead>
@@ -324,6 +315,7 @@ const BoardsManage = () => {
                   <td>{board.category}</td>
                   <td>{board.author}</td>
                   <td>{board.title}</td>
+                  <td>{board.contents}</td>
                   <td>{formatDate(board.writeDate)}</td>
                 </TableRow>
               ))}
