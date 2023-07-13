@@ -533,7 +533,8 @@ const BoardView = () => {
                                 )}
                             </div>
                         )}
-                    <div className="text_area">{boardView?.contents}</div>
+                        {/* HTML <p>태그 없애는 변환코드(문자열) */}
+                    <div className="text_area" dangerouslySetInnerHTML={{__html: boardView?.contents}}></div>
                 </Contents>
             </div>
 

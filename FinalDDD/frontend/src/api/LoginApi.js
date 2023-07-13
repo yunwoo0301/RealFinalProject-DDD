@@ -10,7 +10,7 @@ const LoginApi = {
             email : email,
             password : password
         };
-        return await axios.post(`${DDD_DOMAIN}/login/`, loginCheck, HEADER); // config 부분 같이 날리기
+        return await axios.post(`/login/`, loginCheck); // config 부분 같이 날리기
     },
     
     signup : async(inputEmail, inputPwd, inputNick, inputName, inputTel, inputIns) => {
@@ -30,7 +30,7 @@ const LoginApi = {
         const findPasswordCheck = {
             email : inputEmail
         }
-        return await axios.post(DDD_DOMAIN + "/login/forgot", findPasswordCheck);
+        return await axios.post("/login/forgot", findPasswordCheck);
         },
     
     emaildup :async(inputEmail) => {
