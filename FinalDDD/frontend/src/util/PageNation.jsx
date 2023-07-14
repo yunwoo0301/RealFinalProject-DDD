@@ -43,7 +43,7 @@ const PageNation = ({pageCount,onPageChange}) => {
         nextLabel={<SlArrowRight style={{margin:'0 .5rem',paddingTop:'3px', cursor:'pointer' }}/>}
         breakLabel={'...'}
         pageCount={pageCount}
-        marginPagesDisplayed={0}
+        marginPagesDisplayed={1}
         pageRangeDisplayed={5}
         onPageChange={onPageChange}
         pageLinkClassName={'page-item'}
