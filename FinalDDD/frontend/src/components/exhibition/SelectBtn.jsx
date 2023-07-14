@@ -10,7 +10,11 @@ const SelectBox = styled.select`
     option{
         font-size: 1rem;
     }
-  
+
+    @media (max-width: 768px) {
+        display: none;
+    }
+
 `
 
 const SelectBtn = ({selectedOption,setSelectedOption,options}) => {
@@ -31,3 +35,4 @@ const SelectBtn = ({selectedOption,setSelectedOption,options}) => {
 }
 
 export default SelectBtn;
+

@@ -2,21 +2,24 @@ import React from "react";
 import styled,{css} from "styled-components";
 
 const Container = styled.div`
-    width: 300px;
-    height: 30px;
-    border: 1px solid black;
-    border-radius: 30px;
+    width: 40%;
+    height: 3rem;
     margin: 0 auto;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    
+    font-weight: bold;
+
+
+    @media (max-width: 768px){
+        width: 100vw;
+    }
 
 
 `
 const Category = styled.div`
-   
+
     width: 200px;
     height: 100%;
     display: flex;
@@ -24,15 +27,21 @@ const Category = styled.div`
     justify-content: center;
     cursor: pointer;
     &:hover {
-        background-color:#5EADF7;
-        border-radius : 30px;
+        color: #050E3D;
+        font-weight: 900;
     }
-    ${props => 
+    ${props =>
         props.active && css`
-        border-radius : 30px;
-        font-weight: bold;
-        background-color:#5EADF7;
+        font-weight: 900;
+        color:#5EADF7;
+        text-decoration: underline;
     `}
+    @media (max-width: 768px){
+        font-size: 0.8rem;
+        width: 100vw;
+        text-align: center;
+
+    }
     
 `;
 

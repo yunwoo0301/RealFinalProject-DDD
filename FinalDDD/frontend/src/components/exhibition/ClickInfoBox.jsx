@@ -90,7 +90,7 @@ const ClickInfoBox = ({data}) => {
             : (<div className="date">{data.startDate} ~ <br/> {data.endDate}</div>)}
 
             <div>{data.exhibitLocation}</div>
-            <div className="btn"><Button onClick={()=>handleClick(data)}>상세정보</Button></div>
+            <div className="btn"><Button onClick={()=>handleClick(data)}>상세정보`</Button></div>
             
         </div>
         </Container>
