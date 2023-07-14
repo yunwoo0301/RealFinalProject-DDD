@@ -6,8 +6,9 @@ const SelectBox = styled.select`
 
     width: 100px;
     height: 30px;
+    border: 1px solid #eee;
     option{
-        font-size: 20px;
+        font-size: 1rem;
     }
   
 `
