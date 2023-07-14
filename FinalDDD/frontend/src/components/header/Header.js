@@ -52,7 +52,7 @@ const FirstLayer = styled.div`
 
 const LogoContainer = styled.div`
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     flex-direction: row;
     .icons{
