@@ -63,7 +63,7 @@ const Container = styled.div`
     gap: 1rem;
 
     // 미디어 쿼리
-    @media (max-width: 400px) {
+    @media (max-width: 768px) {
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
     }

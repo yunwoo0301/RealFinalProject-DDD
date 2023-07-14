@@ -43,7 +43,7 @@ const Container = styled.div`
             font-size: 0.9rem;
         }
     }
-    @media (max-width: 400px) {
+    @media (max-width: 768px) {
         width: 100%;
         height: 70%;
         margin: 0;
