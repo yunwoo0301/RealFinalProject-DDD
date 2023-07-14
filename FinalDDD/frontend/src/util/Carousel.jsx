@@ -47,26 +47,52 @@ const Container = styled.div`
         transform: translateX(-50%);
     }
     .btn{
-      width: 150px;
-      height: 40px;
+      width: 5rem;
+      height: 2rem;
       position: absolute;
       top: calc(80px + 7rem);
       right: 40px;
     }
 
     @media (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
     .name{
-      font-size: 1.5rem;
+      font-size: 1rem;
+      font-weight: 900;
+      top: 40px;
+      text-shadow: 2px 2px 4px rgba(94, 173, 247, 0.5);
+}
+
     }
     .date{
+      width: 100%;
+      text-align: center;
       font-size : 1rem;
+      top: calc(80px + 2rem);
+      right: 10px;
+    }
+    img{
+      display: none;
+    }
+    .btn{
+      width: 30%;
+      height: 1.5rem;
+      top: calc(80px + 6rem);
+      right: 6.3rem;
+
+    }
+    .location{
+      width: 100%;
+      top: calc(80px + 3.5rem);
+      text-align: center;
     }
 
-  }
 `;
+
 const ImgBox = styled.div`
     width: 100%;
-    height: 250px;
+    height: 30vh;
     position: relative;
     background-image: url(${props => props.imgUrl});
     background-repeat: no-repeat;
