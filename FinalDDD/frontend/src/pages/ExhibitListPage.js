@@ -20,16 +20,16 @@ const Container = styled.div`
     .apiBox {
         width: 70%;
         height: 250px;
-        border: 3px solid #eee;
+        /* border: 3px solid #eee; */
         margin: 0 auto;
         border-radius:5px;
 
     }
     .category{
-        margin: 10px;
+        margin-top: 2rem;
     }
     .section{
-        border: 1px solid #050E3D;
+        /* border: 1px solid #050E3D; */
         width: 70%;
         margin : 0 auto;
         position: relative;
@@ -40,7 +40,9 @@ const Container = styled.div`
             right: 5px;
             top: 5px;
         }
-
+        /* @media (max-width: 768px) {
+        width: 40%;
+      } */
     }
     .areaSelectBox{
         display: flex;
@@ -51,17 +53,24 @@ const Container = styled.div`
             font-size:20px;
         }
     }
-    .imgBoxs{
-        display: flex;
-        flex: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
+
+    /* @media (max-width: 768px) {
+    width: 100vw;
+  } */
+  .imgBoxs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+
+    // 미디어 쿼리
+    @media (max-width: 400px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
     }
-    @media (max-width: 768px) {
-    width: 768px;
+
 
   }
+
 
 `;
 
@@ -163,7 +172,7 @@ const ExhibitListPage = () => {
       <>
       <Header/>
         <Container>
-          
+
         <div className="apiBox">
             <Carousel data={exhibitionList}/>
         </div>
@@ -184,7 +193,7 @@ const ExhibitListPage = () => {
             <InfoBox key={data.exhibitNo} data={data}  selectedOption={selectedOption} onClick={()=>exClick(data)}/>
             ))}
             </div>
-            <PageNation pageCount={pageCount} onPageChange={handlePageClick} selected={currentPage+1}  />
+          <PageNation pageCount={pageCount} onPageChange={handlePageClick} selected={currentPage+1}  />
         </div>
         <InfoModal open={modalOpen} close={closeModal}> <ClickInfoBox data={selectEx}/></InfoModal>
         </Container>
