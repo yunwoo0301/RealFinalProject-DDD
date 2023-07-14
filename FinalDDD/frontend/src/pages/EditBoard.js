@@ -285,12 +285,6 @@ const EditBoard = () => {
               imageUrl = url;
             } catch (error) {
               console.log("게시글 수정 중 오류가 발생했습니다." + error);
-              console.log(typeof category);
-              console.log(typeof region);
-              console.log(typeof title);
-              console.log(typeof contents);
-              console.log(image);
-              console.log(error.response);
             }
           }
 

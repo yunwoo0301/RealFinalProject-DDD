@@ -291,7 +291,6 @@ const BoardView = () => {
     const [boardView, setBoardView] = useState(null); // URL에서 boardNo를 가져옴(게시판목록)
     const [commentList, setCommentList] = useState([]); // 댓글용 추가
     const [nickname, setNickname] = useState(""); // 닉네임 초기값 수정
-
     const [test, setTest] = useState(""); // 기본 이미지 불러오기용
 
     // 게시글 작성일자(연도-월-일)로 추출
@@ -299,15 +298,13 @@ const BoardView = () => {
 
     // 작성자 정보를 localStorage에 저장
     window.localStorage.setItem('author', boardView?.author);
-
-    // 수정, 삭제는 본인만 가능하도록 노출
     const isLogin = window.localStorage.getItem("isLogin");
 
-    // id와 작성자 정보 비교
-    const getId = window.localStorage.getItem("memberId"); // localStorage 저장 정보
-    // const isAuthorMatched = boardView.id === getId;
+    // 로그인 상태 확인
+    console.log(isLogin);
 
     // 로그인한 id와 작성자의 id 비교
+    const getId = window.localStorage.getItem("memberId"); // localStorage 저장 정보
     const isAuthorMatched = String(boardView?.id) === getId; // boardView?.id(숫자타입)를 문자열로 반환
     console.log(isAuthorMatched);
 
@@ -316,9 +313,6 @@ const BoardView = () => {
     console.log("boardView?.id 타입:", typeof boardView?.id); // number
     console.log("getId 타입:", typeof getId); // string
 
-
-    // 로그인 상태 확인
-    console.log(isLogin);
 
     //작성자와 id 일치 여부 확인 출력
     console.log("작성자 정보:", boardView?.author);
@@ -341,11 +335,8 @@ const BoardView = () => {
     }
 
 
-
-
     // 본문 불러오기
     useEffect(() => {
-
         const boardViewLoad = async () => {
             try {
                 // 게시물 내용 불러오기
@@ -378,94 +369,53 @@ const BoardView = () => {
     }, [boardNo, regComment]);
 
 
-
-    // 게시글 삭제 함수
-    const deleteBoard = async () => {
-        try {
-          const confirmed = window.confirm('게시글을 삭제하시겠습니까?');
-          if (!confirmed) {
-            return;
-          }
-
-          const response = await DDDApi.delBoards(boardNo);
-          console.log(response);
-
-          navigate('/boardList'); // 삭제 후 게시판 메인 이동
-        } catch (error) {
-          console.error(error);
-
-          if (error.response) {
-            // 서버로부터 오는 응답 에러 처리
-            console.log("error.response.data 내용 : " + error.response.data);
-            console.log("error.response.status 내용 : " + error.response.status);
-            console.log("error.response.headers 내용 : " + error.response.headers);
-
-        } else if (error.request) {
-            // 요청이 이루어졌으나 응답을 받지 못한 경우
-            console.log(error.request);
-
-        } else {
-            // 오류를 발생시킨 요청 설정을 처리하는 중에 오류가 발생한 경우
-            console.log('Error', error.message);
-
-        }
-
-        console.log(error.config);
-
-        }
-    };
-
-
-
-
-    // 수정하기 버튼 이동을 위한 추가사항
-    const [showModal, setShowModal] = useState(false);
-    const [comment, setComment] = useState("");
-
-
-
+    // 게시글 수정 화면으로 이동
     const onClickEdit = () => {
-        // setModalOpen(true);
-        // setModalOption('수정');
-        setComment("수정하시겠습니까?");
-
-        // 수정하기 버튼 클릭 시 수정화면으로 이동
         navigate(`/boardList/boardView/${boardNo}/editBoard`);
     };
 
+const deleteBoard = async (boardNo) => {
+    try {
+        const response = await DDDApi.delBoards(boardNo);
+        console.log(response);
+        if (response.status === 200) {
+            setShowModal(false);
+            navigate('/boardList'); // 삭제 후 게시판 메인 이동
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 
-    // 댓글 삭제 함수
-    // const deleteComment = async (commentNo) => {
-    //     try {
+    const onClickDelete = () => {
+        setShowModal(true);
+    };
 
-    //         // const confirmed = window.confirm("댓글 삭제 시 내용은 저장되지 않습니다. 정말로 삭제하시겠습니까?");
-    //         // if (!confirmed) {
-    //         //     return; // 삭제 취소
-    //         // }
+    // 게시글 삭제용 모달 & 함수
+    const [showModal, setShowModal] = useState(false);
 
-    //         const response = await DDDApi.commentDelete(commentNo);
-    //         if (response.status === 200) {
-    //             const updatedBoard = { ...boardView }; // 기존의 게시물 정보 복사
-    //             updatedBoard.comments = updatedBoard.comments.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
-    //             setBoardView(updatedBoard); // 업데이트된 게시물 정보(기존)
-    //             const updatedCommentList = commentList.filter((comment) => comment.commentNo !== commentNo); // 삭제된 댓글 제외
-    //             setCommentList(updatedCommentList); // 댓글 목록 업데이트
+    const boardDelete  ={
+        title: "게시글 삭제",
+        body: (
+        <ModalBodyStyle>
+            등록된 게시글을 삭제하시겠습니까?  <br />
+            <div className="warn">삭제하신 게시글은 복구가 어렵습니다. <br/>
+            </div>
+        </ModalBodyStyle>
+        ),
+        button: [
+        <button onClick={()=> deleteBoard(boardNo)}>확인</button>,
+        <button onClick={()=> setShowModal(false)}>취소</button>
+        ],
+        icon: <FcCancel/>
+      }
 
-    //         }
-    //         } catch (error) {
-    //         console.log(error);
-    //         }
-    //     };
+
 
     // 댓글 삭제 함수
     const deleteComment = async (commentNo) => {
         try {
-
-            // const confirmed = window.confirm("댓글 삭제 시 내용은 저장되지 않습니다. 정말로 삭제하시겠습니까?");
-            // if (!confirmed) {
-            //     return; // 삭제 취소
-            // }
 
             const response = await DDDApi.commentDelete(commentNo);
             if (response.status === 200) {
@@ -485,20 +435,12 @@ const BoardView = () => {
 
 
 
-
-
-
-    // 게시글 삭제 함수
-    const onClickDelete = () => {
-        deleteBoard();
-    };
-
     // 댓글 삭제 모달 함수
     const [checkAgain, setCheckAgain] = useState(false);
     const [delSelect, setDelSelect] = useState(null); // 삭제할 댓글의 상태 변수
 
     const commentDelete  ={
-        title: "댓글삭제",
+        title: "댓글 삭제",
         body: (
         <ModalBodyStyle>
             댓글을 삭제하시겠습니까?  <br />
@@ -571,12 +513,6 @@ const BoardView = () => {
                 {/* 작성자 정보 구간 */}
                 {boardView && (
                 <div className="authorinfo">
-                    {/* {boardView?.profileImg ? (
-                    <img src={boardView?.profileImg} alt="프로필 이미지" />
-                    ) : (
-                    <img src={profile} alt="기본 이미지" />
-                    )} */}
-
                     {/*기본 프로필 이미지*/}
                     <img src={test} alt="프로필"/>
                     <div className="author">{boardView?.author}</div>
@@ -603,7 +539,6 @@ const BoardView = () => {
                             </div>
                         )}
                     <div className="text_area" dangerouslySetInnerHTML={{__html: boardView?.contents}}></div>
-                    {/* <div className="text_area">{boardView?.contents}</div> */}
                 </Contents>
             </div>
 
@@ -613,33 +548,34 @@ const BoardView = () => {
             {/* 댓글 데이터가 있을 경우에만 컨테이너 보이게 조정 */}
             {boardView?.comments && boardView.comments.length > 0 && (
             <Wrapper>
+
             {/* 댓글 목록 값 배열로 순회 */}
             {boardView?.comments && boardView.comments.map((comment, index) => (
                 <div key={index} className="comment">
-                    <div className="commentbox">
-                        {/* 댓글 작성자 정보 */}
-                        <div className="userinfo">
+                <div className="commentbox">
+
+                    {/* 댓글 작성자 정보 */}
+                    <div className="userinfo">
                         <div className="profile">
                             <img src={comment.profileImg} alt="프로필 이미지" />
                             <div className="user">{comment.nickname}</div>
                         </div>
 
-                        {/* 작성일, 삭제 버튼 영역 */}
-                        <div className="rightmenu">
-                            <div className="comment_write">{new Date(comment.writeDate).toLocaleString()}</div>
+                    {/* 작성일, 삭제 버튼 영역 */}
+                    <div className="rightmenu">
+                        <div className="comment_write">{new Date(comment.writeDate).toLocaleString()}</div>
 
-                            {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
-                            {nickname === comment.nickname && (
-                            <div className="deleteBtn" onClick={()=> {setCheckAgain(true);
-                                // deleteComment(comment.commentNo);}}
-                                setDelSelect(comment.commentNo);}}
+                        {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
+                        {nickname === comment.nickname && (
+                        <div className="deleteBtn" onClick={()=> {setCheckAgain(true);
+                            // deleteComment(comment.commentNo);}}
+                            setDelSelect(comment.commentNo);}}
                             style={{ cursor: 'pointer', fontWeight: 'bold' }}>삭제</div>)}
-
-                            </div>
                         </div>
+                    </div>
                         {/* 댓글 텍스트 구간 */}
                         <TextInfo>{comment.content}</TextInfo>
-                    </div>
+                </div>
                 </div>
             ))}
             </Wrapper>
@@ -652,24 +588,35 @@ const BoardView = () => {
                 commentList={commentList}
                 setCommentList={setCommentList}
                 regComment = {regComm}
-                setRegComment={setRegComment}
-            />
+                setRegComment={setRegComment}/>
             </Section>
         </ViewWrap>
 
         <Backdrop
             sx={{
-                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                backgroundColor: 'rgb(0,0,0,0.5)',
                 opacity:'0.5',
                 color: 'black',
                 zIndex: (theme) => theme.zIndex.drawer + 1,
                 top: 0, // 팝업을 상단에 위치
             }}
             open={checkAgain}
-            onClick={()=>{setCheckAgain(false) }}
-            >
+            onClick={()=>{setCheckAgain(false) }}>
         {checkAgain && <ConfirmModal props={commentDelete}/>}
-    </Backdrop>
+        </Backdrop>
+
+        <Backdrop
+            sx={{
+                backgroundColor: 'rgb(0,0,0,0.5)',
+                opacity:'0.5',
+                color: 'black',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0,
+            }}
+            open={showModal}>
+        {showModal && <ConfirmModal props={boardDelete}/>}
+        </Backdrop>
+
         </>
     )
 };
