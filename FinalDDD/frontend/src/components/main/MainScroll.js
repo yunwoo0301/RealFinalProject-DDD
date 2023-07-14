@@ -4,7 +4,7 @@ import BG from "../../resources/BGimg1.jpg"
 import MuseumInfo from "./Museum";
 import RollDiv from "./SlideBanner";
 import GridComponent from "./GridLayout";
-import {BsWechat} from "react-icons/bs";
+import {TbMessageChatbot} from "react-icons/tb";
 import Chatbot from "../../pages/Chatbot";
 
 const ScrollStyle = styled.div`
@@ -37,7 +37,7 @@ const ScrollStyle = styled.div`
   justify-content: space-between;
 }
 .service {
-  position: fixed;
+  position: absolute;
   bottom: 2rem;
   left: 2rem;
   font-size: 3rem;
@@ -61,6 +61,12 @@ const ScrollStyle = styled.div`
   flex-direction: column;
   justify-content: center;
 }
+
+@media (max-width: 728px) {
+        .service{
+          font-size: 2rem;
+        }
+    }
 `;
 
 const Mainpage = () => {
@@ -164,7 +170,7 @@ const Mainpage = () => {
             <div className="service">
             {showChatbot && <Chatbot/> }
             <div className="icon">
-            <BsWechat onClick={openToChatbot}/>
+            <TbMessageChatbot onClick={openToChatbot}/>
             </div>
             </div>
             </div>

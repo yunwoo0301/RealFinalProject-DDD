@@ -3,7 +3,7 @@ import ChatBot from 'react-simple-chatbot';
 import styled, { ThemeProvider } from 'styled-components';
 
 const ChatContainer = styled.div`
-    width: 100%;
+    width: 80%;
     z-index: 99;
     margin-left: 2rem;
     .answer{
@@ -12,11 +12,20 @@ const ChatContainer = styled.div`
     .xbutton{
         border: none;
         font-size: 2rem;
-        float: right;
+        float: left;
         background-color: transparent;
-        margin-right: 1.7rem;
+        /* margin-right: 1.7rem; */
         cursor: pointer;
     }
+
+    @media (max-width: 728px) {
+        width: 80%;
+        .answer{
+            font-size: 0.6rem;
+        }
+    }
+
+
 `;
 
 const inputStyle = {

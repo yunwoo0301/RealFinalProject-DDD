@@ -30,11 +30,26 @@ const Logo = () => {
     };
   }, []);
 
+  const [isMobile, setIsMobile] = useState(false); // 반응형
+
+  useEffect(() => { // 반응형
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const onClickToMain = () => {
     navigation("/");
   }
 
   return (
+    <>
+   {!isMobile ? (
     <LogoContainer onClick={onClickToMain}>
       {!isExpanded && <span>:DDD</span>}
       <motion.span
@@ -60,7 +75,7 @@ const Logo = () => {
                   display: 'inline-block',
                   width: 'auto',
                   overflow: 'visible', // 글자 넘침 처리
-                  verticalAlign: 'top' 
+                  verticalAlign: 'top'
                 }}
                 initial={{ scaleX: index === 0 ? 1 : 0 }}
                 animate={{ scaleX: 1 }}
@@ -73,6 +88,12 @@ const Logo = () => {
         )}
       </motion.span>
     </LogoContainer>
+    ):(
+      <LogoContainer onClick={onClickToMain}>
+        <span>:DDD</span>
+      </LogoContainer>
+    )}
+    </>
   );
 };
 
