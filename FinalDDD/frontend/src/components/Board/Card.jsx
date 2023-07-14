@@ -135,14 +135,15 @@ const Card = () => {
           try {
             const category = 'DDDmate'; // 조회할 카테고리 이름 지정
             const response = await DDDApi.getFreeBoardsByCategory(category);
-            setBoardList(response.data);
-            setFilterRegion(response.data); // 지역별 필터링 추가
+            const filteredData = response.data.filter(boardList => boardList.category === category);
+            setBoardList(filteredData);
+            setFilterRegion(filteredData); // 지역별 필터링 추가
             console.log(response.data);
           } catch (error) {
             console.log(error);
           }
         };
-    
+
         fetchData();
       }, []);
     
