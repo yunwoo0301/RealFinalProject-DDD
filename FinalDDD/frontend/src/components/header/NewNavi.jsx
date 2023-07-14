@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import {BsList} from 'react-icons/bs';
 import styled from 'styled-components';
@@ -11,6 +11,8 @@ const Button = styled.button`
     background-color: transparent;
     margin: 0.6rem 0.4rem;
     cursor: pointer;
+
+
 `;
 
 const List = styled.div`
@@ -20,7 +22,21 @@ const List = styled.div`
     flex-direction: column;
     align-items: flex-end;
     margin-right: 2rem;
+    @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+
+
 `;
+
+const Box = styled.div`
+    width: 20rem;
+
+    @media (max-width: 768px) {
+    width: 100vw;
+  }
+
+`
 
 const CustomLink = styled(Link)`
   color: inherit; /* 기본 색상 유지 */
@@ -53,7 +69,7 @@ export default function SwipeableTemporaryDrawer() {
 
     const list = (anchor) => (
       <Box
-        sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 300 }}
+        // sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 300 }}
         role="presentation"
         onClick={toggleDrawer(anchor, false)}
         onKeyDown={toggleDrawer(anchor, false)}
