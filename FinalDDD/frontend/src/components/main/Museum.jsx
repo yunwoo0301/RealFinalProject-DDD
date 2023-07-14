@@ -12,8 +12,9 @@ const MuseumContainer = styled.div`
         margin-right: 2rem;
         @media (max-width: 768px) {
             font-size: 1rem;
+            margin-bottom: 1rem;
         }
-        
+
     }
     .museum-list {
         display: flex;
@@ -26,6 +27,9 @@ const MuseumContainer = styled.div`
 
     .museum-detail {
         margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+        flex-direction: column;
     }
 
 `;
@@ -60,6 +64,7 @@ const DetailContainer = styled.div`
         }
         @media (max-width: 768px) {
             font-size: 0.9rem;
+            text-align: center;
             p{
                 display: none;
             }

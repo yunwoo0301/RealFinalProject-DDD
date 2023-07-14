@@ -11,6 +11,9 @@ const Button = styled.button`
     background-color: transparent;
     margin: 0.6rem 0.4rem;
     cursor: pointer;
+    @media (max-width: 768px){
+        margin-top: 0.65rem;
+    }
 
 
 `;
