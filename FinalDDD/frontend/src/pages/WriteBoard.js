@@ -4,9 +4,11 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { storage } from "../util/FireBase";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DDDApi from '../api/DDDApi';
-
+import ConfirmModal from "../util/ConfirmModal";
+import { Backdrop } from "@mui/material";
+import { FcCloseUpMode } from 'react-icons/fc';
 
 const Wrap = styled.div`
     width: 75em;
@@ -157,16 +159,6 @@ const Section = styled.div`
 
 
             button {
-                /* font-size: 14px;
-                cursor: pointer;
-                border-radius: 10px;
-                border: none;
-                color: white;
-                background-color: #050E3D;
-                transition: all .1s ease-in;
-                font-weight: bold;
-                float: left;
-                padding: .5em 1.3em; */
                 font-size: 14px;
                 cursor: pointer;
                 border-radius: 10px;
@@ -182,6 +174,7 @@ const Section = styled.div`
                 &:hover {background-color: #5EADF7; color: #F4F8FF;}
                 }
         }
+
 `;
 
 const TextWrap = styled.div`
@@ -192,16 +185,18 @@ const TextWrap = styled.div`
   .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
     min-height: 500px;} // 텍스트 높이 조절
   .ck-editor__main {padding: 0px;}
+
+
+
 `;
 
-// const WriteWrap = styled.div`
-//   width: 1200px;
-//     height: 100%;
-//     margin: 0 auto;
-//     align-items: center;
-//     justify-content: center;
+const ModalBodyStyle = styled.div`
+.success{
+  font-size: 1rem;
+  line-height: 1;
+}
+`;
 
-// `;
 
 
 const WriteBoard = () => {
@@ -268,45 +263,30 @@ const WriteBoard = () => {
       };
     };
 
-    /* 이미지 업로드 1차 작업 건 */
-    // const handleUploadClick = () => {
-
-    //     const storageRef = storage.ref();
-    //     const fileRef = storageRef.child(image.image_file.name);
-    //     fileRef.put(image.image_file).then(() => {
-    //       console.log('File uploaded successfully!');
-    //       fileRef.getDownloadURL().then((url) => {
-    //         console.log("저장경로 확인 : " + url);
-    //         setImage(prevState => ({ ...prevState, image_url: url }));
-    //       });
-    //     });
-    //   };
-
-
-    // 이미지 업로드 함수
-  const onClickSave = async () => {
-    if (title.length === 0 || category.length === 0 || contents === 0) {
-      alert("제목, 카테고리, 내용을 모두 입력해 주세요.");
-      return;
-    }
-
-    let imageUrl = "/default-profile.png"; // 이미지 URL 초기값
-
-    if (image && image.image_file) {
-      // 이미지가 선택된 경우에만 업로드 로직 수행
-      const storageRef = storage.ref();
-      const fileRef = storageRef.child(image.image_file.name);
-
-      try {
-        // 이미지 업로드
-        await fileRef.put(image.image_file);
-        imageUrl = await fileRef.getDownloadURL();
-      } catch (error) {
-        console.log(error);
-        alert("이미지 업로드 중 오류가 발생했습니다.");
+      // 이미지 업로드 함수
+    const onClickSave = async () => {
+      if (title.length === 0 || category.length === 0 || contents === 0) {
+        alert("제목, 카테고리, 내용을 모두 입력해 주세요.");
         return;
       }
-    }
+
+      let imageUrl = "/default-profile.png"; // 이미지 URL 초기값
+
+      if (image && image.image_file) {
+        // 이미지가 선택된 경우에만 업로드 로직 수행
+        const storageRef = storage.ref();
+        const fileRef = storageRef.child(image.image_file.name);
+
+        try {
+          // 이미지 업로드
+          await fileRef.put(image.image_file);
+          imageUrl = await fileRef.getDownloadURL();
+        } catch (error) {
+          console.log(error);
+          alert("이미지 업로드 중 오류가 발생했습니다.");
+          return;
+        }
+      }
 
     try {
       const resultNo = await DDDApi.boardWrite(
@@ -321,18 +301,52 @@ const WriteBoard = () => {
       const linkNo = resultNo.data;
       console.log("Result Number:", linkNo);
 
-      if (linkNo) {
-        alert("문의글 작성이 완료되었습니다.");
-        navigate('/boardList');
+      if (linkNo === true) {
+        // alert("문의글 작성이 완료되었습니다.");
+        setShowModal(true);
       }
     } catch (error) {
       console.log(error);
       alert("문의글 작성 중 오류가 발생했습니다.");
     }
+
   };
+
+    // 확인 버튼 클릭 시 게시판 메인으로 이동
+    const handleConfirmClick = () => {
+      setShowModal(false);
+      navigate('/boardList');
+    }
+
+
+    const buttonStlye = {
+      backgroundColor:'#2B5EC2',
+      marginTop:'1rem',
+    }
+
+
+    // 작성하기 모달 변수
+    const [showModal, setShowModal] = useState(false);
+
+    const writeProps  ={
+        title: "게시글 작성완료",
+        body: (
+        <ModalBodyStyle>
+          <div className='success'>
+            등록이 완료되었습니다.
+          </div>
+        </ModalBodyStyle>
+        ),
+        button: [
+      //  <button style = {buttonStlye} onClick={()=> setShowModal(false)}>확인</button>
+        <button style = {buttonStlye} onClick={handleConfirmClick}>확인</button>
+        ],
+        icon: <FcCloseUpMode/>
+      }
 
 
     return (
+      <>
       <Wrap>
         <Section className="section">
           <div className="board_header">
@@ -382,14 +396,14 @@ const WriteBoard = () => {
                   </td>
                   <td>
                     <div className="imguploaderBtn">
-                      <button>
-                        <input
-                          type="file"
-                          id="file-upload"
-                          onChange={previewImage}
-                          style={{ display: "none" }}/>
-                        <label htmlFor="file-upload">사진 업로드</label>
-                      </button>
+                    <button>
+                       <input
+                        type="file"
+                        id="file-upload"
+                        onChange={previewImage}
+                        style={{ display: "none" }}/>
+                       <label htmlFor="file-upload">사진 업로드</label>
+                    </button>
                     </div>
                   </td>
                 </tr>
@@ -400,32 +414,40 @@ const WriteBoard = () => {
               <div className="addBoard-wrapper">
                 {previewUrl && <img src={previewUrl} alt="Preview" />}
                 {image.image_url && <img src={image.image_url} alt="Uploaded" />}
-                </div>
+               </div>
           </div>
-
-          </Section>
-
-          <TextWrap>
-            <CKEditor
-            editor={ClassicEditor}
-            data={contents}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              setContents(data);
-            }}
-            config={{
-              placeholder: '자유롭게 작성 가능합니다.'
-            }}
-            />
-          </TextWrap>
-
+        </Section>
+        <TextWrap>
+         <CKEditor
+         editor={ClassicEditor}
+         data={contents}
+         onChange={(event, editor) => {
+           const data = editor.getData();
+           setContents(data);}}
+         config={{
+           placeholder: '자유롭게 작성 가능합니다.',
+           enterMode: 2,}}/>
+        </TextWrap>
         <div className="btn_area">
             <button className="savebtn" onClick={onClickSave}>등록하기</button>
-            <Link to='/boardList'>
-                <button className="cancelbtn">취소하기</button>
-            </Link>
+            <button className="cancelbtn">취소하기</button>
         </div>
       </Wrap>
+
+      <Backdrop
+            sx={{
+                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                opacity:'0.5',
+                color: 'black',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0, // 팝업을 상단에 위치
+            }}
+            open={showModal}
+            onClick={()=>{setShowModal(false) }}
+            >
+        {showModal && <ConfirmModal props={writeProps} minWidth='200px' minHeight="250px"/>}
+      </Backdrop>
+      </>
   );
 };
 
