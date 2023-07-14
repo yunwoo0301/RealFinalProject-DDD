@@ -29,7 +29,7 @@ z-index: 99;
     section {
         width: 50%;
         margin: 0 auto;
-        border-radius: 0.2rem;
+        border-radius: 1rem;
         background-color: #fff;
         /* 팝업이 열릴때 스르륵 열리는 효과 */
         animation: modal-show 0.3s;
@@ -69,6 +69,11 @@ z-index: 99;
             opacity: 1;
         }
     }
+  @media (max-width: 768px) {
+    section{
+        width: 100%;
+    }
+  }
   
 
 `;
