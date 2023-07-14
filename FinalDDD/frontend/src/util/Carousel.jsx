@@ -62,9 +62,9 @@ const Container = styled.div`
       font-weight: 900;
       top: 40px;
       text-shadow: 2px 2px 4px rgba(94, 173, 247, 0.5);
-}
-
     }
+
+
     .date{
       width: 100%;
       text-align: center;
@@ -87,7 +87,7 @@ const Container = styled.div`
       top: calc(80px + 3.5rem);
       text-align: center;
     }
-
+  }
 `;
 
 const ImgBox = styled.div`
