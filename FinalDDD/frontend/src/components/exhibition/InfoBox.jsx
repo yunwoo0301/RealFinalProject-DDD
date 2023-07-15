@@ -55,13 +55,14 @@ const Container = styled.div`
     .textBox{
         height: 2rem;
         .title{
-            font-size: 0.5rem;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
         }
         .location{
-            font-size: 0.2rem;
+            font-size: 0.7rem;
         }
         .date{
-           font-size: 0.2rem;
+           font-size: 0.7rem;
         }
     }
   }
@@ -117,28 +118,33 @@ const InfoBox = ({data,selectedOption,onClick}) => {
         <Container selectedOption={selectedOption} imgUrl={data.imgUrl} onClick={handleClick}>
           <div className="imgBox"></div>
           <div className="textBox">
-            <div className="title">
-              {selectedOption ? (
-                <p>{data.exhibitName}</p>
-              ) : (
-                <>
-                  {data.exhibitName.length > 19 ? (
-                    <p>
-                      {data.exhibitName.slice(0, 20)}
-                      <br />
-                      {data.exhibitName.slice(20)}
-                    </p>
-                  ) : (
-                    <p>
-                      {data.exhibitName}
-                      {data.exhibitName.length < 10 && <br />}
-                      &nbsp;
-                    </p>
-                  )}
-                </>
-              )}
-            </div>
-            <div className="date">{data.startDate} ~ {data.endDate}</div>
+          <div className="title">
+      {window.innerWidth > 768 ? (
+        selectedOption ? (
+          <p>{data.exhibitName}</p>
+        ) : (
+          <>
+            {data.exhibitName.length > 19 ? (
+              <p>
+                {data.exhibitName.slice(0, 20)}
+                <br />
+                {data.exhibitName.slice(20)}
+              </p>
+            ) : (
+              <p>
+                {data.exhibitName}
+                {data.exhibitName.length < 10 && <br />}
+                &nbsp;
+              </p>
+            )}
+          </>
+        )
+      ) : (
+        <p>{data.exhibitName}</p>
+      )}
+    </div>
+            {window.innerWidth > 768 ? ( <div className="date">{data.startDate} ~ {data.endDate}</div>)
+            : (<div className="date">{data.startDate} ~ <br/> {data.endDate}</div>)}
             <div className="location">{data.exhibitLocation}</div>
           </div>
         </Container>

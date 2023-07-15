@@ -27,6 +27,9 @@ const Container = styled.div`
     }
     .category{
         margin-top: 2rem;
+    @media (max-width: 768px) {
+      margin-top: 3rem;
+    }
     }
     .section{
         /* border: 1px solid #050E3D; */
@@ -54,9 +57,7 @@ const Container = styled.div`
         }
     }
 
-    /* @media (max-width: 768px) {
-    width: 100vw;
-  } */
+
   .imgBoxs {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

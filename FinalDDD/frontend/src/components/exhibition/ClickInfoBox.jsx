@@ -53,6 +53,7 @@ const Container = styled.div`
     }
 
     @media (max-width: 768px) {
+        font-size: 0.7rem;
         .imgBox{
             width: 100%;
         }
@@ -64,10 +65,10 @@ const Container = styled.div`
             text-align: center;
         }
         .date{
-            font-size: 0.3rem;
+            font-size: 0.7rem;
         }
         .btn{
-            width: 4rem;
+            width: 5rem;
             height: 2rem;
             margin: 0 auto;
         }
@@ -88,9 +89,8 @@ const ClickInfoBox = ({data}) => {
             <div className="title">{data.exhibitName}</div>
             {window.innerWidth > 768 ? ( <div className="date">{data.startDate} ~ {data.endDate}</div>)
             : (<div className="date">{data.startDate} ~ <br/> {data.endDate}</div>)}
-
             <div>{data.exhibitLocation}</div>
-            <div className="btn"><Button onClick={()=>handleClick(data)}>상세정보`</Button></div>
+            <div className="btn"><Button className="modalBtn" onClick={()=>handleClick(data)}>상세정보</Button></div>
             
         </div>
         </Container>

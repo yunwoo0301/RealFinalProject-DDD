@@ -20,11 +20,13 @@ cursor: pointer;
 &.btn {
     width: 30rem;
 }
-
+&.modalBtn {
     @media (max-width: 768px) {
         background-color: transparent;
         color: #5EADF7;
     }
+}
+
 `;
 const Button =  ({onClick, children, disabled, className}) => {
 
