@@ -30,20 +30,6 @@ const Section = styled.div`
             color:  inherit;
             text-decoration: none;
         }
-        button {
-            font-size: 16px;
-            font-weight: 400;
-            float: right;
-            padding: 8px 35px;
-            border-radius: 10px;
-            background-color: #135CD2;
-            color: white;
-            border: none;
-            transition: all .1s ease-in;
-             cursor: pointer;
-
-            &:hover{background-color:  #a1f7d9; color: #135CD2;}
-        }
     }
 
     table {
@@ -76,6 +62,15 @@ const Section = styled.div`
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
+        // 미디어쿼리 적용 시 작성자 이후 부터 안보이도록 설정
+        @media (max-width: 768px) {
+          td:nth-child(5), th:nth-child(5), td:last-child, th:last-child {
+            display: none;
+          }
+        }
+
+
         th:first-child, td:first-child {border-left: none; width: 70px;} // 글번호(열)
         td:first-child, td:nth-child(5), td:last-child { letter-spacing: -1px;}
         th:nth-child(2), td:nth-child(2) {width: 70px; letter-spacing: -.4px;} // 카테고리(열)
@@ -94,6 +89,7 @@ const Section = styled.div`
             color:#FC5C7D;
         }
     }
+
     .writebtn {
         display: flex;
         margin-bottom: 1em 0em ;
@@ -112,6 +108,11 @@ const Section = styled.div`
             font-weight: bold;
         }
     }
+
+    @media (max-width: 768px) {
+    width: 768px;
+    min-width: 400px;
+  }
 `;
 
 
@@ -156,7 +157,6 @@ const Question = () => {
             const category = 'Question'; // 조회할 카테고리 이름 지정
             const response = await DDDApi.getFreeBoardsByCategory(category);
             const filteredData = response.data.filter(boardList => boardList.category === category);
-            // setBoardList(response.data);
             setBoardList(filteredData);
             console.log(response.data);
           } catch (error) {
@@ -180,7 +180,7 @@ const Question = () => {
             navigate(link);
         } else {
             alert("로그인 완료 시 작성 진행 가능합니다.");
-            navigate('/login'); // 로그인 화면으로 이동 ** 추가
+            navigate('/login');
         }
     };
 
@@ -214,7 +214,6 @@ const Question = () => {
                     <tr key={boardList.boardNo}>
                       <td>{boardList.boardNo}</td>
                       <td>{boardList.category === 'Question' ? '질문하기' : boardList.category}</td>
-                      {/* <td>{boardList.category}</td> */}
                       <td>
                         <Link
                           to={`/boardList/boardView/${boardList.boardNo}`}
