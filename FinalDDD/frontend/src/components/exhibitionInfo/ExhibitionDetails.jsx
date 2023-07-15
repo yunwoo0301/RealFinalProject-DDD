@@ -26,6 +26,7 @@ const Container = styled.div`
         }
     .price {
         font-size: 1rem;
+        font-weight: bold;
         color: #585656;
     }
     img{

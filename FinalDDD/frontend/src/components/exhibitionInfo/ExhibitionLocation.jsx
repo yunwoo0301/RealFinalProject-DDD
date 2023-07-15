@@ -23,8 +23,13 @@ const Container = styled.div`
         width: 80%;
         height: 300px;
         background-color:#F4F8FF ;
-        border: 2px solid #050E3D;
         text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .title{
+            font-size: 1rem;
+        }
     }
 
 `;
