@@ -158,7 +158,6 @@ const Recommend = () => {
             const category = 'Recommend'; // 조회할 카테고리 이름 지정
             const response = await DDDApi.getFreeBoardsByCategory(category);
             const filteredData = response.data.filter(boardList => boardList.category === category);
-            // setBoardList(response.data);
             setBoardList(filteredData);
             console.log(response.data);
           } catch (error) {
