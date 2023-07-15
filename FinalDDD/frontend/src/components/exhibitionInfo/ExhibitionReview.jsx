@@ -3,12 +3,12 @@ import styled from "styled-components";
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import DDDApi from "../../api/DDDApi";
-import AlertModal from "../../util/Alert";
 import Backdrop from "@mui/material/Backdrop";
 import PageNation from "../../util/PageNation";
 import {RiUserHeartLine} from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../../util/ConfirmModal";
+import AlertBlue from "../../util/AlertBlue";
 
 
 const Container = styled.div`
@@ -16,22 +16,22 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     .reviewBox {
-        width: 50%;
+        width: 60%;
         margin: 1em;
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
        .rating{
-        width: 20rem;
         display: flex;
         justify-content: left;
-        margin: 0 auto;
+        margin: 0;
        }
         .textBox{
             display: flex;
             flex-direction: row;
             justify-content: center;
+            margin: 0;
         }
         input{
             width: 15rem;
@@ -52,9 +52,6 @@ const Container = styled.div`
             font-weight: bold;
             height: 2rem;
         }
-        &>*{
-            margin: 10px;
-        }
     }
     .review{
         width: 80%;
@@ -63,11 +60,22 @@ const Container = styled.div`
     @media (max-width: 768px) {
       .reviewBox{
         flex-direction: column;
-        .rating{
-          width: 8rem;
-        }
+        margin: 0;
+      .textBox{
+        width: 100vw;
+        margin-top: 1rem;
       }
+        input{
+          width: 80%;
+        }
+        button{
+          margin: 0;
+          width: 2rem;
+          background-color: transparent;
+          color: #050E3D;
+        }
     }
+  }
 
 `;
 
@@ -223,7 +231,7 @@ const ExhibitionReview = ({ data }) => {
         open={openToModal}
         onClick={closeToModal}
         >
-            <AlertModal />
+            <AlertBlue />
         </Backdrop>
         }
         {warnModal && <ConfirmModal props={props}/>}
