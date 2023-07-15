@@ -14,6 +14,8 @@ import { Backdrop } from "@mui/material";
 
 
 const ViewWrap = styled.div`
+    width: 70%; // 추가
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,7 +24,8 @@ const ViewWrap = styled.div`
 `;
 
 const Section = styled.div`
-    width: 75%;
+    /* width: 75%; */
+    width: 100%; // 추가
     display: flex;
     flex-direction: column;
     float: center;
@@ -30,10 +33,15 @@ const Section = styled.div`
 
     .board_header {
         h2 {
-            padding: 10px 16px;
+            /* padding: 10px 16px;
+            font-size: 1.8em;
+            margin-top: 30px;
+            font-weight: 900; */
+
             font-size: 1.8em;
             margin-top: 30px;
             font-weight: 900;
+            text-align: center;
         }
     }
 
@@ -47,52 +55,51 @@ const Section = styled.div`
 
     .editBtn {
         margin-left: auto;  // 오른쪽으로 이동
-        margin-right: 20px;
+        margin-right: 2em;
         display: flex;
         flex-direction: row;  // 가로 방향으로 정렬
         align-items: center;
 
         .upBtn { // 수정하기 버튼
-            padding: 10px 1.6em;
+            padding: .8em 1.6em;
             border: none;
             border-radius: 10px;
             background-color: #050e3d;
             color: white;
             cursor: pointer;
-            margin-left: 15px;
+            /* margin-left: 1px; */
             transition: all .1s ease-in;
             text-decoration: none;
 
-        &:hover {
-            background-color: #5eadf7;
-            color: #f4f8ff;}
-        }
+            &:hover {
+                background-color: #5eadf7;
+                color: #f4f8ff;}
+            }
 
         .delBtn { // 삭제하기 버튼
-                padding: 10px 1.6em;
-                border: none;
-                border-radius: 10px;
-                background-color: #050e3d;
-                color: white;
-                cursor: pointer;
-                margin-left: 15px;
-                transition: all .1s ease-in;
+            padding: .8em 1.6em;
+            border: none;
+            border-radius: 10px;
+            background-color: #050e3d;
+            color: white;
+            cursor: pointer;
+            margin-left: 1.2em;
+            transition: all .1s ease-in;
 
             &:hover {background-color: #FA6060;
                     color: #F4F8FF;}
-            }
-
+        }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
 
     .editBtn {
+        margin-left: auto;  // 오른쪽으로 이동
+        margin-right: .1rem;
 
         .upBtn, .delBtn {
-        padding: 0.7em 1.5em;
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
+            display: flex;
+
         }
     }
 }
@@ -100,15 +107,23 @@ const Section = styled.div`
     .dateview {
         display: flex;
         font-weight: bold;
-        margin-right : 4.5em;
+        justify-content: flex-end;
+        /* margin-right : 4.5em; */
+        padding-right: 4.5em;
 
-        .write_date {
-            flex:1;
-            text-align: right;
-            margin-right: 1em;
+
+        .write_date, .views {
+            /* flex:1; */
+            /* text-align: right; */
+            margin-left: 1em;
             margin-bottom:2px;
+
+        }
+        @media (max-width: 768px) {
+            padding-right: 1em;
         }
     }
+
 
 
     .authorinfo {
@@ -139,6 +154,9 @@ const Section = styled.div`
         margin-top : 1em;
     }
 
+    @media (max-width: 768px) {
+        width: 768px;
+    }
 `;
 
 const TitleView = styled.h3`
@@ -255,7 +273,7 @@ const Wrapper = styled.div`
     }
 
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
         flex-direction: column;
     }
 `;
@@ -373,6 +391,7 @@ const BoardView = () => {
     const onClickEdit = () => {
         navigate(`/boardList/boardView/${boardNo}/editBoard`);
     };
+
 
 const deleteBoard = async (boardNo) => {
     try {
@@ -529,16 +548,16 @@ const deleteBoard = async (boardNo) => {
 
                 {/* 게시글 내용(이미지+텍스트) 구간 */}
                 <Contents>
-                    {boardView && (
-                            <div className="image_area">
-                                {boardView.image ? (
-                                    <img src={boardView.image} alt="업로드 이미지" />
-                                ) : (
-                                    <img src="/default-image.png" alt="기본 이미지" />
-                                )}
-                            </div>
-                        )}
-                    <div className="text_area" dangerouslySetInnerHTML={{__html: boardView?.contents}}></div>
+                {boardView && (
+                        <div className="image_area">
+                            {boardView.image ? (
+                                <img src={boardView.image} alt="업로드 이미지" />
+                            ) : (
+                                <img src="/default-image.png" alt="기본 이미지" />
+                            )}
+                        </div>
+                    )}
+                <div className="text_area" dangerouslySetInnerHTML={{__html: boardView?.contents}}></div>
                 </Contents>
             </div>
 
@@ -554,12 +573,12 @@ const deleteBoard = async (boardNo) => {
                 <div key={index} className="comment">
                 <div className="commentbox">
 
-                    {/* 댓글 작성자 정보 */}
-                    <div className="userinfo">
-                        <div className="profile">
-                            <img src={comment.profileImg} alt="프로필 이미지" />
-                            <div className="user">{comment.nickname}</div>
-                        </div>
+                {/* 댓글 작성자 정보 */}
+                <div className="userinfo">
+                    <div className="profile">
+                        <img src={comment.profileImg} alt="프로필 이미지" />
+                        <div className="user">{comment.nickname}</div>
+                    </div>
 
                     {/* 작성일, 삭제 버튼 영역 */}
                     <div className="rightmenu">
@@ -594,7 +613,7 @@ const deleteBoard = async (boardNo) => {
 
         <Backdrop
             sx={{
-                backgroundColor: 'rgb(0,0,0,0.5)',
+                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
                 opacity:'0.5',
                 color: 'black',
                 zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -607,11 +626,11 @@ const deleteBoard = async (boardNo) => {
 
         <Backdrop
             sx={{
-                backgroundColor: 'rgb(0,0,0,0.5)',
+                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
                 opacity:'0.5',
                 color: 'black',
                 zIndex: (theme) => theme.zIndex.drawer + 1,
-                top: 0,
+                top: 0, // 팝업을 상단에 위치
             }}
             open={showModal}>
         {showModal && <ConfirmModal props={boardDelete}/>}
