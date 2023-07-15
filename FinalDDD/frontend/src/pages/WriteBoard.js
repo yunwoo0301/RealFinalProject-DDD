@@ -11,7 +11,8 @@ import { Backdrop } from "@mui/material";
 import { FcCloseUpMode } from 'react-icons/fc';
 
 const Wrap = styled.div`
-    width: 75em;
+    /* width: 75em; */
+    width: 70%;
     height: 100%;
     margin: 0 auto;
     align-items: center;
@@ -19,10 +20,8 @@ const Wrap = styled.div`
 
     .btn_area {
         text-align: right;
-        margin-right: .9em;
 
         .savebtn { // 등록 버튼 속성
-                /* display :inline-block; */
                 cursor: pointer;
                 margin-top: 1em;
                 padding: 10px 1.6em;
@@ -59,142 +58,173 @@ const Wrap = styled.div`
             }
 
     }
+
+    @media (max-width: 800px) {
+      max-width: 800px;
+    }
 `;
 
 
 
 const Section = styled.div`
-    width: 1140px;
-    float: center;
+    width: 100%;
+    margin: 0 auto;
+    justify-content: center;
     position: relative;
     display: flex;
     flex-direction: column;
 
     div { // 헤더 및 카테고리 박스
         width: 100%;
-        padding: 10px 30px;
+        padding : 1em;
     }
+
     .board_header { // 게시물 작성 영역
         h2 {
             font-size: 1.8em;
             margin-top: 30px;
             font-weight: 900;
+            text-align: center;
         }
     }
 
     table {
-        border-collapse: collapse;
-        width: 100%;
-        background-color: #4555AE;
-        border-bottom: solid 1px #4555AE;
-        text-align: center;
-        tr:nth-child(2n) td {background-color: #f9f9f9;}
+      border-collapse: collapse;
+      width: 100%;
+      background-color: #4555AE;
+      border-bottom: solid 1px #4555AE;
+      text-align: center;
+
+
+        tr:nth-child(2n) td {background-color: #f9f9f9;} // 타이틀 박스 배경색 설정
         th {padding: 10px; color: white;}
         td {padding: 10px; background-color: white; border-left: solid 1px #bbb; border-top: solid 1px #ddd;}
-        td:first-child {border-left: none; width: 115px;
+
+        td:first-child {border-left: none; width: 10%;
 
             select { // 게시판 카테고리 셀렉박스
                 text-align:center;
                 background: none;
                 border: none;
                 outline: none;
-                font-size: 16px;
+                font-size: 1rem;
                 font-weight: 600;
             }
         }
-        td:nth-child(2) {width: 100px; text-align: left; padding-left: 20px;
+        td:nth-child(2) {width: 10%; text-align: center;
 
             select{ // 지역선택 카테고리 셀렉박스
                 text-align:center;
                 background: none;
                 border: none;
                 outline: none;
-                font-size: 16px;
+                font-size: 1rem;
                 font-weight: 600;
             }
         }
 
-        td:nth-child(3) {width: 41em; text-align: left; padding-left: 20px;
+        td:nth-child(3) {width: 70%; text-align: left; padding-left: 20px;} // 제목 카테고리
 
+
+        td:nth-child(4) { text-align: left;}
+
+        @media (max-width: 780px) {
+        td:nth-child(4) { display: flex; flex-direction: column; justify-content: center; align-items: center;}
+      }
+
+
+        @media (max-width: 780px) {
+          /* width: 780px; */
+          min-width: 400px;
         }
+  }
 
-    }
+
     .input_title {
-        font-size: 20px;
+        font-size: 1.3rem;
         width: 100%;
-        height: 30px;
+        /* height: 30px; */
         outline: none;
         display: block;
         margin-bottom: 30px;
-        padding-left: 15px;
         margin: 0 auto;
         border: none;
         background: none;
+
         &:focus {border: none; background:none;}
     }
 
+
+    .imguploaderBtn { // 업로드 버튼
+
+        button {
+          font-size: .9rem;  // 폰트 크기 조정
+          cursor: pointer;  // 커서 스타일을 포인터로 변경
+          border-radius: 1em;  // 버튼 모서리 둥글게 처리
+          border: none;  // 테두리 제거
+          color: white;  // 글자색을 흰색으로
+          background-color: #050E3D;  // 버튼 배경색
+          transition: all .1s ease-in;  // 마우스 호버시 효과 전환 속도
+          font-weight: bold;  // 글자를 굵게
+          padding: .5em .8em;  // 패딩으로 내부 여백 조정
+
+          &:hover {background-color: #5EADF7; color: #F4F8FF;}
+      }
+    }
+
+    // 업로드 이미지 영역
     .addBoard-wrapper{
-            margin-top: 1rem;
-            display: flex;
-            flex-direction: column-reverse; // 업로드된 이미지 아래로 향하게 설정
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-        .imgcontainer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 12px;
-        }
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column-reverse; // 업로드된 이미지 아래로 향하게 설정
+        align-items: center;
+        /* justify-content: center; */
+        justify-content: flex-start;
+        width: 100%;
+      }
 
-        img {
-            width: 50%; /* 이미지의 최대 가로 너비를 설정 */
-            height: 50%; /* 이미지의 최대 세로 높이를 설정 */
-            /* object-fit: cover; */
-            /* align-self: flex-start; */
-        }
+    .imgcontainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* margin: 0 12px; */
+    }
 
-        .imguploaderBtn {
+    img {
+        width: 40%; /* 이미지의 최대 가로 너비를 설정 */
+        height: 40%; /* 이미지의 최대 세로 높이를 설정 */
 
+        /* object-fit: cover; */
+        /* align-self: flex-start; */
+    }
 
-            button {
-                font-size: 14px;
-                cursor: pointer;
-                border-radius: 10px;
-                border: none;
-                color: white;
-                background-color: #050E3D;
-                transition: all .1s ease-in;
-                font-weight: bold;
-                float: left;
-                padding: .5em 1.3em;
-                margin-bottom: .5em;
-
-                &:hover {background-color: #5EADF7; color: #F4F8FF;}
-                }
-        }
-
+    @media (max-width: 768px) {
+      max-width: 780px;
+    }
 `;
 
 const TextWrap = styled.div`
-  width: 95%;
+  width: 100%;
   margin: 0 auto;
   margin-bottom:20px;
+  justify-content: center;
+  align-items: center;
+  padding : 1em;
 
-  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
-    min-height: 500px;} // 텍스트 높이 조절
-  .ck-editor__main {padding: 0px;}
+     .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+       min-height: 500px;} // 텍스트 높이 조절
+     .ck-editor__main {padding: 0px;}
 
-
-
+     @media (max-width: 768px) {
+      max-width: 768px;
+     }
 `;
 
 const ModalBodyStyle = styled.div`
-.success{
-  font-size: 1rem;
-  line-height: 1;
-}
+    .success{
+      font-size: 1rem;
+      line-height: 1;
+    }
 `;
 
 
@@ -216,6 +246,7 @@ const WriteBoard = () => {
       image_file: null,
       image_url: null
     });
+
     const [previewUrl, setPreviewUrl] = useState(""); // 이미지 미리보기
     const [contents, setContents] = useState("");
 
@@ -302,7 +333,6 @@ const WriteBoard = () => {
       console.log("Result Number:", linkNo);
 
       if (linkNo === true) {
-        // alert("문의글 작성이 완료되었습니다.");
         setShowModal(true);
       }
     } catch (error) {
@@ -338,7 +368,6 @@ const WriteBoard = () => {
         </ModalBodyStyle>
         ),
         button: [
-      //  <button style = {buttonStlye} onClick={()=> setShowModal(false)}>확인</button>
         <button style = {buttonStlye} onClick={handleConfirmClick}>확인</button>
         ],
         icon: <FcCloseUpMode/>
@@ -356,7 +385,7 @@ const WriteBoard = () => {
               <table>
                 <tbody>
                 <tr>
-                  <th colSpan={3}>게시물 작성</th>
+                  <th colSpan={4}>게시물 작성</th>
                 </tr>
                 <tr>
                   <td>
@@ -394,16 +423,17 @@ const WriteBoard = () => {
                       name="title"
                       maxLength={40}/>
                   </td>
+
                   <td>
                     <div className="imguploaderBtn">
-                    <button>
-                       <input
-                        type="file"
-                        id="file-upload"
-                        onChange={previewImage}
-                        style={{ display: "none" }}/>
-                       <label htmlFor="file-upload">사진 업로드</label>
-                    </button>
+                      <button>
+                        <input
+                          type="file"
+                          id="file-upload"
+                          onChange={previewImage}
+                          style={{ display: "none" }}/>
+                        <label htmlFor="file-upload">사진 업로드</label>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -414,19 +444,19 @@ const WriteBoard = () => {
               <div className="addBoard-wrapper">
                 {previewUrl && <img src={previewUrl} alt="Preview" />}
                 {image.image_url && <img src={image.image_url} alt="Uploaded" />}
-               </div>
+              </div>
           </div>
         </Section>
         <TextWrap>
-         <CKEditor
-         editor={ClassicEditor}
-         data={contents}
-         onChange={(event, editor) => {
-           const data = editor.getData();
-           setContents(data);}}
-         config={{
-           placeholder: '자유롭게 작성 가능합니다.',
-           enterMode: 2,}}/>
+        <CKEditor
+        editor={ClassicEditor}
+        data={contents}
+        onChange={(event, editor) => {
+          const data = editor.getData();
+          setContents(data);}}
+        config={{
+          placeholder: '자유롭게 작성 가능합니다.',
+          enterMode: 2,}}/>
         </TextWrap>
         <div className="btn_area">
             <button className="savebtn" onClick={onClickSave}>등록하기</button>
