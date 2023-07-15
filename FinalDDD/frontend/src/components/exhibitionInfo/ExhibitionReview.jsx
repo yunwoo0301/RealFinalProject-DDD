@@ -6,6 +6,9 @@ import DDDApi from "../../api/DDDApi";
 import AlertModal from "../../util/Alert";
 import Backdrop from "@mui/material/Backdrop";
 import PageNation from "../../util/PageNation";
+import {RiUserHeartLine} from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
+import ConfirmModal from "../../util/ConfirmModal";
 
 
 const Container = styled.div`
@@ -20,7 +23,7 @@ const Container = styled.div`
         align-items: center;
         justify-content: center;
        .rating{
-        width: 350px;
+        width: 20rem;
         display: flex;
         justify-content: left;
         margin: 0 auto;
@@ -33,6 +36,7 @@ const Container = styled.div`
         input{
             width: 15rem;
             height: 1.5rem;
+            margin-right: 0.5rem;
             border-radius: 0.3rem;
 
         }
@@ -44,7 +48,7 @@ const Container = styled.div`
             border-radius: .5rem;
             background-color:#050E3D;
             color:  white;
-            font-size: 1rem;
+            font-size: 0.8rem;
             font-weight: bold;
             height: 2rem;
         }
@@ -54,6 +58,15 @@ const Container = styled.div`
     }
     .review{
         width: 80%;
+    }
+
+    @media (max-width: 768px) {
+      .reviewBox{
+        flex-direction: column;
+        .rating{
+          width: 8rem;
+        }
+      }
     }
 
 `;
@@ -92,6 +105,7 @@ const Review = styled.div`
     }
 `;
 const ExhibitionReview = ({ data }) => {
+    const navigate = useNavigate();
     const getId = window.localStorage.getItem("memberId");
     const isLogin = window.localStorage.getItem("isLogin");
     const exhibitNo = data.exhibitNo;
@@ -120,6 +134,11 @@ const ExhibitionReview = ({ data }) => {
       if (comment.trim() === "") {
         return; // 빈 문자열이면 함수 종료
       }
+      // 로그인이 안되어있으면 로그인 모달띄움
+      if (!isLogin) {
+        openToWarnModal();
+        return;
+      }
       const result = await DDDApi.writeExhibitComment(getId, exhibitNo, stars, comment);
       const isOk = result.data;
       if (isOk) {
@@ -129,7 +148,7 @@ const ExhibitionReview = ({ data }) => {
           setComment(""); // 한줄평 내용 초기화
           setOpenModal(false);
           setStars(0); // 별점 초기화
-        }, 500); // 0.8초 후에 모달을 닫음
+        }, 1000); // 0.8초 후에 모달을 닫음
       }
     };
 
@@ -165,7 +184,32 @@ const ExhibitionReview = ({ data }) => {
     const offset = currentPage * ITEMS_PAGE; // 현재 페이지에서 보여줄 아이템의 시작 인덱스
     const currentPageData = commentList.slice(offset, offset + ITEMS_PAGE);
 
+    // 로그인 경고모달
+    const [warnModal, setWarnModal] = useState(false);
+    const openToWarnModal = () => {
+      setWarnModal(true);
+    }
+    const closeWarnModal = () => {
+      setWarnModal(false);
+    }
+    const goToLogin = () => {
+      navigate("/login");
+    }
 
+    const props = {
+      icon: <RiUserHeartLine color="#5eadf7"/>,
+      body:(
+        <>
+        <p>로그인 후 이용가능합니다🥺</p>
+        <p style={{fontSize: "0.9rem"}}>확인을 누르시면 로그인페이지로 이동합니다.</p>
+        </>
+      ),
+      button: [
+        <button onClick={goToLogin}>확인</button>,
+        <button onClick={closeWarnModal}>취소</button>
+      ]
+
+    }
     return (
       <Container>
         {openModal &&
@@ -182,6 +226,7 @@ const ExhibitionReview = ({ data }) => {
             <AlertModal />
         </Backdrop>
         }
+        {warnModal && <ConfirmModal props={props}/>}
         <div className="reviewBox">
           <div className="rating">
             <Stack spacing={1}>
@@ -203,7 +248,7 @@ const ExhibitionReview = ({ data }) => {
                 placeholder="한줄평을 남겨보세요!"
                 onChange={handleCommentChange}
               />
-              <button type="submit" disabled={!isLogin || comment.trim() === ""}>
+              <button type="submit">
                 입력
               </button>
             </div>
