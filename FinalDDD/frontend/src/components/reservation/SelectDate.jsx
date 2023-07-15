@@ -13,96 +13,103 @@ export const Container = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
-    .header { 
-        width: 100%;
-        height: 170px;
-        
-    }
+    margin-bottom: 1rem;
+
     .reservationBox{
-        background-color: #F4F8FF;
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        gap: 1rem;
-        border-radius: 10px;
+      background-color: #F4F8FF;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      gap: 1rem;
+      border-radius: 2rem;
     }
     .bodyContainer{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
     .root{
-        display: flex;
-        align-items: center;
-        gap: 0.2rem;
-        flex-direction: row;
-        text-align: left;
-        width: 100%;
-        p{
-            cursor: pointer;
-        }
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      flex-direction: row;
+      text-align: left;
+      width: 100%;
+      p{
+          cursor: pointer;
+      }
     }
+
     .infoBox {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    
-    margin: 20px;
-   
-    .imgBox{
-        margin-top: 1rem;
-        overflow: hidden;
-        width: 13rem;
-        height: 20rem;
-        position: relative;
-        background-image: url(${props => props.imgUrl});
-        background-repeat: no-repeat;
-        background-size: contain;
-       
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 20px;
+      .imgBox{
+          margin-top: 1rem;
+          overflow: hidden;
+          width: 13rem;
+          height: 20rem;
+          position: relative;
+          background-image: url(${props => props.imgUrl});
+          background-repeat: no-repeat;
+          background-size: contain;
+
+      }
+      .textBox{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          .title{
+              margin-top: 10px;
+              font-size: 1rem;
+              font-weight: bold;
+          }
+          &>*{
+              margin-bottom: 10px;
+          }
+      }
+      .visitDate{
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: red;
+      }
     }
-    .textBox{
-        display: flex;
+    .rightBox{
+      width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+          .btnContainer{
+              width: 15rem;
+              height: 2rem;
+              display: flex;
+              flex-direction: row;
+              margin-top: 1rem;
+              gap: 1rem;
+          }
+          .calendar-container{
+              width: 20rem;
+          }
+    }
+
+    @media (max-width: 768px){
+      .bodyContainer{
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        .title{
-            margin-top: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-        &>*{
-            margin-bottom: 10px;
-        }
+      }
+      .reservationBox{
+        border-radius: 0;
+      }
+      .root{
+        margin-left: 1rem;
+      }
     }
-    .visitDate{
-      font-weight: bold;
-      margin-bottom: 1rem;
-      color: red;
-    }
-}
-.rightBox{
-    width: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-        .btnContainer{
-            width: 15rem;
-            height: 2rem;
-            display: flex;
-            flex-direction: row;
-            margin-top: 1rem;
-            gap: 1rem;
-        }
-        .calendar-container{
-            width: 20rem;
-        }
-    }
-    
+
 `;
 
 
@@ -113,9 +120,9 @@ const SelectDate =  () => {
     // 달력에서 선택된 날짜 변수정의
     const [selectedDate, setSelectedDate] = useState(null);
 
-     //클릭한 정보id가져오기 
+     //클릭한 정보id가져오기
      const { id } = useParams();
-     //데이터 상태관리 
+     //데이터 상태관리
      const [exData, setExData] = useState([0]);
 
      // 백엔드에서 상세정보가져오기
@@ -147,40 +154,48 @@ const SelectDate =  () => {
             setGoToReservation(true);
       };
 
+      // 날짜형식 바꾸기
+      const formatDate = (dateStr) => {
+      const year = dateStr.toString().substring(0, 4);
+      const month = dateStr.toString().substring(4, 6);
+      const day = dateStr.toString().substring(6, 8);
+      return `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
+      };
+
     return(
-        <>
-        {exData[0] && 
-        <Container  imgUrl ={exData[0].imgUrl}>
-            {goToReservation ? (<InputInfo rootData={rootData} reservationData={exData[0]} id={id} selectedDate={selectedDate}/>) :(
-            <div className="reservationBox">
-                <div className="root">
-                <ImHome/><p onClick={handleCancle}>전시 상세정보 페이지</p>
-                <p>{rootData[0]}</p>
-                </div>
-                <div className="bodyContainer">
-               <div className="infoBox">
-               <div className="imgBox"/>
-                <div className="textBox">
-                    <div className="title">{exData[0].exhibitName}</div>
-                    <div>{exData[0].startDate} ~ {exData[0].endDate}</div>
-                    <div>{exData[0].exhibitLocation}</div>
-                </div>
-               </div>
-               <div className="rightBox">
-                <div className="calendar-container">
-               <BasicDateCalendar onDateChange={(date) => handleDateChange(date || null)} selectedDate={selectedDate}/>
-               </div>
-               <div className="btnContainer">
-               <Button onClick={handleCancle}>이전 단계</Button>
-               <Button onClick={handleNextStep} disabled={selectedDate===null}>다음 단계</Button>
-               </div>
-               </div>
-               </div>
+      <>
+      {exData[0] &&
+      <Container  imgUrl ={exData[0].imgUrl}>
+        {goToReservation ? (<InputInfo rootData={rootData} reservationData={exData[0]} id={id} selectedDate={selectedDate}/>) :(
+        <div className="reservationBox">
+          <div className="root">
+              <ImHome/><p onClick={handleCancle}>전시 상세정보 페이지</p>
+              <p>{rootData[0]}</p>
+          </div>
+          <div className="bodyContainer">
+            <div className="infoBox">
+              <div className="imgBox"/>
+              <div className="textBox">
+                  <div className="title">{exData[0].exhibitName}</div>
+                  <div>{formatDate(exData[0].startDate)} ~ {formatDate(exData[0].endDate)}</div>
+                  <div>{exData[0].exhibitLocation}</div>
+              </div>
             </div>
-            )}        
-        </Container>
-        }
-        </>
+            <div className="rightBox">
+              <div className="calendar-container">
+              <BasicDateCalendar onDateChange={(date) => handleDateChange(date || null)} selectedDate={selectedDate}/>
+              </div>
+              <div className="btnContainer">
+              <Button onClick={handleCancle}>이전 단계</Button>
+              <Button onClick={handleNextStep} disabled={selectedDate===null}>다음 단계</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        )}
+      </Container>
+      }
+      </>
     );
 }
 
