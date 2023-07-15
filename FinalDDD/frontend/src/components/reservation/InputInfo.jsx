@@ -145,12 +145,13 @@ const PaymentMethodWrapper = styled.div`
 `;
 
 const ReservationButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  width: 100%;
-  height: 2rem;
-  margin-top: 2rem;
+    width: 15rem;
+    height: 2rem;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    gap: 1rem;
+
 `;
 const RightContainer =styled.div`
     display: flex;
@@ -170,6 +171,14 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
 
   const [bookedNo, setBookedNo] = useState('');
   window.localStorage.setItem("bookedNo", bookedNo);
+
+  // 날짜형식 바꾸기
+  const formatDate = (dateStr) => {
+  const year = dateStr.toString().substring(0, 4);
+  const month = dateStr.toString().substring(4, 6);
+  const day = dateStr.toString().substring(6, 8);
+  return `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
+  };
 
   // 예매 관련 상태 및 함수
   const navigate = useNavigate();
@@ -371,7 +380,7 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
                <div className="imgBox"/>
                 <div className="textBox">
                     <div className="title">{reservationData.exhibitName}</div>
-                    <div>{reservationData.startDate} ~ {reservationData.endDate}</div>
+                    <div>{formatDate(reservationData.startDate)} ~ {formatDate(reservationData.endDate)}</div>
                     <div>{reservationData.exhibitLocation}</div>
                     <div className="visitDate">선택한 관람일 : {selectedDate && formatSelectedDate(selectedDate)}</div>
                 </div>
