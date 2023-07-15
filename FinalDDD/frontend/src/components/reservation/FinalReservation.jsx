@@ -2,20 +2,29 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import  Button from "../../util/Button";
 import { ImHome } from "react-icons/im";
-// import { Container } from "./SelectDate";
 import MobileTicket from "../MyPage/MobileTicket";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+
 
 const FinalContainer = styled.div`
   .body{
     display: flex;
     flex-direction: column;
   }
+  @media (max-width: 768px) {
+    .root{
+      font-size: 0.8rem;
+    }
+  }
 
 `;
 
 
 const FinalReservation = ({props}) => {
+    const navigate = useNavigate();
+    const getId = window.localStorage.getItem("memberId");
+
     //결제 후에는 예약하기, 예약정보, 결제정보확인을 못가게하기위한 alert창띄우기
     const showAlert = (message) => {
         alert(message);
@@ -45,8 +54,10 @@ const FinalReservation = ({props}) => {
         deliveryMethod: props.deliveryMethod,
         barcodeNo: visitDateDigits
     }
-    
 
+    const openMyBooking = () => {
+      navigate(`/mypage/${getId}`);
+    }
 
     return(
         <>
@@ -71,7 +82,7 @@ const FinalReservation = ({props}) => {
               <div className="btnContainer">
               {props.deliveryMethod === "mobileTicket" && <Button className="btn" onClick={clickToTicket}>모바일티켓</Button>}
               {props.deliveryMethod === "onSite" && <Button className="btn" onClick={clickToTicket}>현장발권용티켓</Button>}
-              <Button className="btn" >예매확인</Button>
+              <Button className="btn" onClick={openMyBooking}>예매확인</Button>
               </div>
               </div>
               </div>
@@ -81,7 +92,6 @@ const FinalReservation = ({props}) => {
         <MobileTicket
           reservationData={rData}
           closeModal={closeTicket}
-        //   openCancel={() => {} }
         />
         )}
         </>
