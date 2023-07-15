@@ -39,13 +39,13 @@ const Category = styled.div`
     &:hover {
         color: #495057;
     }
-    ${props => 
+    ${props =>
         props.active && css`
         font-weight: 600;
-        border-bottom: 2px solid #22bbcf;
-        color: #22b8cf;
+        border-bottom: 2px solid #5EADF7;
+        color: #5EADF7;
         &:hover {
-            color: #3bc9db;
+            color: #55aafa;
         }
     `}
 
@@ -55,18 +55,18 @@ const Category = styled.div`
 `;
 
 const Categories = ({onSelect, category}) => {
-    
+
     return (
         <CategoriesBlock>
             {categories.map(c=>(
-                <Category 
+                <Category
                     key={c.name}
                     active={category===c.name}
                     onClick={()=>onSelect(c.name)}
                 >{c.text}</Category>
             ))}
         </CategoriesBlock>
-        
+
     );
 };
 export default Categories;

@@ -2,31 +2,33 @@ import styled from 'styled-components';
 import Card from '../components/Board/Card';
 import {useState, useCallback} from 'react';
 import Categories from '../components/Board/Category';
-import { useNavigate } from 'react-router-dom';
 import Recommend from '../components/Board/Recommend';
 import Question from '../components/Board/Question';
+
 const Wrap = styled.div`
     width: 100%;
     height: 100vh;
     margin: 0 auto;
 
+
     .boardtitle {
-        margin-left: 6em;
+        /* margin-left: 8em; */
         margin-bottom: 1em;
         display: flex;
         align-items: center;
+        justify-content: center;
         font-size: 30px;
         font-weight: 600;
         color: #1a5d98;
-        
-        h2 { 
+
+        h2 {
             font-size: 1em;
-            margin-top: 35px;  
-            color:black; 
+            margin-top: 1.2em;
+            color:black;
         }
 
-    }  
-    
+    }
+
     button {
             float: right;
             margin: -1.5em 16em ;
@@ -43,11 +45,13 @@ const Wrap = styled.div`
             font-weight: bold;
         }
 
+        @media (max-width: 768px) {
+            width: 768px;
+            min-width: 400px;
+    }
+
 `;
 
-
-
-  
 
 const BoardList = () => {
     const [category, setCategory] = useState('menu1');
