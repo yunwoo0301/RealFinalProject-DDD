@@ -6,7 +6,8 @@ import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import profileImage from '../../resources/기본프로필.png';
 import { DiaryApi } from '../../api/MyPageApi';
-import { debounce } from 'lodash';
+import Backdrop from '@mui/material/Backdrop';
+import AlertModal from '../../util/Alert';
 
 const Container = styled.div`
     width: 100%;
@@ -14,30 +15,50 @@ const Container = styled.div`
     /* background-color: aqua; */
     display: flex;
     justify-content: center;
+    @media (max-width: 768px) {
+
+    }
     .wrap{
         /* background-color: blue; */
         padding: 2rem;
         width: 70%;
-        min-width: 980px;
+        min-width: 250px;
         height: 100%;
         display: grid;
         grid-template-columns: repeat(4, 1fr); // 3개의 카드 아이템을 행으로 정렬
+        /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
+
         grid-gap: 4rem 2rem; // 카드 아이템들 사이의 간격
         justify-items: center; // 아이템들을 행 방향으로 중앙에 위치시킴
-    
-        
+
+
+      @media (max-width: 1280px) {
+      grid-gap: 4rem 1rem; // 카드 아이템들 사이의 간격.
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      /* width: 20%; */
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+    }
+
+
+
+
 }
 `;
 const CardItem = styled.div`
     width: 240px;
-    height: 340px;  
-    /* width: 300px;
-    height: 400px;   */
+    height: 360px;
+    /* width: 240px;
+    height: 360px;   */
+
     background-color: white;
     position: relative;
     border-radius: 0.8rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+
+
 
     img{
         width: 100%;
@@ -49,17 +70,19 @@ const CardItem = styled.div`
     }
     .desc{
         /* background-color: orange; */
-        width: 100%;
+        width: 85%;
         height: 40%;
         position: absolute;
         top: 60%;
         padding: 1rem;
         .title{
             font-size: 0.8rem;
-            width: 90%;
+            width: 70%;
+            height: 2rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
-            /* background-color: aliceblue; */
+            /* background-color: red; */
+
         }
         .rateStar{
             margin-bottom: 0.6rem;
@@ -77,7 +100,7 @@ const CardItem = styled.div`
             outline: none;
             border-radius: 0.2rem;
             padding: 0.3rem;
-            
+
             }
             .comment:focus {
                 background-color: #f4f8ff;
@@ -101,18 +124,19 @@ const CardItem = styled.div`
                 width: 100%;
                 border-radius: 2rem;
                 margin-left: 0.5rem;
-                
+
             }
-    }
+      }
 
-}
+  }
 
-}
-&:hover{
-    box-shadow: 0 3px 10px rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.22);
-       
-}
+  }
+  &:hover{
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.22);
+
+  }
 `;
+
 const BlackBG = styled.div`
     width: 100%;
     height: 60%;
@@ -144,9 +168,9 @@ const RateDiary = () => {
           const comments = newMyDiaryData.map((item) => item.comment);
           setInputComment(comments);
           console.log(inputComment);
-    
+
           const stars = newMyDiaryData.map((item) => item.rateStar);
-    
+
           setRatingStar(stars);
           console.log(ratingStar);
         };
@@ -154,67 +178,60 @@ const RateDiary = () => {
       }, []);
 
 
-
-    //   const onChangeText = (e, index) => {
-    //     let updatedComments = [...inputComment];
-    //     updatedComments[index] = e.target.value;
-    //     setInputComment(updatedComments);
-    //   };
-
-    //   const onChangeStar = (e, index) => {
-    //     const newRatingStar = [...ratingStar];
-    //     console.log(newRatingStar);
-    //     console.log("처음 복사한 배열 " + newRatingStar.rateStar);
-    //     newRatingStar[index] = e.target.value;
-    //     console.log("타겟 밸류" + newRatingStar);
-    
-    //     setRatingStar(newRatingStar);
-    //     console.log("마지막 저장값 " + ratingStar);
-    //   };
-
-    //   const diaryByExhibitNo = myDiaryData.reduce((acc, diary) => {
-    //     acc[diary.exhibitions.exhibitNo] = diary;
-    //     return acc;
-    //   }, {});
-    
 // ratingStar와 inputComment 상태 정의
 const [ratingStar, setRatingStar] = useState(Array(stealExhibition.length).fill(0));
 const [inputComment, setInputComment] = useState(Array(stealExhibition.length).fill(""));
 
 // 별점 변경 핸들러
-const onChangeStar = (e, index) => {
+const onChangeStar = (e, exhibitNo) => {
+    // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
+    const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo);
+
+    // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
+    if (index === -1) {
+      return;
+    }
   const newRatingStar = [...ratingStar];
   newRatingStar[index] = Number(e.target.value); // 숫자로 변환
   setRatingStar(newRatingStar);
 };
 
 // 텍스트 변경 핸들러
-const onChangeText = ((e, index) => {
-    const newComments = [...inputComment];
-    newComments[index] = e.target.value;
-    setInputComment(newComments);
-  }); 
+const onChangeText = ((e, exhibitNo) => {
+  // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
+  const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo);
 
-// exhibitNo를 키로 하는 myDiaryData 객체 변환
-const diaryByExhibitNo = myDiaryData.reduce((acc, diary) => {
-    acc[diary.exhibitions.exhibitNo] = diary;
-    return acc;
-  }, {});
+  // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
+  if (index === -1) {
+    return;
+  }
 
-  // `stealExhibition`에서 `myDiaryData.exhibitions.exhibitNo`와 일치하는 항목을 제거
-const filteredExhibition = stealExhibition.filter(item => !diaryByExhibitNo.hasOwnProperty(item.exhibitNo));
-console.log(diaryByExhibitNo)
+  // 일치하는 diary의 comment를 업데이트합니다.
+  const newComments = [...inputComment];
+  newComments[index] = e.target.value;
+  setInputComment(newComments);
+});
+
+  // backdrop openState
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+    setTimeout(handleClose, 1000)
+  };
 
 
     return (
 
-        
+
         <>
  <Container>
             <div className="wrap">
-           {filteredExhibition.map((item, index) => {
+           {stealExhibition.map((item, index) => {
                 return (
-                    <CardItem key={index}>
+                    <CardItem key={item.exhibitNo}>
                     <BlackBG/>
                     <img src={item.imgUrl} alt="" />
                     <div className="desc">
@@ -223,15 +240,15 @@ console.log(diaryByExhibitNo)
                         <Rating
                             precision={0.5}
                             value={ratingStar[index]}
-                            onChange={(e) => onChangeStar(e, index)}
+                            onChange={(e) => onChangeStar(e, item.exhibitNo)}
                         />
                         </Stack>
                         <div className='textBox'>
-                        <textarea className='comment' name="" id="" cols="18" rows="2" 
-                            onChange={(e) => onChangeText(e, index)} 
+                        <textarea className='comment' name="" id="" cols="18" rows="2"
+                            onChange={(e) => onChangeText(e, item.exhibitNo)}
                             value={inputComment[index]}
                         />
-                        <div className="saveIcon" 
+                        <div className="saveIcon"
                          onClick={() => {
                             (async () => {
                               const response = await DiaryApi.save(
@@ -241,6 +258,7 @@ console.log(diaryByExhibitNo)
                                 inputComment[index]
                               );
                               if (response.status === 200) {
+                                handleOpen();
                                 console.log("Diary successfully saved!");
                               } else {
                                 console.error("Failed to save diary");
@@ -254,6 +272,18 @@ console.log(diaryByExhibitNo)
                 );
                 })}
             </div>
+            <Backdrop
+            sx={{
+                backgroundColor: 'transparent', // 배경색을 투명으로 설정
+                color: '#fff',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0, // 팝업을 상단에 위치
+            }}
+            open={open}
+            onClick={handleClose}
+            >
+                <AlertModal />
+            </Backdrop>
         </Container>
         </>
     );
