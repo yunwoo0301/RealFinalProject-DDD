@@ -10,9 +10,7 @@ const Container = styled.div`
 `;
 const Modal = styled.div`
   position: fixed;
-  width: 30%;
-  min-width: 500px;
-  min-height: 200px;
+  width: 30rem;
   background-color: white;
   top: 50%;
   left: 50%;
@@ -23,7 +21,7 @@ const Modal = styled.div`
   justify-content: center;
   align-items: center;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-
+  z-index: 99;
   .checkIcon {
     /* background-color: blue; */
     height: 20%;
@@ -34,7 +32,7 @@ const Modal = styled.div`
     padding-top: 2rem;
   }
   .title {
-    font-size: 2rem;
+    font-size: 1.3rem;
     font-weight: bold;
     /* background-color: red; */
     text-align: center;
@@ -42,6 +40,7 @@ const Modal = styled.div`
   }
   .desc {
     text-align: center;
+    font-weight: bold;
     line-height: 2rem;
     padding-top: 2rem;
     /* background-color: orange; */
@@ -66,6 +65,10 @@ const Modal = styled.div`
       font-size: 0.8rem;
       cursor: pointer;
     }
+  }
+  @media (max-width: 768px) {
+    width: 70%;
+    left: 40%;
   }
 `;
 
