@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Categroy from "../components/exhibition/Category";
 import DetailBox from "../components/exhibitionInfo/DetailBox";
-import ComentBox from "../components/exhibitionInfo/ComentBox";
 import Section from "../components/exhibitionInfo/Section";
 import DDDApi from "../api/DDDApi";
 import Header from "../components/header/Header";
@@ -16,10 +15,8 @@ const Container = styled.div`
     }
     .InfoBox {
         width: 70%;
-        height: 300px;
-        border: 3px solid #eee;
+        height: 20rem;
         margin: 0 auto;
-        border-radius:5px;
 
     }
     .category{
@@ -31,15 +28,18 @@ const Container = styled.div`
       margin : 0 auto;
     }
     .section{
-        border: 1px solid #050E3D;
         width: 60%;
         margin : 0 auto;
-        border-radius:5px;
         margin-bottom: 20px;
 
     }
     @media (max-width: 768px) {
-      width: 768px;
+      .infoBox{
+        width: 100%;
+      }
+      .section{
+        width: 100%;
+      }
     }
   `;
 
@@ -78,7 +78,7 @@ const ExhibitInfoPage = () => {
       <Header/>
       <Container>
        <div className="InfoBox"><DetailBox data ={exData[0]}/></div>
-       <div className="coment"><ComentBox/></div>
+       {/* <div className="coment"><ComentBox/></div> */}
         <div className="category">
             <Categroy category={category} onSelect={onSelect} categories={categories}/>
         </div>
