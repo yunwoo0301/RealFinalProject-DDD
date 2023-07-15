@@ -37,7 +37,7 @@ const Category = styled.div`
         text-decoration: underline;
     `}
     @media (max-width: 768px){
-        font-size: 0.8rem;
+        font-size: 1rem;
         width: 100vw;
         text-align: center;
 

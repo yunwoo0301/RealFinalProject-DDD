@@ -6,16 +6,16 @@ const Container = styled.div`
   position: relative;
   .imgBox{
         overflow: hidden;
-        width: 200px;
-        height: 280px;
+        width: 13rem;
+        height: 17rem;
         position: absolute;
-        top: 10px;
-        left: 120px;
+        top: 1rem;
+        left: 8rem;
         transform: translateX(-50%);
         background-image: url(${props => props.imgUrl});
         background-repeat: no-repeat;
         background-size: cover;
-       
+
     }
  .name {
         color : black;
@@ -24,7 +24,7 @@ const Container = styled.div`
         width: 100%;
         text-align: center;
         position: absolute;
-        top: 80px;
+        top: 5rem;
         left: 50%;
         transform: translateX(-50%);
 
@@ -44,21 +44,44 @@ const Container = styled.div`
         transform: translateX(-50%);
     }
     .btn{
-      width: 150px;
-      height: 40px;
+      width: 8rem;
+      height: 2.5rem;
       position: absolute;
       top:calc(80px + 10rem);
-      right: 40px;
+      right: 2rem;
     }
     @media (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
     .name{
-      font-size: 1.5rem;
+      font-size: 1.3rem;
+      top: 5rem;
+      font-weight: 900;
+      text-shadow: 2px 2px 4px rgba(94, 173, 247, 0.5);
     }
     .date{
-      font-size : 0.8rem;
+      width: 100%;
+      text-align: center;
+      font-weight: bold;
+      font-size : 1rem;
+      top: calc(80px + 3rem);
+      right: 10px;
     }
-    .imgBox {
-        display: none;
+    .imgBox{
+      display: none;
+    }
+    .btn{
+      width: 30%;
+      height: 1.5rem;
+      top: calc(80px + 9rem);
+      right: 6.3rem;
+
+    }
+    .location{
+      font-weight: bold;
+      width: 100%;
+      top: calc(80px + 5rem);
+      text-align: center;
     }
   }
 `;
