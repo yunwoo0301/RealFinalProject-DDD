@@ -213,7 +213,7 @@ const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, c
         setOpenTicket(false);
       }
       // YYMMDD 형태로 전달
-    const visitDateDigits = dayjs(reservationDatas.visitDate).format('YYMMDD');
+    const visitDateDigit = dayjs(reservationDatas.visitDate).format('YYMMDD');
       // 티켓이미지로 props전달
       const reservationData = {
         imgUrl: reservationDatas.imgUrl,
@@ -221,7 +221,7 @@ const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, c
         place: reservationDatas.exhibitLocation,
         visitDate: reservationDatas.visitDate,
         deliveryMethod: reservationDatas.getTicket,
-        barcodeNo: visitDateDigits,
+        barcodeNo: visitDateDigit,
         index: reservationDatas.exhibitNo
       }
 

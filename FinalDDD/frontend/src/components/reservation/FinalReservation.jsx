@@ -42,7 +42,12 @@ const FinalReservation = ({props}) => {
     }
 
     // YYMMDD 형태로 전달
-    const visitDateDigits = dayjs(props.reservationData).format('YYMMDD');
+    const today = new Date();
+    const year = today.getFullYear().toString().slice(-2);
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+
+    const visitDateDigits = year + month + day;
 
     // Ticket에 예매정보전달
     const rData = {
