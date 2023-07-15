@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../../util/Button";
 import { useNavigate } from "react-router";
+import {RiUserHeartLine} from "react-icons/ri";
+import ConfirmModal from "../../util/ConfirmModal";
+
+
 const Container = styled.div`
   position: relative;
   .imgBox{
@@ -93,25 +97,25 @@ const ImgBox = styled.div`
     background-repeat: no-repeat;
     background-size:cover;
     opacity: 0.3;
-   
+
 
 
 `;
 
 const DetailBox = ({data}) => {
+
     const isLogin = window.localStorage.getItem("isLogin");
     const navigate = useNavigate();
     const handleClick = (data) => {
       if (isLogin) {
         navigate(`/reservation/${data.exhibitNo}`);
       } else {
-        alert('로그인 후 이용 가능합니다.');
-        navigate("/login");
+        setOpenModal(true);
       }
     };
 
     // 날짜형식 바꾸기
-    
+
     const formatDate = (dateStr) => {
       const year = dateStr.toString().substring(0, 4);
       const month = dateStr.toString().substring(4, 6);
@@ -119,8 +123,34 @@ const DetailBox = ({data}) => {
       return `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
     };
 
+    // 예매시 로그인이 아닐경우 모달띄우기
+    const [openModal, setOpenModal] = useState(false);
+    const clickToClose = () => {
+      setOpenModal(false);
+    }
+
+    const goToLogin = () => {
+        navigate("/login");
+    }
+
+    const props = {
+      icon: <RiUserHeartLine color="#FF69B4"/>,
+      body:(
+        <>
+        <p>로그인 후 이용가능합니다🥺</p>
+        <p style={{fontSize: "0.9rem"}}>확인을 누르시면 로그인페이지로 이동합니다.</p>
+        </>
+      ),
+      button: [
+        <button onClick={goToLogin}>확인</button>,
+        <button onClick={clickToClose}>취소</button>
+      ]
+
+    }
+
     return(
         <>
+        {openModal && <ConfirmModal props={props}/>}
         {data &&
         <Container imgUrl ={data.imgUrl}>
             <ImgBox imgUrl ={data.imgUrl}/>

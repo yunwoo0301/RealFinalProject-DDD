@@ -292,7 +292,7 @@ const Chatbot = () => {
         {isOpen && (
                 <ThemeProvider theme={theme}>
                     <ChatBot
-                        headerTitle="❣️문의하기❣️ - 문의하실 내용을 선택해주세요."
+                        headerTitle="❣️문의하기❣️ 문의하실 내용을 선택해주세요."
                         steps={steps}
                         placeholder={"문의하실 내용을 클릭해주세요."}
                         hideUserAvatar={true}

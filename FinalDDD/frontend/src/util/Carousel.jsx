@@ -47,7 +47,7 @@ const Container = styled.div`
         transform: translateX(-50%);
     }
     .btn{
-      width: 5rem;
+      width: 7rem;
       height: 2rem;
       position: absolute;
       top: calc(80px + 7rem);

@@ -67,8 +67,8 @@ const Modal = styled.div`
     }
   }
   @media (max-width: 768px) {
-    width: 70%;
-    left: 40%;
+    width: 100vw;
+    left: 50%;
   }
 `;
 

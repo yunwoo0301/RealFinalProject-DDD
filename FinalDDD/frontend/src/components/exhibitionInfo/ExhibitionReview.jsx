@@ -205,7 +205,7 @@ const ExhibitionReview = ({ data }) => {
     }
 
     const props = {
-      icon: <RiUserHeartLine color="#5eadf7"/>,
+      icon: <RiUserHeartLine color="#FF69B4"/>,
       body:(
         <>
         <p>로그인 후 이용가능합니다🥺</p>

@@ -6,8 +6,6 @@ import TicketBarcode from '../reservation/Barcode';
 
 const Modal = styled.div`
     width: 30rem;
-    height: 80%;
-    /* height: 70vh; */
     background-color: white;
     position: absolute;
     top: 50%;
@@ -93,7 +91,8 @@ const Modal = styled.div`
         }
 
     @media (max-width: 768px) {
-        width: 100%;
+        width: 100vw;
+        height: 40rem;
         left: 52%;
     }
 `;
