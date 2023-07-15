@@ -26,8 +26,6 @@ const ModalStyle = styled.div`
     animation: modal-bg-show 0.8s;
   }
     section {
-        width: 50%;
-        height: 26rem;
         box-sizing: border-box;
         margin: 0 auto;
         border-radius: 0.5rem;
@@ -52,7 +50,7 @@ const ModalStyle = styled.div`
         border: 0;
         }
 
-        >h2{
+        >h3{
         padding: 16px 15px 16px 16px;
         }
     }
@@ -61,10 +59,11 @@ const ModalStyle = styled.div`
         display: flex;
         flex-direction: row;
         gap: 1rem;
-        margin: 0 auto;
+        margin-bottom: 1rem;
+        margin-left: 7rem;
         height: 2rem;
         width: 60%;
-        
+
     }
 
     .bankingInfo{
@@ -83,8 +82,16 @@ const ModalStyle = styled.div`
     .p1{
         margin-left: 3rem;
     }
-    h3{
+    h4{
         margin-left: 2rem;
+    }
+    @media (max-width: 768px) {
+      .bankingInfo{
+        flex-direction: column;
+      }
+      .btnContainer{
+        margin-left: 4.5rem;
+      }
     }
 `;
 
@@ -150,49 +157,48 @@ const ModalBankingPayment = ({ props }) => {
           <section>
             <header>
             <div className='headerContainer'>
-              <h2>무통장입금</h2>
+              <h3>무통장입금</h3>
               <button onClick={props.close}>&times;</button>
             </div>
             </header>
             <main>
-                <h3>{props.exhibitName}</h3>
+                <h4>{props.exhibitName}</h4>
                 <p className='p1'>입금액 : {props.totalPrice}</p>
                 <div className='bankingInfo'>
-                <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-                <InputLabel id="demo-select-small-label">계좌번호</InputLabel>
-                <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    value={selectedBank}
-                    label="Banking"
-                    onChange={handleBankChange}
-                >
-                    <MenuItem value="">
-                    <em></em>
-                    </MenuItem>
-                    <MenuItem value="국민은행">국민은행</MenuItem>
-                    <MenuItem value="우리은행">우리은행</MenuItem>
-                    <MenuItem value="신한은행">신한은행</MenuItem>
-                    <MenuItem value="카카오뱅크">카카오뱅크</MenuItem>
-                    <MenuItem value="우체국">우체국</MenuItem>
-                </Select>
-                </FormControl>
-                {selectedBank && (
-                <div className='pContainer'>
-                <p>입금하실계좌번호: {accountNumber}</p>
-                <p className='p2'>입금기한: 위 계좌번호로 {paymentDeadline}까지 입금해주세요.</p>
-                <p className='p2'>은행에 따라 밤 11시 30분 이후로는 온라인 입금이 제한 될 수 있습니다.</p>
-                </div>)}
+                  <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                  <InputLabel id="demo-select-small-label">계좌번호</InputLabel>
+                  <Select
+                      labelId="demo-select-small-label"
+                      id="demo-select-small"
+                      value={selectedBank}
+                      label="Banking"
+                      onChange={handleBankChange}
+                  >
+                      <MenuItem value="">
+                      <em></em>
+                      </MenuItem>
+                      <MenuItem value="국민은행">국민은행</MenuItem>
+                      <MenuItem value="우리은행">우리은행</MenuItem>
+                      <MenuItem value="신한은행">신한은행</MenuItem>
+                      <MenuItem value="카카오뱅크">카카오뱅크</MenuItem>
+                      <MenuItem value="우체국">우체국</MenuItem>
+                  </Select>
+                  </FormControl>
+                  {selectedBank && (
+                    <div className='pContainer'>
+                      <p>입금하실계좌번호: {accountNumber}</p>
+                      <p className='p2'>입금기한: 위 계좌번호로 {paymentDeadline}까지 입금해주세요.</p>
+                      <p className='p2'>은행에 따라 밤 11시 30분 이후로는 온라인 입금이 제한 될 수 있습니다.</p>
+                    </div>)}
                 </div>
                 <FormControlLabel
-                sx={{margin: '1rem'}}
-                control={<Checkbox checked={agreed} onChange={handleAgreementChange} />}
-                label="결제에 동의합니다."
+                  sx={{margin: '1rem'}}
+                  control={<Checkbox checked={agreed} onChange={handleAgreementChange} />}
+                  label="결제에 동의합니다."
                 />
                 <div className="btnContainer">
-                <Button onClick={props.close}>취소</Button>
-                <Button onClick={props.handleToComplete} disabled={!agreed}>확인</Button>
-                
+                  <Button onClick={props.close}>취소</Button>
+                  <Button onClick={props.handleToComplete} disabled={!agreed}>확인</Button>
                 </div>
             </main>
           </section>
