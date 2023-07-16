@@ -138,7 +138,7 @@ public class BookingService {
         }
     }
 
-    // 예매전체조회(관리자)
+    // 예매내역 전체 조회(관리자)
     public List<BookingDTO> findAllBooking() {
         List<BookingDTO> bookingDTOS = new ArrayList<>();
         List<Booking> bookings = bookingRepository.findAll();
@@ -148,9 +148,24 @@ public class BookingService {
             bookingDTO.setBookingId(e.getBookingId());
             bookingDTO.setMemberName(e.getMember().getName());
             bookingDTO.setBookedName(e.getBookedName());
+            bookingDTO.setBookedTel(e.getBookedEmail());
             bookingDTO.setBookingDate(e.getBookingDate());
+            bookingDTO.setExhibitNo(String.valueOf(e.getExhibitions().getExhibitNo()));
             bookingDTO.setExhibitName(e.getExhibitions().getExhibitName());
+            bookingDTO.setImgUrl(e.getExhibitions().getImgUrl());
             bookingDTO.setVisitDate(e.getVisitDate());
+
+            // 결제정보설정
+            Payment payment = paymentRepository.findByBookingBookingId(e.getBookingId());
+            if(payment != null) {
+                PaymentDTO paymentDTO = new PaymentDTO();
+                paymentDTO.setPaymentDate(payment.getPaymentDate()); // 결제일
+                paymentDTO.setPaymentCnt(payment.getPaymentCnt()); // 관람인원(티켓예매수)
+                paymentDTO.setPaymentType(payment.getPaymentType()); // 결제수단
+                paymentDTO.setPaidPrice(String.valueOf(payment.getPaidPrice())); // 총금액
+
+                bookingDTO.setPaymentDTO(paymentDTO);
+            }
 
             bookingDTOS.add(bookingDTO);
         }
@@ -158,4 +173,5 @@ public class BookingService {
         return bookingDTOS;
 
     }
+
 }

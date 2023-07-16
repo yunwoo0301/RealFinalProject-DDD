@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import { DisplayData } from './DisplayData';
 import { useTranslation } from 'react-i18next';
 import DDDApi from '../../api/DDDApi';
 
@@ -78,6 +77,7 @@ const GridItem = styled.div`
     font-weight: bold;
   }
 `;
+
 const GridComponent = () => {
   const { t } = useTranslation();
   const [bookingList, setBookingList] = useState([]);
@@ -103,6 +103,9 @@ const GridComponent = () => {
     }, [])
     .sort((a, b) => b.count - a.count)
     .slice(0, 4);
+
+  // 콘솔에 상위 4개 예매 데이터 출력
+  console.log('상위 4개 예매 데이터:', topFourBookings);
 
   return (
     <Container>
