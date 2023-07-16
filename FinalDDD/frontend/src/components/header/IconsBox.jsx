@@ -1,13 +1,12 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {HiOutlineTicket} from 'react-icons/hi';
 import { BsPersonCircle } from 'react-icons/bs';
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import NavigateBar from "./Navigate";
 import useStore from "../../store";
 import SwipeableTemporaryDrawer from "../header/newNavi";
-import Functions from "../../util/Functions";
+import Badge from '@mui/material/Badge';
+import DDDApi from "../../api/DDDApi";
 
 const IconBox = styled.div`
     display: flex;
@@ -89,17 +88,18 @@ const LoginIconBox = styled.div`
 const Icons = () => {
     const { profileImg } = useStore();
     const loginState = window.localStorage.getItem("isLogin");
-    const memberId = Functions.getMemberId();
+    const getId = window.localStorage.getItem("memberId");
+    // 오늘 예약 건수 계산
+    const [todayBookingCnt, setTodayBookingCnt] = useState(0);
+
     // console.log(profileImg)
     // console.log(loginState)
 
     const navigate = useNavigate();
 
     const onClickToLogin = () => {
-        loginState ?
-         navigate(`/api/mypage/${memberId}`) : navigate("/login")
+        navigate("/login");
     }
-    const {t} = useTranslation();
 
 
     const removeLocalstorage = () =>{
@@ -110,13 +110,35 @@ const Icons = () => {
         navigate('/')
     }
 
+    useEffect(() => {
+        const reservations = async () => {
+          try {
+            const reservationList = await DDDApi.myBookedList(getId);
+
+            // 오늘 날짜와 일치하는 예약 건 수 계산
+            const today = new Date().toISOString().split("T")[0];
+            const todayBookings = reservationList.data.filter(
+              (booking) => booking.bookingDate === today
+            );
+            setTodayBookingCnt(todayBookings.length);
+            console.log("오늘예약한 에약건수 : " + todayBookings.length)
+          } catch (e) {
+            console.log(e);
+          }
+        };
+
+        reservations();
+      }, []);
+
 
 
     return (
 
         <IconBox>
             <div className="ticket-icon">
-                <HiOutlineTicket/>
+                {loginState ? (<Badge badgeContent={todayBookingCnt} color="primary" showZero>
+                    <HiOutlineTicket/>
+                </Badge>) : (<HiOutlineTicket/>) }
             </div>
 
         <LoginIconBox>
