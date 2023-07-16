@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { DisplayData } from './DisplayData';
 import { useTranslation } from 'react-i18next';
+import DDDApi from '../../api/DDDApi';
 
 const Container = styled.div`
   display: flex;
@@ -77,28 +78,42 @@ const GridItem = styled.div`
     font-weight: bold;
   }
 `;
-
 const GridComponent = () => {
-    const {t} = useTranslation();
-  // Like가 높은 순서로 DisplayData를 정렬
-  const sortedData = [...DisplayData].sort((a, b) => b.like - a.like);
+  const { t } = useTranslation();
+  const [bookingList, setBookingList] = useState([]);
 
-  // 상위 4개의 데이터를 선택
-  const topFourData = sortedData.slice(0, 4);
+  useEffect(() => {
+    const getBookings = async () => {
+      const result = await DDDApi.bookingList();
+      setBookingList(result.data);
+    };
+    getBookings();
+  }, []);
+
+  // exhibitNo를 기준으로 상위 4개의 예매 데이터를 추출
+  const topFourBookings = bookingList
+    .reduce((acc, cur) => {
+      const existIndex = acc.findIndex((item) => item.exhibitNo === cur.exhibitNo);
+      if (existIndex === -1) {
+        acc.push({ exhibitNo: cur.exhibitNo, exhibitName: cur.exhibitName, imgUrl: cur.imgUrl, count: 1 });
+      } else {
+        acc[existIndex].count++;
+      }
+      return acc;
+    }, [])
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 4);
 
   return (
     <Container>
       <h2>{t('오늘의랭킹')}</h2>
       <GridContainer>
-        {topFourData.map((data, index) => (
-          <GridItem
-            key={index}
-            className={index === 0 || index === 2 ? 'large' : 'medium'}
-          >
-            <h4>{index+1}{t('위')}</h4>
-            <img src={data.imgUrl} alt={data.name} />
+        {topFourBookings.map((booking, index) => (
+          <GridItem key={index} className={index === 0 || index === 2 ? 'large' : 'medium'}>
+            <h4>{index + 1}{t('위')}</h4>
+            <img src={booking.imgUrl} alt={booking.exhibitName} />
             <div className="overlay">
-              <div className="name">{data.name}</div>
+              <div className="name">{booking.exhibitName}</div>
             </div>
           </GridItem>
         ))}
