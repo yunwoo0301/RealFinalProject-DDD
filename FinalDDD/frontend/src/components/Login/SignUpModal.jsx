@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import LoginApi from "../../api/LoginApi";
 import Backdrop from '@mui/material/Backdrop';
+import { useEffect } from "react";
 
 const Container = styled.div`
     position: absolute;
@@ -9,13 +10,14 @@ const Container = styled.div`
     width: 100vw;
     height: 100vh;
     box-sizing: border-box;
+    overflow: hidden;
     /* background-color: aqua; */
-    
+
 
 `;
 const Modal = styled.div`
     width: 40vw;
-    min-width: 600px;
+    /* min-width: 600px; */
     height: 70vh;
     background-color: white;
     position: absolute;
@@ -28,6 +30,18 @@ const Modal = styled.div`
     flex-direction: column;
     align-items: center;
     background-color: white;
+    @media (max-width: 1440px) {
+    width: 50%;
+      }
+  @media (max-width: 1024px) {
+    width: 60%;
+      }
+  @media (max-width: 720px) {
+    width: 100%;
+    position: relative;
+    transform: translate3d(-50%, -50%, 0);
+      }
+
 
         .title{
             font-size: 1.5rem;
@@ -43,9 +57,12 @@ const Modal = styled.div`
         }
 
         .inputBlock{
-            width: 90%;
-            /* background-color: aqua; */
-            padding-left: 3vw;
+            width: 100%;
+            /* background-color: blue; */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            /* gap: 1rem; */
+
             p{
                 text-align: left;
                 /* margin-left: 7%; */
@@ -56,7 +73,7 @@ const Modal = styled.div`
             }
             input{
                 width: calc(70% - 0.8rem);
-                background-color: #F2F2F2;    
+                background-color: #F2F2F2;
                 /* border: 1px solid #5EADF7; */
                 /* opacity: 0; */
                 border: none;
@@ -79,7 +96,7 @@ const Modal = styled.div`
             }
             .regCheckBox{
                 /* background-color: red; */
-                width: 10%;
+                width: 2rem;
                 height: 100%;
                 margin: 0, 1px;
                 justify-content: center;
@@ -90,7 +107,7 @@ const Modal = styled.div`
                 display: flex;
                 height: 2rem;
                 background-color: #F2F2F2;
-                width: 80%;
+                width: 100%;
                 justify-content: space-around;
                 border-radius: .3rem;
             }
@@ -125,27 +142,27 @@ const Modal = styled.div`
             font-size: .3rem;
             text-align:center;
             display: flex;
-            width: 80%;
+            width: 100%;
             justify-content: right;
             height: 1rem;
 
         }
 `;
 const LeftBox = styled.div`
-    width: 50%;
-    height: calc(50%-2rem);
-    /* background-color: aqua; */
-    padding-top: 2rem;
-    min-width: 300px;
-`;
-const RightBox = styled.div`
-    width: 50%;
-    height: calc(80%-2rem);
-    /* background-color: red; */
-    padding-top: 2rem;
-    min-width: 300px;
 
+    width: 100%;
+    padding: 2rem;
+    padding-left: 3rem;
+
+    /* background-color: aqua; */
+    .item{
+        width: 80%;
+        height: auto;
+        /* background-color: red; */
+
+    }
 `;
+
 const True = styled.div`
     width: 1.3rem;
     height: 1.3rem;
@@ -199,16 +216,16 @@ const SignUpModal = (props) => {
 
 
 
-    // 이메일 유효성 검사 
+    // 이메일 유효성 검사
     const onChangeEmail = (e) => {
         const emailCurrent = e.target.value ;
         setInputEmail(emailCurrent);
         const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const emailCheck = regexEmail.test(emailCurrent);
-    
+
         if (!emailCheck) {
             setEmailMessage("이메일 형식으로 입력해주세요");
-            setIsEmail(false);    
+            setIsEmail(false);
         } else {
             // 이메일 형식이 올바르면 중복 검사를 수행합니다.
             checkEmailDuplication(emailCurrent);
@@ -234,7 +251,7 @@ const SignUpModal = (props) => {
         }
     }
 
-    // 닉네임 체크 
+    // 닉네임 체크
     const onChangeNick = (e) => {
         const nickCurrent = e.target.value;
         setInputNick(nickCurrent);
@@ -259,8 +276,8 @@ const SignUpModal = (props) => {
             console.log(e);
         }
     }
-    
-    // 비밀번호 정규식 검사 
+
+    // 비밀번호 정규식 검사
     const onChangePwd = (e) => {
         setInputPwd(e.target.value)
         const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
@@ -269,21 +286,21 @@ const SignUpModal = (props) => {
         // console.log(pwdCheck)
         if (!pwdCheck) {
             setPwdMessage("숫자+영문자+특수문자의 8자리 이상");
-            setIsPwd(false);    
+            setIsPwd(false);
         } else {
             setPwdMessage("올바른 형식 입니다.");
             setIsPwd(true);
             // console.log(`isPwd값 : ${isPwd} `)
         }
     }
-    // 비밀번호 확인 체크 
+    // 비밀번호 확인 체크
     const onChangeConPw = (e) => {
         const passwordCurrent = e.target.value;
         setInputConPw(passwordCurrent);
-        
+
         if (passwordCurrent === inputPwd) {
           setConPwMessage('비밀 번호가 일치합니다.');
-      
+
           setIsConPw(true);
           // 1초의 타이머 설정
           setTimeout(() => {
@@ -295,7 +312,7 @@ const SignUpModal = (props) => {
           setIsConPw(false);
         }
       };
-      
+
 
 
     const onChangeTel = (e) => {
@@ -320,7 +337,7 @@ const SignUpModal = (props) => {
     const onChangeName = (e) => {
         const nameCurrent = e.target.value;
         setInputName(nameCurrent);
-      
+
         if (nameCurrent.length > 0 && isNaN(nameCurrent)) {
           setIsName(true);
           setNameMessage(`안녕하세요 ${nameCurrent}님`);
@@ -334,7 +351,7 @@ const SignUpModal = (props) => {
     const onChangeIns = (e) => {
         const insCurrent = e.target.value;
         setInputIns(insCurrent);
-        
+
         if (insCurrent.length > 0) {
             setInsMessage(`@${insCurrent}`);
           } else {
@@ -350,9 +367,7 @@ const SignUpModal = (props) => {
     //     return false;
     // };
 
-    
-const onClickSignup = () => {
-    const signupFetchDate = async () => {
+    const onClickSignup = async () => {
         console.log('클릭됨');
         try {
           const response = await LoginApi.signup(
@@ -363,18 +378,30 @@ const onClickSignup = () => {
             inputTel,
             inputIns
           );
+
           console.log('리스폰 데이터', response);
           if (response.status === 200) {
             console.log('회원가입이 되었습니다.');
-            props.showPopup()
+
+            // // Send confirmation email
+            // try {
+            //   const emailRsp = await LoginApi.emailSend(inputEmail);
+            //   console.log(emailRsp);
+            //   if(emailRsp.data)
+            //   console.log('이메일 발송 완료');
+            // } catch (e) {
+            //   console.log(e)
+            // }
+
+            props.showPopup();
           }
         } catch (e) {
           console.log(e);
         }
-      };
-      
-    signupFetchDate();
-  };
+    };
+
+
+
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -387,57 +414,75 @@ const onClickSignup = () => {
                 <div className="wrap">
                     <LeftBox>
                         <div className="inputBlock">
+                         <div className="item">
                             <p>이메일</p>
                             <div className="textBox">
                                 <input type="text" placeholder="Email@:DDD.com" value={inputEmail} onChange={onChangeEmail}/>
-                                <div className="regCheckBox">{isEmail ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div> 
+                                <div className="regCheckBox">{isEmail ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div>
                             </div>
                             <div className="hint">{emailMessage}</div>
-                            <p>패스워드</p>
+                         </div>
+                         <div className="item">
+                         <p>이름</p>
+                        <div className="textBox">
+                            <input type="text" placeholder="이름을 입력해주세요" value={inputName} onChange={onChangeName}/>
+                            <div className="regCheckBox">{isName ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div>
+                        </div>
+                        <div className="hint">{nameMessage}</div>
+
+
+                         </div>
+                         <div className="item">
+
+                         <p>패스워드</p>
                             <div className="textBox">
                                 <input type="password" placeholder="Password" value={inputPwd} onChange={onChangePwd}/>
-                                <div className="regCheckBox">{isPwd ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div> 
+                                    <div className="regCheckBox">{isPwd ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div>
                             </div>
                             <div className="hint">{pwdMessage}</div>
-                            <p>패스워드 확인</p>
+
+                         </div>
+                         <div className="item">
+                         <p>패스워드 확인</p>
                             <div className="textBox">
                                 <input type="password" placeholder="Password" value={inputConPw} onChange={onChangeConPw}/>
-                                <div className="regCheckBox">{isConPw ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div> 
+                                <div className="regCheckBox">{isConPw ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div>
                             </div>
                             <div className="hint">{conPwMessage}</div>
-                            <p>닉네임</p>
+
+                         </div>
+                         <div className="item">
+                         <p>닉네임</p>
                             <div className="textBox">
                                 <input type="text" placeholder="닉네임을 입력해주세요" value={inputNick} onChange={onChangeNick}/>
-                                <div className="regCheckBox">{isNick ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div> 
+                                <div className="regCheckBox">{isNick ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div>
                             </div>
                             <div className="hint">{nickMessage}</div>
+
+                         </div>
+                         <div className="item">
+                         <p>연락처</p>
+                        <div className="textBox">
+                            <input type="tel" placeholder="연락처를 입력해주세요" value={inputTel} onChange={onChangeTel}/>
+                            <div className="regCheckBox">{isTel ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div>
+                        </div>
+                        <div className="hint">{telMessage}</div>
+
+                         </div>
+                         <div className="item">
+                         <p>instagram <span style={{fontWeight:'400'}}>(선택사항)</span> </p>
+                        <div className="textBox">
+                            <input type="text" placeholder="instagram ID" value={inputIns}
+                            onChange={onChangeIns}
+                            />
+                            <div className="regCheckBox"></div>
+                        </div>
+                        <div className="hint">{insMessage}</div>
+                         </div>
                         </div>
 
                     </LeftBox>
-                    <RightBox>
-                        <div className="inputBlock">
-                            <p>이름</p>
-                            <div className="textBox">
-                                <input type="text" placeholder="이름을 입력해주세요" value={inputName} onChange={onChangeName}/>
-                                <div className="regCheckBox">{isName ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div> 
-                            </div>
-                            <div className="hint">{nameMessage}</div>
-                            <p>연락처</p>
-                            <div className="textBox">
-                                <input type="tel" placeholder="연락처를 입력해주세요" value={inputTel} onChange={onChangeTel}/>
-                                <div className="regCheckBox">{isTel ? <True> <span>&#10003;</span>  </True> : <False> <span>X</span> </False>}</div> 
-                            </div>
-                            <div className="hint">{telMessage}</div>
-                            <p>instagram <span style={{fontWeight:'400'}}>(선택사항)</span> </p>
-                            <div className="textBox">
-                                <input type="text" placeholder="instagram ID" value={inputIns} 
-                                onChange={onChangeIns}
-                                />
-                                <div className="regCheckBox"></div> 
-                            </div>
-                            <div className="hint">{insMessage}</div>
-                        </div>
-                    </RightBox>
+
                 </div>
                 <div className="btnBlock">
                     <button 

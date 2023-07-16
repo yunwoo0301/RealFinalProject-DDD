@@ -5,18 +5,19 @@ import { useNavigate } from "react-router-dom";
 import useStore from "../../store";
 import { MyPageApi } from "../../api/MyPageApi";
 
-
 const Container = styled.div`
   position: absolute;
   top: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  justify-content: center;
   /* background-color: aqua; */
+
 `;
 const Modal = styled.div`
-  width: 20vw;
-  min-width: 400px;
+  width: 26%;
+  /* min-width: 400px; */
   height: 50vh;
   min-height: 500px;
   background-color: white;
@@ -29,6 +30,21 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 1440px) {
+    width: 30%;
+      }
+  @media (max-width: 1024px) {
+    position: relative;
+    width: 50%;
+    top: 50%;
+    right: -50%;
+    transform: translate3d(-50%, -50%, 0);
+      }
+  @media (max-width: 720px) {
+    width: 100%;
+    position: relative;
+    transform: translate3d(-50%, -50%, 0);
+      }
   .title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -218,7 +234,7 @@ const LoginModal = (props) => {
         <div className="loginMsg">{errorMsg}</div>
         <div className="btnBlock">
           <button onClick={onClickLogin}>로그인</button>
-          <button style={{ backgroundColor: "#F9E000", color: "#6F4F28" }}>
+          <button style={{ backgroundColor: "#F9E000", color: "#6F4F28" }} >
             <div></div>카카오로그인
           </button>
         </div>

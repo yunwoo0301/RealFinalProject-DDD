@@ -10,7 +10,8 @@ const Container = styled.div`
     height: 100vh;
     box-sizing: border-box;
     /* background-color: aqua; */
-    
+    overflow: hidden;
+
 
 `;
 const Modal = styled.div`
@@ -28,6 +29,15 @@ const Modal = styled.div`
     flex-direction: column;
     align-items: center;
     background-color: white;
+    @media (max-width: 768px) {
+        width: 100%;
+
+    }
+    @media (max-width: 500px) {
+        width: 100%;
+        min-width: 0;
+
+    }
     .title{
         font-weight: bold;
         text-align: center;

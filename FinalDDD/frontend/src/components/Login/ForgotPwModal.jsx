@@ -31,6 +31,21 @@ const Modal = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    @media (max-width: 1440px) {
+    width: 30%;
+      }
+  @media (max-width: 1024px) {
+    position: relative;
+    width: 50%;
+    top: 50%;
+    right: -50%;
+    transform: translate3d(-50%, -50%, 0);
+      }
+  @media (max-width: 680px) {
+    width: 100%;
+    position: relative;
+    transform: translate3d(-50%, -50%, 0);
+      }
         .title{
             font-size: 1.5rem;
             font-weight: bold;

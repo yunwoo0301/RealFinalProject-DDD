@@ -79,14 +79,15 @@ const MyPageBG = () => {
 
   return (
     <>
-
+{ memberData && myDiaryData &&
+(
       <Container style={showPage === "다이어리" ? { height: "auto" } : null}>
         <Modal>
           {showPage === "마이페이지" &&  (
             <>
               {memberData && <Thumnail memberData={memberData}/>}
               <SNSBox />
-              {memberData && <Introduce memberData={memberData} myDiaryData={myDiaryData}/>} 
+              {memberData && <Introduce memberData={memberData} myDiaryData={myDiaryData}/>}
             </>
           )}
           {showPage === "다이어리" && (
@@ -120,8 +121,8 @@ const MyPageBG = () => {
             </>
           )}
         </Modal>
-      </Container>
-
+      </Container>)
+}
       
     </>
   );

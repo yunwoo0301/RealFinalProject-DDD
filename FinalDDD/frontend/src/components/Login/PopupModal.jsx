@@ -24,6 +24,14 @@ const Modal = styled.div`
   justify-content: center;
   align-items: center;
 
+  @media (max-width: 720px) {
+    width: 100%;
+    position: relative;
+    transform: translate3d(-50%, -50%, 0);
+      }
+
+
+
   .checkIcon {
     /* background-color: blue; */
     height: 20%;
