@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import DDDApi from '../../api/DDDApi';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -32,6 +33,7 @@ const GridItem = styled.div`
   background-color: #fff;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
   flex-direction: row;
+  cursor: pointer;
 
   &.large {
     grid-row: span 4;
@@ -79,6 +81,7 @@ const GridItem = styled.div`
 `;
 
 const GridComponent = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [bookingList, setBookingList] = useState([]);
 
@@ -104,15 +107,16 @@ const GridComponent = () => {
     .sort((a, b) => b.count - a.count)
     .slice(0, 4);
 
-  // 콘솔에 상위 4개 예매 데이터 출력
-  console.log('상위 4개 예매 데이터:', topFourBookings);
+    const clickToDetail = (exhibitNo) => {
+      navigate(`/exhibitInfo/${exhibitNo}`);
+    }
 
   return (
     <Container>
       <h2>{t('오늘의랭킹')}</h2>
       <GridContainer>
         {topFourBookings.map((booking, index) => (
-          <GridItem key={index} className={index === 0 || index === 2 ? 'large' : 'medium'}>
+          <GridItem key={index} className={index === 0 || index === 2 ? 'large' : 'medium'} onClick={() => clickToDetail(booking.exhibitNo)}>
             <h4>{index + 1}{t('위')}</h4>
             <img src={booking.imgUrl} alt={booking.exhibitName} />
             <div className="overlay">
