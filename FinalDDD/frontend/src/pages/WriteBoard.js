@@ -11,7 +11,6 @@ import { Backdrop } from "@mui/material";
 import { FcCloseUpMode } from 'react-icons/fc';
 
 const Wrap = styled.div`
-    /* width: 75em; */
     width: 70%;
     height: 100%;
     margin: 0 auto;
@@ -22,35 +21,36 @@ const Wrap = styled.div`
         text-align: right;
 
         .savebtn { // 등록 버튼 속성
-                cursor: pointer;
-                margin-top: 1em;
-                padding: 10px 1.6em;
-                border-radius: 15px;
-                border: none;
-                color: white;
-                background-color: #050E3D;
-                transition: all .1s ease-in;
-                font-weight: 600;
-                font-size: 14px;
+
+            margin-top: 1em;
+            padding: 10px 1.6em;
+            border-radius: 15px;
+            border: none;
+            color: white;
+            background-color: #050E3D;
+            transition: all .1s ease-in;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
 
 
-                &:hover {background-color: #5EADF7;
-                    color: #F4F8FF;}
-            }
+            &:hover {background-color: #5EADF7;
+                color: #F4F8FF;}
+          }
             .cancelbtn { // 취소버튼 속성
-                cursor: pointer;
-                margin-top: 1em;
-                padding: 10px 1.6em;
-                border-radius: 15px;
-                border: none;
-                color: white;
-                background-color: #050E3D;
-                transition: all .1s ease-in;
-                font-weight: 600;
-                font-size: 14px;
+              margin-top: 1em;
+              padding: 10px 1.6em;
+              border-radius: 15px;
+              border: none;
+              color: white;
+              background-color: #050E3D;
+              transition: all .1s ease-in;
+              font-weight: 600;
+              font-size: 14px;
+              cursor: pointer;
 
-                &:hover {background-color: #FA6060;
-                    color: #F4F8FF;}
+              &:hover {background-color: #FA6060;
+                  color: #F4F8FF;}
 
             }
             button:nth-child(1) {
@@ -102,35 +102,36 @@ const Section = styled.div`
 
         td:first-child {border-left: none; width: 10%;
 
-            select { // 게시판 카테고리 셀렉박스
-                text-align:center;
-                background: none;
-                border: none;
-                outline: none;
-                font-size: 1rem;
-                font-weight: 600;
-            }
+          select { // 게시판 카테고리 셀렉박스
+              text-align:center;
+              background: none;
+              border: none;
+              outline: none;
+              font-size: 1rem;
+              font-weight: 600;
+          }
         }
+
         td:nth-child(2) {width: 10%; text-align: center;
 
-            select{ // 지역선택 카테고리 셀렉박스
-                text-align:center;
-                background: none;
-                border: none;
-                outline: none;
-                font-size: 1rem;
-                font-weight: 600;
-            }
+          select{ // 지역선택 카테고리 셀렉박스
+              text-align:center;
+              background: none;
+              border: none;
+              outline: none;
+              font-size: 1rem;
+              font-weight: 600;
+          }
         }
 
         td:nth-child(3) {width: 70%; text-align: left; padding-left: 20px;} // 제목 카테고리
 
 
-        td:nth-child(4) { text-align: left;}
+        td:nth-child(4) {text-align: left;}
 
         @media (max-width: 780px) {
         td:nth-child(4) { display: flex; flex-direction: column; justify-content: center; align-items: center;}
-      }
+        }
 
 
         @media (max-width: 780px) {
@@ -143,7 +144,6 @@ const Section = styled.div`
     .input_title {
         font-size: 1.3rem;
         width: 100%;
-        /* height: 30px; */
         outline: none;
         display: block;
         margin-bottom: 30px;
@@ -157,20 +157,20 @@ const Section = styled.div`
 
     .imguploaderBtn { // 업로드 버튼
 
-        button {
-          font-size: .9rem;  // 폰트 크기 조정
-          cursor: pointer;  // 커서 스타일을 포인터로 변경
-          border-radius: 1em;  // 버튼 모서리 둥글게 처리
-          border: none;  // 테두리 제거
-          color: white;  // 글자색을 흰색으로
-          background-color: #050E3D;  // 버튼 배경색
-          transition: all .1s ease-in;  // 마우스 호버시 효과 전환 속도
-          font-weight: bold;  // 글자를 굵게
-          padding: .5em .8em;  // 패딩으로 내부 여백 조정
+      button {
+        font-size: .9rem;
+        cursor: pointer;
+        border-radius: 1em;
+        border: none;
+        color: white;
+        background-color: #050E3D;
+        transition: all .1s ease-in;  // 마우스 호버시 효과 전환 속도
+        font-weight: bold;
+        padding: .5em .8em;
 
-          &:hover {background-color: #5EADF7; color: #F4F8FF;}
-      }
+        &:hover {background-color: #5EADF7; color: #F4F8FF;}
     }
+  }
 
     // 업로드 이미지 영역
     .addBoard-wrapper{
@@ -178,7 +178,6 @@ const Section = styled.div`
         display: flex;
         flex-direction: column-reverse; // 업로드된 이미지 아래로 향하게 설정
         align-items: center;
-        /* justify-content: center; */
         justify-content: flex-start;
         width: 100%;
       }
@@ -187,15 +186,11 @@ const Section = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        /* margin: 0 12px; */
     }
 
     img {
-        width: 40%; /* 이미지의 최대 가로 너비를 설정 */
-        height: 40%; /* 이미지의 최대 세로 높이를 설정 */
-
-        /* object-fit: cover; */
-        /* align-self: flex-start; */
+        width: 40%;
+        height: 40%;
     }
 
     @media (max-width: 768px) {
@@ -211,20 +206,23 @@ const TextWrap = styled.div`
   align-items: center;
   padding : 1em;
 
-     .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
-       min-height: 500px;} // 텍스트 높이 조절
-     .ck-editor__main {padding: 0px;}
 
-     @media (max-width: 768px) {
-      max-width: 768px;
-     }
+    .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+      min-height: 500px;} // 텍스트 높이 조절
+    .ck-editor__main {padding: 0px;}
+
+    @media (max-width: 768px) {
+    max-width: 768px;
+    }
+
+
 `;
 
 const ModalBodyStyle = styled.div`
-    .success{
-      font-size: 1rem;
-      line-height: 1;
-    }
+  .success{
+    font-size: 1rem;
+    line-height: 1;
+  }
 `;
 
 
@@ -348,6 +346,11 @@ const WriteBoard = () => {
       navigate('/boardList');
     }
 
+    // 작성 취소하기(뒤로가기)
+    const onClickBack = () => {
+      navigate(-1);
+    }
+
 
     const buttonStlye = {
       backgroundColor:'#2B5EC2',
@@ -390,9 +393,7 @@ const WriteBoard = () => {
                 <tr>
                   <td>
                     <select name="category" onChange={onChangerCtg}>
-                      <option value={category} selected>
-                        카테고리
-                      </option>
+                      <option value={category} selected>카테고리</option>
                       <option value="Recommend">추천수다</option>
                       <option value="Question">질문하기</option>
                       <option value="DDDmate">동행찾기</option>
@@ -427,11 +428,7 @@ const WriteBoard = () => {
                   <td>
                     <div className="imguploaderBtn">
                       <button>
-                        <input
-                          type="file"
-                          id="file-upload"
-                          onChange={previewImage}
-                          style={{ display: "none" }}/>
+                        <input type="file" id="file-upload" onChange={previewImage} style={{ display: "none" }}/>
                         <label htmlFor="file-upload">사진 업로드</label>
                       </button>
                     </div>
@@ -448,19 +445,20 @@ const WriteBoard = () => {
           </div>
         </Section>
         <TextWrap>
-        <CKEditor
-        editor={ClassicEditor}
-        data={contents}
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          setContents(data);}}
-        config={{
-          placeholder: '자유롭게 작성 가능합니다.',
-          enterMode: 2,}}/>
+          <CKEditor
+            editor={ClassicEditor}
+            data={contents}
+            onChange={(event, editor) => {
+            const data = editor.getData();
+            setContents(data);
+            }}
+            config={{
+            placeholder: '자유롭게 작성 가능합니다.'
+            }}/>
         </TextWrap>
         <div className="btn_area">
             <button className="savebtn" onClick={onClickSave}>등록하기</button>
-            <button className="cancelbtn">취소하기</button>
+            <button className="cancelbtn" onClick={onClickBack}>취소하기</button>
         </div>
       </Wrap>
 
@@ -478,7 +476,7 @@ const WriteBoard = () => {
         {showModal && <ConfirmModal props={writeProps} minWidth='200px' minHeight="250px"/>}
       </Backdrop>
       </>
-  );
+  )
 };
 
 export default WriteBoard;
