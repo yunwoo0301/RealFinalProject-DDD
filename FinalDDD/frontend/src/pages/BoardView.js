@@ -151,7 +151,17 @@ const Section = styled.div`
     }
 
     .comment_title {
+        display : flex;
+        flex-direction : row;
         margin-top : 1em;
+
+        h2, .comment_List {
+            margin-left : 1em;
+            margin-bottom : 2px;
+        }
+        .comment_List {
+            margin-top : 1.6em;
+        }
     }
 
     @media (max-width: 768px) {
@@ -177,7 +187,6 @@ const Contents = styled.div`
     padding: 30px 18px;
     margin-top: 20px;
     min-height: 400px;
-    /* max-height: 800px;*/
 
     .image_area {
         display: flex;
@@ -206,8 +215,6 @@ const Wrapper = styled.div`
     width: 92%;
     display: flex;
     flex-direction: column;
-    /*align-items: center;
-    justify-content: center;*/
     border: 1px solid #8a8a8a;
     border-radius: 12px;
     padding: 15px 18px;
@@ -245,7 +252,6 @@ const Wrapper = styled.div`
 
     .userinfo {
         display: flex;
-        /* align-items: center; */
         justify-content: space-between;
 
         .profile {
@@ -336,7 +342,6 @@ const BoardView = () => {
     console.log("작성자 정보:", boardView?.author);
     console.log("getId:", getId);
     console.log("작성자와 Id 일치 여부:", isAuthorMatched);
-    // console.log(boardView?.email);
     console.log(boardView?.id);
 
 
@@ -562,7 +567,10 @@ const deleteBoard = async (boardNo) => {
             </div>
 
             {/* 댓글 구간 */}
-            <div className="comment_title"><h2>Comment</h2></div>
+            <div className="comment_title">
+                <h2>Comment</h2>
+                <div className="comment_List">총 <span style={{ fontWeight: 'bold' }}>{boardView?.comments?.length || 0}개</span>의 댓글</div>
+            </div>
 
             {/* 댓글 데이터가 있을 경우에만 컨테이너 보이게 조정 */}
             {boardView?.comments && boardView.comments.length > 0 && (
