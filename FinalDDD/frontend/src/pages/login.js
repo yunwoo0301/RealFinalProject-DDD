@@ -17,9 +17,7 @@ const Container = styled.div`
 `;
 
 const Login = () => {
-    // isLogin 상태 가져오기
-    const isLogin = window.localStorage.getItem('isLogin')
-    const memberId = window.localStorage.getItem('memberId')
+
 
     // showLogin이 1, 2, 3으로 변할 때 각자 modal창 보여줌
     const [showLogin, setShowLogin] = useState(0);
@@ -45,20 +43,8 @@ const Login = () => {
         // console.log(showLogin)
       };
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-    if (isLogin) {
-        navigate(`/api/mypage/${memberId}`);
-    }
-    }, [isLogin, navigate]);
-
-
-
     return(
         <>
-
-            {!isLogin && (
                 <div>
                     <Container>
                         <BGItmes/>
@@ -69,9 +55,6 @@ const Login = () => {
                     {showLogin === 3 && <SignUpModal showLogin={handleLoginModal0} showPopup={handleLoginModal4} />}
                     {showLogin === 4 && <PopupModal showLogin={handleLoginModal0} />}
                 </div>
-            )
-            }
-
         </>
     )
 }

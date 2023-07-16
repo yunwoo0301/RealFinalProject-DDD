@@ -15,8 +15,8 @@ const MyPage = () => {
 
     return(
         <>
-        <button onClick={removeLocalstorage}>로그아웃</button>
-        <button onClick={()=>navigate('/ratediary')}>다이어리 평가 </button>
+//        <button onClick={removeLocalstorage}>로그아웃</button>
+      { /* <button onClick={()=>navigate('/ratediary')}>다이어리 평가 </button> */}
             <MyPageBG/>
             
         </>

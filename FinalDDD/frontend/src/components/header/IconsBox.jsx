@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import NavigateBar from "./Navigate";
 import useStore from "../../store";
 import SwipeableTemporaryDrawer from "../header/newNavi";
+import Functions from "../../util/Functions";
 
 const IconBox = styled.div`
     display: flex;
@@ -87,14 +88,16 @@ const LoginIconBox = styled.div`
 
 const Icons = () => {
     const { profileImg } = useStore();
-    const loginState = window.localStorage.getItem("isLogin")
+    const loginState = window.localStorage.getItem("isLogin");
+    const memberId = Functions.getMemberId();
     // console.log(profileImg)
     // console.log(loginState)
 
     const navigate = useNavigate();
 
     const onClickToLogin = () => {
-        navigate("/login");
+        loginState ?
+         navigate(`/api/mypage/${memberId}`) : navigate("/login")
     }
     const {t} = useTranslation();
 

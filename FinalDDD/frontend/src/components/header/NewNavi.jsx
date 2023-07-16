@@ -82,6 +82,7 @@ export default function SwipeableTemporaryDrawer() {
         <h2><CustomLink to="/">HOME</CustomLink></h2>
         <h2><CustomLink to="/exhibitList">전시예매</CustomLink></h2>
         <h2><CustomLink to="/boardList">게시판</CustomLink></h2>
+        <h2><CustomLink to="/ratediary">평가하기</CustomLink></h2>
         <h2><CustomLink to="/chatbot">고객센터</CustomLink></h2>
     </List>
       </Box>

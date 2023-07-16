@@ -39,6 +39,12 @@ const Modal = styled.div`
   flex-direction: column;
   /* align-items: center; */
   border: 0.5px solid #bbb;
+  @media (max-width : 768px) {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    
+  }
 `;
 
 const MyPageBG = () => {
