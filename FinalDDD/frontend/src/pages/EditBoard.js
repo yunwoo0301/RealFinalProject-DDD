@@ -155,7 +155,6 @@ const Section = styled.div`
             background-color: #050E3D;
             transition: all .1s ease-in;
             font-weight: bold;
-            float: left;
             padding: .5em .8em;
 
             &:hover {background-color: #5EADF7; color: #F4F8FF;}

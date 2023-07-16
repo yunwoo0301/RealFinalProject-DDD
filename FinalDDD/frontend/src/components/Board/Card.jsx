@@ -17,7 +17,7 @@ const CardContainer = styled.div`
     margin: 2rem;
     gap: 1rem;
     transition: width 1s, height 1s;
-    
+
 
     * {
         margin: 2rem;
@@ -38,8 +38,8 @@ const CardContainer = styled.div`
 
     .img_area {
     .cardimage {
-        width: 100%; 
-        height: 11rem; 
+        width: 100%;
+        height: 11rem;
     }
 }
 
@@ -50,29 +50,28 @@ const CardContainer = styled.div`
         font-size: 1em;
         font-weight: bold;
     }
-    
-    .viewarea, .replyarea {
+
+    .viewarea, .commentarea {
         margin-left: .2em; // 아이콘과 숫자 사이 여백
         margin-top: .2em; // 아이콘 옆 숫자 위치
         font-size: 1em;
-        
+
     }
 
     .icon-container {
-        /* border-top: 2px solid #ccc; */
         display: flex;
         justify-content: flex-end;
         margin-right: 1.5rem;
 
         .icon {
         margin-left: 1.2rem;
-        font-size: 1.6rem;   
+        font-size: 1.6rem;
         }
     }
     .writebtn {
         display: flex;
-        margin-bottom: 1em 0em ;
-    
+        margin-bottom: 1em;
+
         button {
             margin: -1em 1em ;
             margin-left: auto;
@@ -100,14 +99,13 @@ const SelectBox = styled.select`
     }
 
     @media (max-width: 768px) {
-    margin-right: 8em;
-    
+        margin-left: 10em;
     }
- `; 
+ `;
 
 
 
-const Card = () => {    
+const Card = () => {
 
     const navigate = useNavigate();
     const [selectedRegion, setSelectedRegion] = useState("");
@@ -138,7 +136,7 @@ const Card = () => {
             const filteredData = response.data.filter(boardList => boardList.category === category);
             setBoardList(filteredData);
             setFilterRegion(filteredData); // 지역별 필터링 추가
-            console.log(response.data);
+            console.log(filteredData);
           } catch (error) {
             console.log(error);
           }
@@ -146,29 +144,29 @@ const Card = () => {
 
         fetchData();
       }, []);
-    
-    
-    
-    
+
+
+
+
       const handleRegionChange = (event) => {
         const selectedRegion = event.target.value;
         setSelectedRegion(selectedRegion);
-      
+
         console.log(selectedRegion);
-      
+
         // 선택된 지역에 해당하는 데이터를 필터링하여 업데이트
         const filteredData = boardList.filter((item) => {
           return selectedRegion ? item.region === selectedRegion : true;
         });
-      
+
         setFilterRegion(filteredData);
       };
-       
 
 
-    
 
-    // 비로그인 시 작성페이지 접근 제한
+
+
+    // 글쓰기 버튼 클릭 시 게시판 작성페이지로 이동
     const onClickToWrite = () => {
         const isLogin = window.localStorage.getItem("isLogin");
         const getId = window.localStorage.getItem("memberId");
@@ -180,9 +178,10 @@ const Card = () => {
             navigate(link);
         } else {
             alert("로그인 완료 시 작성 진행 가능합니다.");
-            navigate('/login'); // 로그인 화면으로 이동 ** 추가
+            navigate('/login');
         }
     };
+
 
 
     return(
@@ -198,32 +197,32 @@ const Card = () => {
             <option value="전라도">전라도</option>
             <option value="제주">제주</option>
         </SelectBox>
-        <CardContainer> 
+        <CardContainer>
             {currentPageData.map((data, index) => (
                 <div className="container" key={index}>
                 <Link to={`/boardList/boardView/${data.boardNo}`} className="boardView_link" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div className="img_area">
                     <img src={data.image} alt="CardImage" className="cardimage" />
                 </div>
-                
+
                 <div className="region">
                     <IoMdPin style={{fontSize:'1.2em', color:'#528BF9'}}/>{data.region}
                 </div>
                 <h3 className="cardtitle">{data.title}</h3>
                 <div className="cardnickname">{data.author}</div>
                 <div className="datearea">{data.writeDate.substring(0, 10)}</div>
-                
+
                 <div className="icon-container">
-                    <IoMdEye className="icon" style={{color:'#686565'}} /> 
+                    <IoMdEye className="icon" style={{color:'#686565'}} />
                     <div className="viewarea">{data.views}</div>
-                    <IoChatbubbleEllipses className="icon" style={{color:'#2468ee'}} />
-                    {data.reply && <div className="replyarea">{data.reply}</div>} 
+                    <IoChatbubbleEllipses className="icon" style={{color:'#55aafa'}} />
+                    {data.commentCount && <div className="commentarea">{data.commentCount}</div>}
                 </div>
                 </Link>
             </div>
-            
+
         ))}
-      </CardContainer> 
+      </CardContainer>
        <PageNation pageCount={pageCount} onPageChange={handlePageClick} />
        <div className="writebtn">
             <button onClick={onClickToWrite}>글쓰기</button>
