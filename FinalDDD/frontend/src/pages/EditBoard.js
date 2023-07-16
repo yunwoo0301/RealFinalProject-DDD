@@ -11,7 +11,7 @@ import { Backdrop } from "@mui/material";
 
 
 const EditWrap = styled.div`
-    width: 75em;
+    width: 70%;
     height: 100%;
     margin: 0 auto;
     align-items: center;
@@ -19,23 +19,22 @@ const EditWrap = styled.div`
 
     .btn_area {
         text-align: right;
-        margin-right: .9em;
 
         .editbtn { // 수정 버튼 속성
-                margin-top: 1em;
-                padding: 10px 1.6em;
-                border-radius: 15px;
-                border: none;
-                color: white;
-                background-color: #050E3D;
-                transition: all .1s ease-in;
-                font-weight: 600;
-                font-size: 14px;
-                cursor: pointer;
+            margin-top: 1em;
+            padding: 10px 1.6em;
+            border-radius: 15px;
+            border: none;
+            color: white;
+            background-color: #050E3D;
+            transition: all .1s ease-in;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
 
-                &:hover {background-color: #5EADF7;
-                    color: #F4F8FF;}
-            }
+            &:hover {background-color: #5EADF7;
+                color: #F4F8FF;}
+        }
             .backbtn { // 취소 버튼 속성
                 margin-top: 1em;
                 padding: 10px 1.6em;
@@ -47,7 +46,6 @@ const EditWrap = styled.div`
                 font-weight: 600;
                 font-size: 14px;
                 cursor: pointer;
-                margin-right: 16px;
 
                 &:hover {background-color: #FA6060;
                     color: #F4F8FF;}
@@ -56,26 +54,31 @@ const EditWrap = styled.div`
             button:nth-child(1) {
                 margin-right: 16px;
             }
+    }
 
+    @media (max-width: 800px) {
+      max-width: 800px;
     }
 `;
 
 const Section = styled.div`
-    width: 1140px;
-    float: center;
+    width: 100%;
+    margin: 0 auto;
+    justify-content: center;
     position: relative;
     display: flex;
     flex-direction: column;
 
     div { // 헤더 및 카테고리 박스
         width: 100%;
-        padding: 10px 30px;
+        padding: 1em;
     }
-    .board_header { // 게시물 작성 영역
+    .board_header { // 게시물 수정 영역
         h2 {
             font-size: 1.8em;
             margin-top: 30px;
             font-weight: 900;
+            text-align: center;
         }
     }
 
@@ -85,41 +88,51 @@ const Section = styled.div`
         background-color: #4555AE;
         border-bottom: solid 1px #4555AE;
         text-align: center;
+
         tr:nth-child(2n) td {background-color: #f9f9f9;}
         th {padding: 10px; color: white;}
         td {padding: 10px; background-color: white; border-left: solid 1px #bbb; border-top: solid 1px #ddd;}
-        td:first-child {border-left: none; width: 115px;
+
+        td:first-child {border-left: none; width: 10%;
 
             select { // 게시판 카테고리 셀렉박스
                 text-align:center;
                 background: none;
                 border: none;
                 outline: none;
-                font-size: 16px;
+                font-size: 1rem;
                 font-weight: 600;
             }
         }
-        td:nth-child(2) {width: 100px; text-align: left; padding-left: 20px;
+
+        td:nth-child(2) {width: 10%; text-align: center;
 
             select{ // 지역선택 카테고리 셀렉박스
                 text-align:center;
                 background: none;
                 border: none;
                 outline: none;
-                font-size: 16px;
+                font-size: 1rem;
                 font-weight: 600;
             }
         }
 
-        td:nth-child(3) {width: 41em; text-align: left; padding-left: 20px;
+        td:nth-child(3) {width: 70%; text-align: left; padding-left: 20px;}
 
+        td:nth-child(4) {text-align: left;}
+
+        @media (max-width: 780px) {
+        td:nth-child(4) { display: flex; flex-direction: column; justify-content: center; align-items: center;}
+        }
+
+        @media (max-width: 780px) {
+            min-width: 400px;
         }
 
     }
     .input_title {
-        font-size: 20px;
+        font-size: 1.3rem;
         width: 100%;
-        height: 30px;
         outline: none;
         display: block;
         margin-bottom: 30px;
@@ -127,63 +140,74 @@ const Section = styled.div`
         margin: 0 auto;
         border: none;
         background: none;
+
         &:focus {border: none; background:none;}
     }
 
-    .addBoard-wrapper{
-            margin-top: 1rem;
-            display: flex;
-            flex-direction: column-reverse; // 업로드된 이미지 아래로 향하게 설정
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-    .imgcontainer {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 12px;
-    }
-
-    img {
-        width: 50%; /* 이미지의 최대 가로 너비를 설정 */
-        height: 50%; /* 이미지의 최대 세로 높이를 설정 */
-        /* object-fit: cover; */
-        /* align-self: flex-start; */
-    }
-
-    .imguploaderBtn {
+    .imguploaderBtn { // 업로드 버튼
 
         button {
-            font-size: 14px;
+            font-size: .9rem;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 1em;
             border: none;
             color: white;
             background-color: #050E3D;
             transition: all .1s ease-in;
             font-weight: bold;
             float: left;
-            padding: .5em 1.3em;
-            margin-bottom: .5em;
+            padding: .5em .8em;
 
             &:hover {background-color: #5EADF7; color: #F4F8FF;}
             }
+        }
+
+
+    // 업로드 이미지 영역
+    .addBoard-wrapper{
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column-reverse; // 업로드된 이미지 아래로 향하게 설정
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+    }
+
+    .imgcontainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    img {
+        width: 40%;
+        height: 40%;
+    }
+
+    @media (max-width: 780px) {
+      max-width: 780px;
     }
 
 `;
 
 
 const TextWrap = styled.div`
-    width: 95%;
+    width: 100%;
     margin: 0 auto;
     margin-bottom:20px;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
 
   .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
-    min-height: 500px; // 텍스트 높이 조절
-  }
+    min-height: 500px;} // 텍스트 높이 조절
 
   .ck-editor__main {padding: 0;}
+
+  @media (max-width: 768px) {
+  max-width: 768px;
+  }
+
 `;
 
 const ModalBodyStyle = styled.div`
@@ -364,7 +388,7 @@ const EditBoard = () => {
                 <h2>자유 게시판</h2>
                 </div>
                 <table>
-                <tbody>
+                    <tbody>
                     <tr>
                         <th colSpan={4}>게시물 수정</th>
                     </tr>
@@ -400,20 +424,19 @@ const EditBoard = () => {
                             value={title}
                             onChange={onChangeTitle}
                             name="title"
-                            maxLength={40}
-                            />
+                            maxLength={40}/>
                         </td>
 
                         <td>
                             <div className="imguploaderBtn">
                             <button>
-                                <input type="file" id="file-upload" onChange={previewImage} style={{ display: "none" }} />
+                                <input type="file" id="file-upload" onChange={previewImage} style={{ display: "none" }}/>
                                 <label htmlFor="file-upload">사진 업로드</label>
                             </button>
                             </div>
                         </td>
                     </tr>
-                </tbody>
+                    </tbody>
                 </table>
 
                 {/* 이미지 미리보기 및 업로드 */}
@@ -436,12 +459,12 @@ const EditBoard = () => {
                     onChange={(event, editor) => {
                     const data = editor.getData();
                     setContents(data);}}
-                    config={{placeholder: '자유롭게 작성 가능합니다.',}}/>
+                    config={{placeholder: '자유롭게 작성 가능합니다.'}}/>
             </TextWrap>
 
             <div className="btn_area">
-            <button className="editbtn" onClick={onClickUpdate}>수정하기</button>
-            <button className="backbtn" onClick={onClickBack}>취소하기</button>
+                <button className="editbtn" onClick={onClickUpdate}>수정하기</button>
+                <button className="backbtn" onClick={onClickBack}>취소하기</button>
             </div>
         </EditWrap>
 
