@@ -27,6 +27,10 @@ cursor: pointer;
     }
 }
 
+&.message{
+    background-color: #5EADF7;
+}
+
 `;
 const Button =  ({onClick, children, disabled, className}) => {
 

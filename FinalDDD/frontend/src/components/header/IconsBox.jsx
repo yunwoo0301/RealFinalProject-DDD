@@ -7,6 +7,7 @@ import useStore from "../../store";
 import SwipeableTemporaryDrawer from "../header/newNavi";
 import Badge from '@mui/material/Badge';
 import DDDApi from "../../api/DDDApi";
+import MyPageBG from "../MyPage/MyPageBG";
 
 const IconBox = styled.div`
     display: flex;
@@ -121,25 +122,31 @@ const Icons = () => {
               (booking) => booking.bookingDate === today
             );
             setTodayBookingCnt(todayBookings.length);
-            console.log("오늘예약한 에약건수 : " + todayBookings.length)
           } catch (e) {
             console.log(e);
           }
         };
 
         reservations();
-      }, []);
+    }, []);
 
+
+    const onClickToReservation = () => {
+        navigate(`/mypage/${getId}`);
+    };
 
 
     return (
-
         <IconBox>
-            <div className="ticket-icon">
-                {loginState ? (<Badge badgeContent={todayBookingCnt} color="primary" showZero>
+           {loginState ? (
+           <div className="ticket-icon" onClick={onClickToReservation}>
+                <Badge badgeContent={todayBookingCnt} color="primary" showZero>
                     <HiOutlineTicket/>
-                </Badge>) : (<HiOutlineTicket/>) }
-            </div>
+                </Badge>
+            </div>) : (
+            <div className="ticket-icon" onClick={onClickToLogin}>
+            <HiOutlineTicket/>
+            </div>) }
 
         <LoginIconBox>
             <div className="login-icon" onClick={onClickToLogin}>
@@ -155,9 +162,6 @@ const Icons = () => {
                         {/* <FcDecision/> */}
                         로그아웃 </div> : null}
         </LoginIconBox>
-
-
-
 
             <div className="navi">
 {/*                 <NavigateBar/> */}
