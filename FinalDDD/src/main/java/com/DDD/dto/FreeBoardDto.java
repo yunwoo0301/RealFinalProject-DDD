@@ -29,6 +29,7 @@ public class FreeBoardDto {  // 프론트엔드와 주고 받을 때 사용
     private boolean isOk; // 검색 결과 여부
 
     private List<BoardCommentDto> comments; // 댓글 리스트 추가
+    private Integer commentCount; // 댓글 수 추가 **
 
 }
 

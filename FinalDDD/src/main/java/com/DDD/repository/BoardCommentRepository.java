@@ -13,5 +13,6 @@ public interface BoardCommentRepository extends JpaRepository<BoardComment, Long
     Optional<BoardComment> findById(Long commentNo); // 댓글번호 찾기
     void deleteById(Long commentNo);
     List<BoardComment> findByMember(Member member); // 마이페이지 내 댓글 조회
+    int countByFreeBoard(FreeBoard freeBoard); // 게시글에 대한 댓글 수 ** 추가
 
 }

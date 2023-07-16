@@ -6,6 +6,7 @@ import com.DDD.dto.MemberDto;
 import com.DDD.entity.BoardComment;
 import com.DDD.entity.FreeBoard;
 import com.DDD.entity.Member;
+import com.DDD.repository.BoardCommentRepository;
 import com.DDD.repository.FreeBoardRepository;
 import com.DDD.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +29,14 @@ public class FreeBoardService {
     // 의존성 주입을 통해 빈에 등록된 필드는 불변성이 있어야 하므로 final 선언을 해야함
     private final FreeBoardRepository freeBoardRepository;
     private final MemberRepository memberRepository; // 게시물 작성 위해 멤버 추가
+    private final BoardCommentRepository boardCommentRepository; // 동행찾기 메인 위한 댓글 수 추가
 
 
-    public FreeBoardService(FreeBoardRepository freeBoardRepository, MemberRepository memberRepository) { // 게시판 서비스 클래스의 생성자
+    public FreeBoardService(FreeBoardRepository freeBoardRepository, MemberRepository memberRepository, BoardCommentRepository boardCommentRepository) { // 게시판 서비스 클래스의 생성자
 
         this.freeBoardRepository = freeBoardRepository;
         this.memberRepository = memberRepository;
+        this.boardCommentRepository = boardCommentRepository;
     }
 
     // 게시글 작성
@@ -168,6 +171,8 @@ public class FreeBoardService {
             freeBoardDto.setTitle(freeBoard.getTitle());
             freeBoardDto.setImage(freeBoard.getImage()); // 추가사항(이미지)
             freeBoardDto.setWriteDate(freeBoard.getWriteDate());
+            int commentCount = boardCommentRepository.countByFreeBoard(freeBoard); // 댓글 수 계산
+            freeBoardDto.setCommentCount(commentCount); // 댓글 수 저장
 
             // 조회수 오류 수정
             if (freeBoard != null && freeBoard.getViews() != null) {
