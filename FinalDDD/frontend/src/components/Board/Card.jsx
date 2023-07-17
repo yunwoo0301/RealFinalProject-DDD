@@ -9,15 +9,39 @@ import DDDApi from "../../api/DDDApi";
 import { Link } from "react-router-dom";
 
 const Wrapper = styled.div` // 동행찾기 게시판 전체 컨테이너 영역
+    box-sizing: border-box;
     width: 100vw;
     display:flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    @media(max-width:768px) {
-        width: 100%;
+    .writebtn {
+        display: flex;
+        margin-bottom: 1em;
+        width: 75%;
+        justify-content: flex-end; // 버튼을 오른쪽으로 정렬
+        margin-right: 10em;
+
+        button {
+            margin: -1em 1em ;
+            font-size: .9em;
+            padding: .5em 2em;
+            border-radius: 20px;
+            background-color: #050E3D;
+            color: white;
+            border: none;
+            transition: all .1s ease-in;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media(max-width:768px) {
+            width: 100%;
+            justify-content: flex-end; // 버튼을 오른쪽으로 정렬
+            margin-right: 0;
     }
+}
 
 `;
 
@@ -97,9 +121,13 @@ const CardContainer = styled.div` // 전체 카드아이템 컨테이너
     }
 
     @media(max-width:768px) {
-        width: 100%;
-        grid-template-columns: repeat(2, 1fr);
+        width: 80%;
+
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); // 수정사항
+
+        .card-image {
     }
+}
 `;
 
 
@@ -126,32 +154,6 @@ const SelectBox = styled.select`
     @media (max-width: 768px) {
     }
  `;
-
-const WriteArea = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-
-    .writebtn {
-        height: 2rem;
-
-
-    }
-
-    button {
-        width: 6rem;
-        height: 2rem;
-        display: flex;
-        margin-right: 22em;
-    }
-
-    @media(max-width:768px) {
-        button {
-        margin-right: 2em;
-    }
-}
-
-`;
 
 
 const Card = () => {
@@ -234,7 +236,6 @@ const Card = () => {
 
 
     return(
-        <>
 
         <Wrapper>
         <SelectWrapper>
@@ -278,15 +279,12 @@ const Card = () => {
             </div>
         ))}
       </CardContainer>
-      </Wrapper>
        <PageNation pageCount={pageCount} onPageChange={handlePageClick} />
-       <WriteArea>
             <div className="writebtn">
                 <button onClick={onClickToWrite}>글쓰기</button>
             </div>
-        </WriteArea>
-        {/* </Wrapper> */}
-      </>
+        </Wrapper>
+
     )
 };
 export default Card;
