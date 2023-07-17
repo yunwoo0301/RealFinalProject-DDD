@@ -236,7 +236,13 @@ const ExhibitionReview = ({ data }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const openProfile = (memberId) => {
-      navigate(`/api/mypage/${memberId}`);
+       // 로그인이 안되어있으면 로그인 모달띄움
+      if (!isLogin) {
+      setIsHovered(false);
+      openToWarnModal();
+      return;
+    }
+      navigate(`/mypage/${memberId}`);
     };
 
     const handleMouseEnter = () => {
