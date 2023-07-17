@@ -9,6 +9,7 @@ import {RiUserHeartLine} from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../../util/ConfirmModal";
 import AlertBlue from "../../util/AlertBlue";
+import MessageForm from "../Message/MessageForm";
 
 
 const Container = styled.div`
@@ -193,7 +194,6 @@ const ExhibitionReview = ({ data }) => {
       try {
         const commentsList = await DDDApi.commentList(exhibitNo);
         setCommentList(commentsList.data);
-        console.log("코멘트리스트 어떻게 오지: ", commentList.data);
       } catch (e) {
         console.log(e);
       }
@@ -236,13 +236,35 @@ const ExhibitionReview = ({ data }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const openProfile = (memberId) => {
-      navigate(`/mypage/${memberId}`);
+      navigate(`/api/mypage/${memberId}`);
     };
 
-    const handleMouseEnter = (e) => {
+    const handleMouseEnter = () => {
       setIsHovered(!isHovered);
     };
 
+    // 쪽지보내기로 props 보내기
+    const [openMsg, setOpenMsg] = useState(false);
+    const [receiver, setReceiver] = useState('');
+    const [receiverName, setReceiverName] = useState('');
+
+
+    const openToMsg = (receiverId, receiverName) =>{
+      // 로그인이 안되어있으면 로그인 모달띄움
+    if (!isLogin) {
+      setIsHovered(false);
+      openToWarnModal();
+      return;
+    }
+
+      setIsHovered(false);
+      setOpenMsg(true);
+      setReceiver(receiverId);
+      setReceiverName(receiverName);
+    }
+    const closeToMsg = () => {
+      setOpenMsg(false);
+    }
 
 
 
@@ -262,6 +284,7 @@ const ExhibitionReview = ({ data }) => {
     }
     return (
       <Container>
+        {openMsg && <MessageForm senderId={getId} receiverId={receiver} receiverName={receiverName} close={closeToMsg}/>}
         {openModal &&
         <Backdrop
         sx={{
@@ -315,7 +338,7 @@ const ExhibitionReview = ({ data }) => {
             />
             {isHovered && (
               <div className="hoverContent">
-                <p>쪽지보내기</p>
+                <p onClick={() => openToMsg(e.memberId, e.memberName)}>쪽지보내기</p>
                 <p onClick={() => openProfile(e.memberId)}>프로필보기</p>
               </div>
             )}
