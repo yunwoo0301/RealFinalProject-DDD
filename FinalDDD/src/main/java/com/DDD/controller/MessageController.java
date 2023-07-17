@@ -44,4 +44,10 @@ public class MessageController {
     public List<MessageDTO> getAllReceiveMsg(@RequestParam("receiverId") String receiverId) {
         return messageService.receiveMessageList(receiverId);
     }
+
+    // 보낸메세지 보기
+    @GetMapping("/sendMsgList")
+    public List<MessageDTO> getAllSendMsg(@RequestParam("senderId") String senderId) {
+        return messageService.sendMessageList(senderId);
+    }
 }

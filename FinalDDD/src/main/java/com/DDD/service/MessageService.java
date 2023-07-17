@@ -63,5 +63,23 @@ public class MessageService {
         return messageDTOS;
     }
 
+    // 보낸메세지보기
+    public List<MessageDTO> sendMessageList(String senderId) {
+        List<MessageDTO> messageDTOS = new ArrayList<>();
+        List<Message> messages = messageRepository.findAllBySenderId(Long.parseLong(senderId));
+
+        for(Message e : messages) {
+            MessageDTO messageDTO = new MessageDTO();
+            messageDTO.setTitle(e.getMessageTitle());
+            messageDTO.setContents(e.getMessageContents());
+            messageDTO.setReceiverId(String.valueOf(e.getReceiver().getId()));
+            messageDTO.setReceiverNickname(e.getReceiver().getNickname());
+            messageDTO.setMessageDate(e.getMessageDate());
+
+            messageDTOS.add(messageDTO);
+        }
+        return messageDTOS;
+    }
+
 
 }
