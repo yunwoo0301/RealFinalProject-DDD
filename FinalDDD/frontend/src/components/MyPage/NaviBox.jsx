@@ -8,7 +8,14 @@ const Container = styled.div`
   text-align: right;
   /* background-color: aqua; */
   flex-direction: row;
-  padding-right: 3rem;
+  padding-right: 2rem;
+  @media (max-width:768px) {
+    width: 70%;
+    position: relative;
+    right: -30%;
+    padding-right: 0;
+    
+  }
 
   .icon {
   display: inline-block;
@@ -17,6 +24,13 @@ const Container = styled.div`
   cursor: pointer;
   color: #222;
   margin: 1rem .4rem;
+  /* background-color: red; */
+  @media (max-width:768px) {
+    margin: 1rem .2rem;
+    font-size: 0.051rem; 
+
+    
+  }
 }
 
 .icon::before,
@@ -59,6 +73,7 @@ const Container = styled.div`
 
 
 `;
+
 
 
 const NaviBox = (props) => {

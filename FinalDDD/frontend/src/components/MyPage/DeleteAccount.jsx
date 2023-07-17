@@ -10,7 +10,7 @@ const Container = styled.div`
     width: 60%;
     height: 100%;
     /* background-color: #f96c6c; */
-    /* padding-left: 1rem; */
+    padding-left: 1rem;
 
 
     p {
@@ -51,6 +51,10 @@ const Container = styled.div`
         display: flex;
         /* padding-left: 1rem; */
         margin-top: 1.4rem;
+        @media (max-width:768px) {
+            flex-direction: column;
+            
+        }
 
         input{
             width: 80%;
@@ -82,7 +86,7 @@ const Container = styled.div`
         /* background-color: red; */
 
         button{
-            width: 26%;
+            width: 5rem;
             height: 2.2rem;
             border-radius: 3rem;
             margin : 3rem .6rem;

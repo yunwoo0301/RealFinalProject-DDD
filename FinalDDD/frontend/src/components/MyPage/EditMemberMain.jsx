@@ -26,14 +26,19 @@ const MenuSpace = styled.div`
 `;
 const MenuBlock =  styled.div`
     width: 24%;
-    min-width: 200px;
+    /* min-width: 200px; */
     height: 94%;
     /* background-color: red; */
     padding: 5% 3% 0 3%;
+    @media (max-width:768px) {
+        width: 30%;
+        padding: 0;
+        
+    }
 `;
 
 const Menu =styled.div`
-    width: 90%;
+    width: 100%;
     height: auto;
     /* background-color: aqua; */
     text-align: center;
@@ -48,7 +53,11 @@ const Menu =styled.div`
             background-color: #5EADF7;
             color: white;
         }
+        @media (max-width:768px) {
+        font-size: 0.2rem;
+        }
     }
+
     .FocusedMenuBtn{
         width: 90%;
         padding: 7% 5%;
@@ -56,9 +65,11 @@ const Menu =styled.div`
         color: white;
         font-size: .8rem;
         cursor: pointer;
+        @media (max-width:768px) {
+        font-size: 0.2rem;
+        }
     }
 `;
-
 
 const EditMemberMain = () => {
     const [pageOnEdit, setPageOnEdit] = useState(0)
