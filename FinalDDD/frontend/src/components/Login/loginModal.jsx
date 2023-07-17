@@ -140,7 +140,7 @@ const Modal = styled.div`
 `;
 
 const LoginModal = (props) => {
-  const { profileImg, setProfileImg } = useStore();
+const { profileImg, setProfileImg, setMemberData } = useStore();
 
   const naviagte = useNavigate("");
 
@@ -170,6 +170,7 @@ const LoginModal = (props) => {
 
         const memberInfoResponse = await MyPageApi.info(memberId);
         setProfileImg(memberInfoResponse.data.profileImg)
+         setMemberData(memberInfoResponse.data)
         // console.log(profileImg)
         // localStorage에 email, token 저장
         // window.localStorage.setItem("storageEmail", email);
@@ -181,7 +182,7 @@ const LoginModal = (props) => {
         // console.log('데이터로 받은 멤버아이디' + memberId)
         //console.log("getitem으로 받은 멤버아이디" + window.localStorage.getItem("memberId"));
 
-        if (response.status === 200 && setProfileImg) {
+        if (response.status === 200 && setMemberData) {
                 naviagte("/");
                 // 로그인 시, isLogin true 반환
                 window.localStorage.setItem("isLogin", true);

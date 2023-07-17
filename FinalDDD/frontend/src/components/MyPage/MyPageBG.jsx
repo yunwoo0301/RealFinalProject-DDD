@@ -12,7 +12,7 @@ import useStore from "../../store";
 import Functions from "../../util/Functions";
 import { MyPageApi, DiaryApi } from "../../api/MyPageApi";
 import EditThumnail from "./EditThumnail";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -79,9 +79,22 @@ const MyPageBG = () => {
 
   // console.log('밖에있는 콘솔 : ' + memberData)
   // console.log('밖에있는 콘솔 : ' + myDiaryData)
+    const [ testInput, setTestInput ] = useState();
+    const handleTest = (e) => {
+      setTestInput(e.target.value)
+    }
+    const navigate = useNavigate();
+    const findMember = () => {
+      navigate(`/api/mypage/${testInput}`)
+    }
+
+
+
 
   return (
     <>
+          <input type="text" value={testInput} onChange={handleTest}/>
+          <button onClick={findMember}>member찾기</button>
 { memberData && myDiaryData &&
 (
       <Container style={showPage === "다이어리" ? { height: "auto" } : null}>

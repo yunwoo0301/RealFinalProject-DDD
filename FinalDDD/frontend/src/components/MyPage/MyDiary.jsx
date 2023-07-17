@@ -196,7 +196,7 @@ const CardItem = styled.div`
 
 const MyDiary = () => {
   const iconUrl =
-    "https://mblogthumb-phinf.pstatic.net/MjAyMTA0MDJfMTcx/MDAxNjE3MzQ3NzMzOTUz.Kg3bldcTe5OAoi3I-vBycTDxifu54mD9r3p-j7BNgKgg.Qunwt7JDPPe2v5HCeIlR55TtLn1HtVDhflu3wgLdY5Mg.JPEG.se413496/FB%EF%BC%BFIMG%EF%BC%BF1601135114387.jpg?type=w800";
+    "https://firebasestorage.googleapis.com/v0/b/real-final-project-ddd.appspot.com/o/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png?alt=media&token=7d664c18-037d-4e60-9415-32f26fb0d430";
 
   const memberId = Functions.getMemberId();
   const [myDiaryData, setMyDiaryData] = useState([]);
@@ -311,7 +311,7 @@ const MyDiary = () => {
                     value={inputComment[index]}
                   />
 
-                  <div className="test">
+                    { memberId == Functions.getMemberId() ? (<div className="test">
                     <div
                       className="icon"
                       onClick={() => {
@@ -347,7 +347,7 @@ const MyDiary = () => {
                             <AlertModal />
                         </Backdrop>
                     </div>
-                  </div>
+                  </div>) : null}
                 </div>
               </CardItem>
             ))}
