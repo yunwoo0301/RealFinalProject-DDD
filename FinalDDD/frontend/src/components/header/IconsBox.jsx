@@ -99,7 +99,8 @@ const Icons = () => {
     const navigate = useNavigate();
 
     const onClickToLogin = () => {
-        navigate("/login");
+        loginState ?
+        navigate(`/api/mypage/${getId}`) : navigate("/login");
     }
 
 
@@ -132,7 +133,7 @@ const Icons = () => {
 
 
     const onClickToReservation = () => {
-        navigate(`/mypage/${getId}`);
+        navigate(`/api/mypage/${getId}`);
     };
 
 

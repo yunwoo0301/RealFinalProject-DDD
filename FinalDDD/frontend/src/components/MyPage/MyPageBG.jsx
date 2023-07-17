@@ -25,7 +25,6 @@ const Container = styled.div`
 `;
 const Modal = styled.div`
   width: 55vw;
-  min-width: 600px;
   max-width: 900px;
   height: auto;
   min-height: 1024px;

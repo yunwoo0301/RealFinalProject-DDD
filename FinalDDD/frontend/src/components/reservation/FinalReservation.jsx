@@ -61,7 +61,7 @@ const FinalReservation = ({props}) => {
     }
 
     const openMyBooking = () => {
-      navigate(`/mypage/${getId}`);
+      navigate(`/api/mypage/${getId}`);
     }
 
     return(
