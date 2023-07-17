@@ -86,6 +86,8 @@ const Review = styled.div`
     border-radius: 20px;
     margin: 1rem;
     padding: 1em;
+
+
     img{
         border-radius: 10rem;
         width: 5rem;
@@ -105,13 +107,38 @@ const Review = styled.div`
     }
     .comment{
         font-size: 1rem;
+
+
     }
     .imgContainer{
         display: flex;
         flex-direction: column;
         align-items: center;
+        position: relative;
+        cursor: pointer;
+    }
+    .hoverContent {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1;
+    cursor: pointer;
+
+    p {
+      margin: 0;
+      cursor: pointer;
+    }
     }
 `;
+
+
 const ExhibitionReview = ({ data }) => {
     const navigate = useNavigate();
     const getId = window.localStorage.getItem("memberId");
@@ -166,6 +193,7 @@ const ExhibitionReview = ({ data }) => {
       try {
         const commentsList = await DDDApi.commentList(exhibitNo);
         setCommentList(commentsList.data);
+        console.log("코멘트리스트 어떻게 오지: ", commentList.data);
       } catch (e) {
         console.log(e);
       }
@@ -203,6 +231,20 @@ const ExhibitionReview = ({ data }) => {
     const goToLogin = () => {
       navigate("/login");
     }
+
+    // 다른 멤버에게 쪽지보내기 또는 프로필 보기메뉴
+    const [isHovered, setIsHovered] = useState(false);
+
+    const openProfile = (memberId) => {
+      navigate(`/mypage/${memberId}`);
+    };
+
+    const handleMouseEnter = (e) => {
+      setIsHovered(!isHovered);
+    };
+
+
+
 
     const props = {
       icon: <RiUserHeartLine color="#FF69B4"/>,
@@ -266,13 +308,25 @@ const ExhibitionReview = ({ data }) => {
           {currentPageData.map((e) => (
             <Review key={e.commentNo}>
               <div className="imgContainer">
-                <img src={e.memberPic} alt="" />
+              <img
+              src={e.memberPic}
+              alt=""
+              onClick={handleMouseEnter}
+            />
+            {isHovered && (
+              <div className="hoverContent">
+                <p>쪽지보내기</p>
+                <p onClick={() => openProfile(e.memberId)}>프로필보기</p>
+              </div>
+            )}
+
                 <div className="name">{e.memberName}</div>
               </div>
 
               <div className="memberInfo">
                 <Rating name="read-only" value={e.starRates} readOnly />
                 <div className="comment">{e.comment}</div>
+
               </div>
             </Review>
           ))}
