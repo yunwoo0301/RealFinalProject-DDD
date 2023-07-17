@@ -9,12 +9,12 @@ import { useNavigate } from "react-router-dom";
 
 const Modal = styled.div`
     position: fixed;
-    width: 50%;
+    width: 20rem;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 3rem;
-`
+`;
 
 export const Container = styled.div`
     display: flex;
@@ -24,6 +24,7 @@ export const Container = styled.div`
     /* margin-bottom: 20px; */
     .reservationBox{
         background-color: #F4F8FF;
+        width: 40rem;
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
@@ -44,12 +45,8 @@ export const Container = styled.div`
         flex-direction: row;
         justify-content:  space-between;
         text-align: left;
-        width: 100%;
-        p{
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
     }
+
     .infoBox {
     display: flex;
     flex-direction: column;
@@ -59,7 +56,7 @@ export const Container = styled.div`
 
     .imgBox{
         margin-top: 1rem;
-        overflow: hidden;
+        /* overflow: hidden; */
         width: 13rem;
         height: 20rem;
         position: relative;
@@ -74,7 +71,7 @@ export const Container = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        font-size: 0.8rem;
+        font-size: 1rem;
         .title{
             margin-top: 1rem;
             font-size: 1rem;
@@ -87,6 +84,7 @@ export const Container = styled.div`
         .ticket{
             color: #5EADF7;
             text-decoration: underline;
+            font-size: 1rem;
         }
     }
 
@@ -103,7 +101,7 @@ export const Container = styled.div`
     .bookingItem,
         .payItem {
         margin-bottom: 10px;
-        font-size: 0.8rem;
+        font-size: 1rem;
         }
     .payItem:nth-child(4){
     font-weight: bold;
@@ -122,7 +120,21 @@ export const Container = styled.div`
         height: 2rem;
         gap: 1rem;
     }
-
+    @media (max-width: 768px) {
+        .infoBox{
+            flex-direction: row;
+            margin: 0;
+        }
+        .reservationBox{
+            width: 100vw;
+        }
+        .bodyContainer{
+            flex-direction: column;
+        }
+        .rightBox{
+            margin: 0;
+        }
+    }
 `;
 const Table = styled.table`
     text-align: center;
@@ -130,15 +142,15 @@ const Table = styled.table`
         width: 50%;
         background-color: #5EADF7;
         color: white;
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
     td{
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 `
 const ModalBodyStyle = styled.div`
 .warn{
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: red;
     line-height: 1.2;
 }
@@ -250,7 +262,6 @@ const CheckBooking = ({reservationDatas, closeModal, cancelBooking, openModal, c
             <div className="reservationBox">
                 <div className="root">
                 <h3>예매 확인</h3>
-                <p onClick={closeModal}>&times;</p>
                 </div>
                 <div className="bodyContainer">
                <div className="infoBox">
