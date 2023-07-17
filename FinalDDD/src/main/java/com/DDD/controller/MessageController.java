@@ -25,16 +25,18 @@ public class MessageController {
 
     // 메세지 보내기
     @PostMapping("/sendMsg")
-    public ResponseEntity<String> sendMsg(@RequestParam("sendId") String senderId,
-                                          @RequestParam("receiverId") String receiverId,
-                                          @RequestParam("title") String title,
-                                          @RequestParam("contents") String contents) {
+    public ResponseEntity<String> sendMsg(@RequestBody MessageDTO messageDTO) {
+        String senderId = messageDTO.getSenderId();
+        String receiverId = messageDTO.getReceiverId();
+        String title = messageDTO.getTitle();
+        String contents = messageDTO.getContents();
+
         boolean success = messageService.sendMessage(senderId, receiverId, title, contents);
 
         if (success) {
             return ResponseEntity.ok("메세지가 성공적으로 보내졌습니다🫶🏻");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send message.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("메세지 보내기에 실패하셨습니다😝😝");
         }
 
     }
