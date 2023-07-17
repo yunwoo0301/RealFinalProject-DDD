@@ -578,71 +578,68 @@ const deleteBoard = async (boardNo) => {
 
             {/* 댓글 목록 값 배열로 순회 */}
             {boardView?.comments && boardView.comments.map((comment, index) => (
-                <div key={index} className="comment">
-                <div className="commentbox">
+            <div key={index} className="comment">
+            <div className="commentbox">
 
-                {/* 댓글 작성자 정보 */}
-                <div className="userinfo">
-                    <div className="profile">
-                        <img src={comment.profileImg} alt="프로필 이미지" />
-                        <div className="user">{comment.nickname}</div>
+            {/* 댓글 작성자 정보 */}
+            <div className="userinfo">
+                <div className="profile">
+                    <img src={comment.profileImg} alt="프로필 이미지" />
+                    <div className="user">{comment.nickname}</div>
+                </div>
+
+                {/* 작성일, 삭제 버튼 영역 */}
+                <div className="rightmenu">
+                    <div className="comment_write">{new Date(comment.writeDate).toLocaleString()}</div>
+                    {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
+                    {nickname === comment.nickname && (
+                    <div className="deleteBtn" onClick={()=> {setCheckAgain(true);
+                    setDelSelect(comment.commentNo);}}
+                    style={{ cursor: 'pointer', fontWeight: 'bold' }}>삭제</div>)}
                     </div>
-
-                    {/* 작성일, 삭제 버튼 영역 */}
-                    <div className="rightmenu">
-                        <div className="comment_write">{new Date(comment.writeDate).toLocaleString()}</div>
-
-                        {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
-                        {nickname === comment.nickname && (
-                        <div className="deleteBtn" onClick={()=> {setCheckAgain(true);
-                            // deleteComment(comment.commentNo);}}
-                            setDelSelect(comment.commentNo);}}
-                            style={{ cursor: 'pointer', fontWeight: 'bold' }}>삭제</div>)}
-                        </div>
                     </div>
-                        {/* 댓글 텍스트 구간 */}
-                        <TextInfo>{comment.content}</TextInfo>
+                    {/* 댓글 텍스트 구간 */}
+                    <TextInfo>{comment.content}</TextInfo>
                 </div>
                 </div>
             ))}
             </Wrapper>
             )}
-
-            {/* 댓글 인풋창 */}
-            <BoardComment
-                boardNo={boardNo}
-                nickname = {nickname}
-                commentList={commentList}
-                setCommentList={setCommentList}
-                regComment = {regComm}
-                setRegComment={setRegComment}/>
+                {/* 댓글 인풋창 */}
+                <BoardComment
+                    boardNo={boardNo}
+                    nickname = {nickname}
+                    commentList={commentList}
+                    setCommentList={setCommentList}
+                    regComment = {regComm}
+                    setRegComment={setRegComment}/>
             </Section>
         </ViewWrap>
 
-        <Backdrop
-            sx={{
-                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
-                opacity:'0.5',
-                color: 'black',
-                zIndex: (theme) => theme.zIndex.drawer + 1,
-                top: 0, // 팝업을 상단에 위치
-            }}
-            open={checkAgain}
-            onClick={()=>{setCheckAgain(false) }}>
-        {checkAgain && <ConfirmModal props={commentDelete}/>}
-        </Backdrop>
+            <Backdrop
+                sx={{
+                    backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                    opacity:'0.5',
+                    color: 'black',
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                    top: 0, // 팝업을 상단에 위치
+                }}
+                open={checkAgain}
+                onClick={()=>{setCheckAgain(false) }}>
+            {checkAgain && <ConfirmModal props={commentDelete}/>}
+            </Backdrop>
 
-        <Backdrop
-            sx={{
-                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
-                opacity:'0.5',
-                color: 'black',
-                zIndex: (theme) => theme.zIndex.drawer + 1,
-                top: 0, // 팝업을 상단에 위치
-            }}
-            open={showModal}>
-        {showModal && <ConfirmModal props={boardDelete}/>}
-        </Backdrop>
+            <Backdrop
+                sx={{
+                    backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                    opacity:'0.5',
+                    color: 'black',
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                    top: 0, // 팝업을 상단에 위치
+                }}
+                open={showModal}>
+            {showModal && <ConfirmModal props={boardDelete}/>}
+            </Backdrop>
 
         </>
     )

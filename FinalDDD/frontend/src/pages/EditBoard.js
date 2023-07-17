@@ -11,14 +11,14 @@ import { Backdrop } from "@mui/material";
 
 
 const EditWrap = styled.div`
-    width: 70%;
+    width: 82vw;
     height: 100%;
     margin: 0 auto;
     align-items: center;
     justify-content: center;
 
     .btn_area {
-        text-align: right;
+        text-align: center;
 
         .editbtn { // 수정 버튼 속성
             margin-top: 1em;
@@ -35,7 +35,7 @@ const EditWrap = styled.div`
             &:hover {background-color: #5EADF7;
                 color: #F4F8FF;}
         }
-            .backbtn { // 취소 버튼 속성
+            .backbtn { // 취소버튼 속성
                 margin-top: 1em;
                 padding: 10px 1.6em;
                 border-radius: 15px;
@@ -56,23 +56,24 @@ const EditWrap = styled.div`
             }
     }
 
-    @media (max-width: 800px) {
-      max-width: 800px;
+    @media (max-width: 768px) {
+      width: 100vw;
     }
 `;
 
 const Section = styled.div`
-    width: 100%;
-    margin: 0 auto;
     justify-content: center;
     position: relative;
     display: flex;
     flex-direction: column;
 
-    div { // 헤더 및 카테고리 박스
+
+    /* div { // 헤더 및 카테고리 박스
         width: 100%;
-        padding: 1em;
-    }
+        border: 1px solid red;
+    } */
+
+
     .board_header { // 게시물 수정 영역
         h2 {
             font-size: 1.8em;
@@ -83,11 +84,16 @@ const Section = styled.div`
     }
 
     table {
+        width: 80vw;
+        margin: 0 auto;
         border-collapse: collapse;
-        width: 100%;
         background-color: #4555AE;
         border-bottom: solid 1px #4555AE;
         text-align: center;
+
+        @media (max-width: 768px) {
+         width: 100vw;
+      }
 
         tr:nth-child(2n) td {background-color: #f9f9f9;}
         th {padding: 10px; color: white;}
@@ -119,24 +125,20 @@ const Section = styled.div`
 
         td:nth-child(3) {width: 70%; text-align: left; padding-left: 20px;}
 
-        td:nth-child(4) {text-align: left;}
+        td:nth-child(4) {text-align: center;}
 
-        @media (max-width: 780px) {
+        /* @media (max-width: 780px) {
         td:nth-child(4) { display: flex; flex-direction: column; justify-content: center; align-items: center;}
-        }
-
-        @media (max-width: 780px) {
-            min-width: 400px;
-        }
+        } */
 
     }
+
     .input_title {
         font-size: 1.3rem;
         width: 100%;
         outline: none;
         display: block;
         margin-bottom: 30px;
-        padding-left: 15px;
         margin: 0 auto;
         border: none;
         background: none;
@@ -158,6 +160,15 @@ const Section = styled.div`
             padding: .5em .8em;
 
             &:hover {background-color: #5EADF7; color: #F4F8FF;}
+
+            @media (max-width: 768px) {
+                background-color: transparent;
+                color: #050E3D;
+                width: 2rem;
+                margin: 0;
+                padding: 0;
+        }
+
             }
         }
 
@@ -183,28 +194,28 @@ const Section = styled.div`
         height: 40%;
     }
 
-    @media (max-width: 780px) {
-      max-width: 780px;
+    @media (max-width: 768px) {
+        width: 100vw;
     }
 
 `;
 
 
 const TextWrap = styled.div`
-    width: 100%;
+    width: 80vw;
     margin: 0 auto;
     margin-bottom:20px;
     justify-content: center;
     align-items: center;
-    padding: 1em;
+    margin-top: 1em;
 
   .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
     min-height: 500px;} // 텍스트 높이 조절
 
   .ck-editor__main {padding: 0;}
 
-  @media (max-width: 768px) {
-  max-width: 768px;
+  @media (max-width: 768px) { // 추가
+    width: 100%;
   }
 
 `;
@@ -428,10 +439,13 @@ const EditBoard = () => {
 
                         <td>
                             <div className="imguploaderBtn">
-                            <button>
+                                {window.innerWidth > 768 ? (<button>
                                 <input type="file" id="file-upload" onChange={previewImage} style={{ display: "none" }}/>
                                 <label htmlFor="file-upload">사진 업로드</label>
-                            </button>
+                                </button>) : (<button>
+                                    <input type="file" id="file-upload" onChange={previewImage} style={{ display: "none" }}/>
+                                    <label htmlFor="file-upload">사진</label>
+                                </button>)}
                             </div>
                         </td>
                     </tr>
