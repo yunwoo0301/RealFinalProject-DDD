@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping(value = "/pay")
-//@CrossOrigin("http://localhost:3000")
 public class PaymentController {
     // 카카오페이 결제 요청
     @Autowired

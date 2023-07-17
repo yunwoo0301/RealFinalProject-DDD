@@ -85,12 +85,12 @@ public class PaymentService {
         // 상품비과세 금액(필수)
         params.add("tax_free_amount", "0");
         // 성공 시 redirect url => 결제완료페이지와 연결해야함
-        String approvalUrl = "http://localhost:8111/pay/kakaoSuccess?id=" + id + "&bookingId=" + bookingId;
+        String approvalUrl = "http://myexhibitions.store/pay/kakaoSuccess?id=" + id + "&bookingId=" + bookingId;
         params.add("approval_url", approvalUrl);
         // 취소 시  url
-        params.add("cancel_url", "http://localhost:8111/pay/cancel");
+        params.add("cancel_url", "http://myexhibitions.store/pay/cancel");
         // 실패 시  url
-        params.add("fail_url", "http://localhost:8111/pay/fail");
+        params.add("fail_url", "http://myexhibitions.store/pay/fail");
 
         // 하나의 맵안에 헤더와 파라미터값 담음
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, this.getHeaders());
