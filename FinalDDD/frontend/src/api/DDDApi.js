@@ -161,6 +161,17 @@ const DDDApi = {
     // 게시글전체조회(관리자)
     articleList: async() => {
         return await axios.get("/api/boardList/allArticles");
+    },
+
+    // 쪽지보내기
+    sendMsg: async(sendId, receiverId, title, contents) => {
+        const msgData = {
+            senderId: sendId,
+            receiverId: receiverId,
+            title: title,
+            contents: contents
+        }
+        return await axios.post("/message/sendMsg", msgData);
     }
 
 

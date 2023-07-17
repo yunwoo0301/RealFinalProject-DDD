@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {BsEnvelopePaperHeart} from "react-icons/bs";
 import Button from "../../util/Button";
-
+import DDDApi from "../../api/DDDApi";
+import {BsEnvelopeHeart} from "react-icons/bs";
+import ConfirmModal from "../../util/ConfirmModal";
 
 const Modal = styled.div`
     position: fixed;
@@ -11,6 +13,7 @@ const Modal = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 3rem;
+    z-index: 90;
 `;
 
 export const Container = styled.div`
@@ -18,6 +21,7 @@ export const Container = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 99;
     .reservationBox{
         background-color: #F4F8FF;
         width: 30rem;
@@ -115,12 +119,47 @@ export const Container = styled.div`
 
 
 
-const MessageForm = () => {
+const MessageForm = ({senderId, receiverId, receiverName, close}) => {
+  const [title, setTitle] = useState('');
+  const [contents, setContents] = useState('');
+
+  const sendMsg = async() =>{
+    const sendingOk = await DDDApi.sendMsg(senderId, receiverId, title, contents);
+    if(sendingOk){
+      setOpenConfirm(true);
+    }
+  }
+
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const closeConfirm = () => {
+    setOpenConfirm(false);
+    close();
+  }
+
+  const props = {
+    icon: <BsEnvelopeHeart color="#FF69B4"/>,
+    body: (
+      <h4>{receiverName}님에게 메세지가 성공적으로 보내졌습니다</h4>
+    ),
+    button:(
+      <button onClick={closeConfirm}>확인</button>
+    )
+  }
+
+  const handleTitle = (e) => {
+    setTitle(e.target.value);
+  }
+
+  const handleContents = (e) => {
+    setContents(e.target.value);
+  }
 
 
 
     return(
         <>
+        {openConfirm && <ConfirmModal props={props}/>}
         <Modal>
         <Container>
             <div className="reservationBox">
@@ -129,17 +168,26 @@ const MessageForm = () => {
                 </div>
                 <div className="bodyContainer">
                 <div className="receiver">
-                  <BsEnvelopePaperHeart color="#FF69B4"/> 
-                  <p>받는사람</p>
+                  <BsEnvelopePaperHeart color="#FF69B4"/>
+                  <p>{receiverName}</p>
                 </div>
                 <div className="textBox">
-                  <input type="text" placeholder="제목을 입력해주세요."></input>
-                  <textarea name="contentes" id="contents" placeholder="내용을 입력해주세요."/>
+                  <input
+                    type="text"
+                    placeholder="제목을 입력해주세요."
+                    value={title}
+                    onChange={handleTitle}/>
+                  <textarea
+                    name="contentes"
+                    id="contents"
+                    placeholder="내용을 입력해주세요."
+                    value={contents}
+                    onChange={handleContents}/>
                 </div>
           </div>
           <div className="btnContainer">
-                  <Button className="message">취소</Button>
-                  <Button className="message">보내기</Button>
+                  <Button className="message" onClick={close}>취소</Button>
+                  <Button className="message" onClick={sendMsg}>보내기</Button>
           </div>
           </div>
         </Container>
