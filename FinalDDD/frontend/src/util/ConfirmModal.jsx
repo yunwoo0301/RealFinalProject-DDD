@@ -7,6 +7,7 @@ const Container = styled.div`
   width: 0;
   height: 0;
   box-sizing: border-box;
+  z-index: 99;
 `;
 const Modal = styled.div`
   position: fixed;
