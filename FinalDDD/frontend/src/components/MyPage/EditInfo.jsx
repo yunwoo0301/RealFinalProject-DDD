@@ -8,8 +8,9 @@ import { Backdrop } from "@mui/material";
 import AlertModal from "../../util/Alert";
 
 const EditBlock = styled.div`
+  /* width: calc(70%-1rem); */
   width: 70%;
-  height: 100%;
+  height: auto;
   /* background-color: blue; */
   p {
     text-align: left;
@@ -21,6 +22,8 @@ const EditBlock = styled.div`
     /* background-color: red; */
     height: 2.8rem;
     font-weight: bold;
+    padding-left: 2rem;
+
   }
   .introducBlock {
     /* background-color: aqua; */
@@ -53,12 +56,12 @@ const EditBlock = styled.div`
   .btnBlock {
     height: 20%;
     width: 95%;
-    /* background-color: blue; */
+    /* background-color: aqua; */
     display: flex;
     flex-direction: row;
     justify-content: center;
     button {
-      width: 18%;
+      width: 5rem;
       height: 2rem;
       border-radius: 3rem;
       margin: 1rem 0.5rem;
@@ -75,9 +78,10 @@ const EditBlock = styled.div`
 `;
 const Edit = styled.div`
   width: 100%;
-  height: 70%; // 여기서 내소개 위치 변경함 (바꿔야함...)
+  height: auto;
   display: flex;
   flex-direction: row;
+  /* background-color: blue; */
   p {
     text-align: left;
     margin: 1.6rem 0 0.3rem 0;
@@ -85,7 +89,7 @@ const Edit = styled.div`
     font-weight: bold;
   }
   input {
-    width: 70%;
+    width: 80%;
     height: 1.8rem;
     background-color: #f4f8ff;
     border: 1px solid #5eadf7;
@@ -119,18 +123,41 @@ const Edit = styled.div`
   }
 `;
 const LeftBox = styled.div`
-  width: 50%;
-  min-width: 200px;
+    width: 100%;
+    height: auto;
+    padding: 2rem;
+    padding-left: 3rem;
+    @media (max-width:768px) {
+      /* padding-left: 2rem; */
+      padding: 0;
+      width: 100%;
+      margin-left: 1rem;
+      /* background-color: red; */
+      
+    }
 
-  height: 100%;
-  /* background-color: aqua; */
-`;
-const RightBox = styled.div`
-  width: 50%;
-  min-width: 200px;
+    /* background-color: aqua; */
+    .item{
+        width: 100%;
+        height: auto;
+        /* background-color: red; */
 
-  height: 100%;
-  /* background-color: red; */
+    }
+    .last-item {
+      grid-column: span 2;
+      }
+    .inputBlock{
+      width: 100%;
+      /* background-color: blue; */
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0rem;
+        @media (max-width: 768px) {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
 `;
 
 const EditInfo = (props) => {
@@ -258,85 +285,109 @@ const EditInfo = (props) => {
 
   return (
     <>
-      {responseData && (
-        <EditBlock>
-          <div className="title">내 정보 수정</div>
-          <Edit>
-            <LeftBox>
-              <p>이메일</p>
-              <div className="textBox">
-                <input
-                  type="text"
-                  style={{ backgroundColor: "#eee", border: "1px solid #888" }}
-                  defaultValue={responseData.email}
-                  disabled
-                />
+    {responseData && (
+      <EditBlock>
+        <div className="title">내 정보 수정</div>
+        <Edit>
+          <LeftBox>
+            <div className="inputBlock">
+              <div className="item">
+                <p>이메일</p>
+                <div className="textBox">
+                  <input
+                    type="text"
+                    style={{ backgroundColor: "#eee", border: "1px solid #888" }}
+                    defaultValue={responseData.email}
+                    disabled
+                  />
+                </div>
               </div>
-              <p>닉네임</p>
-              <div className="textBox">
-                <input type="text" onChange={onChangeNick} value={inputNick} />
+              <div className="item">
+                <p>닉네임</p>
+                <div className="textBox">
+                  <input type="text" onChange={onChangeNick} value={inputNick} />
+                </div>
+                <div className="hint">{nickMessage}</div>
               </div>
-              <div className="hint">{nickMessage}</div>
-              <p>인스타그램(선택사항)</p>
-              <div className="textBox">
-                <input type="text" onChange={onChangeInst} value={inputInst} />
+              <div className="item">
+                  <p>인스타그램(선택사항)</p>
+                <div className="textBox">
+                  <input type="text" onChange={onChangeInst} value={inputInst} />
+                </div>
               </div>
-            </LeftBox>
-            <RightBox>
+              <div className="item">
               <p>이름</p>
-              <div className="textBox">
-                <input type="text" onChange={onChangeName} value={inputName} />
+            <div className="textBox">
+              <input type="text" onChange={onChangeName} value={inputName} />
+            </div>
+
               </div>
+              <div className="item">
+
               <p>연락처</p>
-              <div className="textBox">
-                <input type="tel" onChange={onChangeTel} value={inputTel} />
+            <div className="textBox">
+              <input type="tel" onChange={onChangeTel} value={inputTel} />
+            </div>
+
+
               </div>
-            </RightBox>
-          </Edit>
-          <div className="introducBlock">
-            <p>내 소개</p>
-            <textarea
-              className="introarea"
-              name=""
-              id=""
-              cols="20"
-              rows="5"
-              style={{ width: "88%" }}
-              onChange={onChangeIntro}
-              value={inputIntro}
-            />
-          </div>
-          <div className="btnBlock">
-            <button
-              onClick={handleOnclick}
-              disabled={!isNick}
-              style={isNick ? null : { backgroundColor: "#ddd" }}
-            >
-              저장
-            </button>
-            <Backdrop
-              sx={{
-                backgroundColor: "transparent", 
-                color: "#fff",
-                zIndex: (theme) => theme.zIndex.drawer + 1,
-                top: 0, // 팝업을 상단에 위치
-              }}
-              open={open}
-              onClick={handleClose}
-            >
-              <AlertModal />
-            </Backdrop>
-            <button
-              onClick={() => {
-                setShowPage("마이페이지");
-              }}
-            >
-              취소
-            </button>
-          </div>
-        </EditBlock>
-      )}
-    </>
+              <div className="item"></div>
+              <div className="item last-item">
+
+              <div className="introducBlock">
+          <p>내 소개</p>
+          <textarea
+            className="introarea"
+            name=""
+            id=""
+            cols="20"
+            rows="5"
+            style={{ width: "88%" }}
+            onChange={onChangeIntro}
+            value={inputIntro}
+          />
+        </div>
+              </div>
+            </div>
+            <div className="item ">
+            <div className="btnBlock">
+          <button
+            onClick={handleOnclick}
+            disabled={!isNick}
+            style={isNick ? null : { backgroundColor: "#ddd" }}
+          >
+            저장
+          </button>
+          <Backdrop
+            sx={{
+              backgroundColor: "transparent", 
+              color: "#fff",
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+              top: 0, // 팝업을 상단에 위치
+            }}
+            open={open}
+            onClick={handleClose}
+          >
+            <AlertModal />
+          </Backdrop>
+          <button
+            onClick={() => {
+              setShowPage("마이페이지");
+            }}
+          >
+            취소
+          </button>
+        </div>
+            </div>
+           
+
+          </LeftBox>
+        </Edit>
+
+
+      </EditBlock>
+    )}
+  </>
   );
 };
 

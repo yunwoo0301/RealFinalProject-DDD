@@ -41,7 +41,7 @@ const Modal = styled.div`
     transform: translate3d(-50%, -50%, 0);
       }
   @media (max-width: 720px) {
-    width: 100%;
+    width: 80%;
     position: relative;
     transform: translate3d(-50%, -50%, 0);
       }

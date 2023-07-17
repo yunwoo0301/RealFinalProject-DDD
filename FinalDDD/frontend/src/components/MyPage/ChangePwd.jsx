@@ -9,7 +9,7 @@ const Container = styled.div`
     width: 60%;
     height: 100%;
     /* background-color: #f96c6c; */
-    /* padding-left: 1rem; */
+    padding-left: 1rem;
 
 
     p {
@@ -47,12 +47,29 @@ const Container = styled.div`
     .inputBlock{
         /* background-color: blue; */
         width:100%;
-        height: 40%;
+        height: auto;
         display: flex;
         /* padding-left: 1rem; */
         margin-top: 1.0rem;
-        display: flex;
-        flex-direction: column;
+        /* display: flex;
+        flex-direction: column; */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        @media (max-width: 768px) {
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .item{
+        width: 100%;
+        height: auto;
+        /* background-color: red; */
+
+        }
+
+        .last-item {
+        grid-column: span 2;
+        }
         .pwBox{
             display: flex;
             flex-direction: column;
@@ -97,7 +114,7 @@ const Container = styled.div`
         /* background-color: red; */
 
         button{
-            width: 26%;
+            width: 5rem;
             height: 2.2rem;
             border-radius: 3rem;
             margin : 3rem .6rem;
@@ -113,6 +130,7 @@ const Container = styled.div`
         }
     }
 `;
+
 
 
 
@@ -193,47 +211,51 @@ const pwdFetchDate = async () => {
   
     return (
         <>
-            <Container>
-                <div className='title'>비밀번호 변경</div>
-                <div className="textBlock">
-                    <p>
-                    비밀번호 변경을 위하여 <br/>
-                    현재 비밀번호와 새로운 비밀번호를 입력해주세요.</p>
+        <Container>
+            <div className='title'>비밀번호 변경</div>
+            <div className="textBlock">
+                <p>
+                비밀번호 변경을 위하여 <br/>
+                현재 비밀번호와 새로운 비밀번호를 입력해주세요.</p>
+            </div>
+            <div className="inputBlock">
+                <div className="item">
+                <p>현재 비밀번호 </p>
+                    <input type="password" placeholder="Email@:DDD.com" onChange={(e)=>{onChangeCurrentPw(e)}} value={inputCurrentPwd} tabIndex={1}/>
+                    {/* <div className="hint">{errorMessage}</div> */}
                 </div>
-                <div className="inputBlock">
-                    <div className='pwBox'>
-                        <p>현재 비밀번호 </p>
-                        <input type="password" placeholder="Email@:DDD.com" onChange={(e)=>{onChangeCurrentPw(e)}} value={inputCurrentPwd} tabIndex={1}/>
-                        {/* <div className="hint">{errorMessage}</div> */}
-                    </div>
-                    <div className='rowBox'>
-                    <div className='pwBox'>
-                        <p>새 비밀번호 확인</p>
-                        <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangeConPw(e)} value={inputNewPwdCheck} tabIndex={3}/> 
-                        <div className="hint">{conMessage}</div>
-                    </div>
-                    <div className='pwBox'>
-                        <p>새 비밀번호</p>
-                        <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangePwd(e)} value={inputNewPwd} tabIndex={2}/> 
-                        <div className="hint">{errorMessage}</div>
-                    </div>
-
-                    </div>
+                <div className="item">
+                    
                 </div>
-
+                <div className="item">
+                <p>새 비밀번호 확인</p>
+                    <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangeConPw(e)} value={inputNewPwdCheck} tabIndex={3}/> 
+                    <div className="hint">{conMessage}</div>
+                </div>
+                <div className="item">
+                <p>새 비밀번호</p>
+                    <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangePwd(e)} value={inputNewPwd} tabIndex={2}/> 
+                    <div className="hint">{errorMessage}</div>
+                </div>
+                <div className="item last-item">
                 <div className="btnBlock">
-                <button 
-                        style={isPwd && pwdCheck ?  null : { backgroundColor: '#ddd'}  }
-                        disabled={!isPwd || !pwdCheck }
-                    onClick={onClickChange}>변경</button>
-                    {
-                        open && <AlertModal />
-                    }
-                    <button>돌아가기</button> 
+            <button 
+                    style={isPwd && pwdCheck ?  null : { backgroundColor: '#ddd'}  }
+                    disabled={!isPwd || !pwdCheck }
+                onClick={onClickChange}>변경</button>
+                {
+                    open && <AlertModal />
+                }
+                <button>돌아가기</button> 
+            </div>
                 </div>
                 
-            </Container>
-        </>
+            </div>
+
+            
+            
+        </Container>
+    </>
     );
 };
 

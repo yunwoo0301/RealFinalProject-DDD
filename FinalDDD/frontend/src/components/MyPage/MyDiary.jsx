@@ -12,7 +12,6 @@ import AlertModal from "../../util/Alert";
 
 // ====== data 확인하기 =====
 
-
 const Wrap = styled.div`
   width: 100%;
   height: auto;
@@ -39,12 +38,19 @@ const Wrap = styled.div`
         /* background-color: blue; */
         margin: 1.0rem;
     }
+    .infiniteScroll{
+      @media (max-width: 1024px) {
+        width: 100%;
+        
+      }
+    }
+
   
 `;
 const CardItem = styled.div`
   /* background-color: aqua; */
   width: calc(100% - 2.5rem);
-  min-width: 550px;
+  /* min-width: 550px; */
   height: 12rem;
   background-color: white;
   border-radius: 1rem;
@@ -53,35 +59,60 @@ const CardItem = styled.div`
   margin: 1rem;
   display: flex;
   flex-direction: row;
+  /* @media (max-width: 1024px) {
+    width: calc(100%-0.8rem);
+    background-color: blue;
+    
+  } */
 
   .exhibitionImage {
-    /* background-color: red; */
+    /* background-color: red;  */
     width: 24%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    /* border: 2px solid black; */
+    @media (max-width: 1024px) {
+    min-width: 5rem;
+    width: 35%;
+    padding:0;
+    margin: 0;
+    
+  }
     img {
       width: 80%;
-      min-width: 100px;
+      /* min-width: 100px; */
       height: 85%;
       object-fit: cover;
       object-position: top;
       border: 1px solid #bbb;
       margin-left: 20px;
+      /* @media (max-width: 1024px) {
+        margin: 0;
+        min-width: rem;
+        width: 50%;
+    
+  } */
+      
     }
   }
 
   .exhibitionDesc {
     /* background-color: blue; */
     width: 30%;
-    min-width: 140px;
+    /* min-width: 140px; */
     height: 100%;
     flex-shrink: 1;
     display: flex;
     padding: 0 1rem;
     flex-direction: column;
     justify-content: center;
+    @media (max-width: 1024px) {
+    width: 40%;
+    margin: 0;
+    
+  }
     .title {
       font-weight: bold;
       font-size: 1rem;
@@ -99,9 +130,14 @@ const CardItem = styled.div`
   .commentBox {
     /* background-color: brown; */
     width: 50%;
-    min-width: 280px;
+    /* min-width: 220px; */
     height: 100%;
     display: flex;
+    @media (max-width: 1024px) {
+    width: 80%;
+    
+  }
+
 
     .textBox {
       background-color: #f2f2f2;
@@ -115,6 +151,10 @@ const CardItem = styled.div`
       outline: none;
       margin: auto 0;
       border-bottom-right-radius: 0;
+      @media (max-width: 1024px) {
+        min-width: 4rem;
+        
+      }
     }
     .textBox:focus {
       background-color: #f4f8ff;
@@ -128,9 +168,15 @@ const CardItem = styled.div`
     }
     .test {
       /* background-color: red; */
+      .deletIconBox{
+        /* background-color: blue; */
+        position: relative;
+        top: 2%;
+        left: 0%;
+      }
       .icon {
         position: relative;
-        top: 66%;
+        top: 45%;
         left: -50%;
         /* background-color: blue; */
         width: 2.5rem;
@@ -146,6 +192,7 @@ const CardItem = styled.div`
     }
   }
 `;
+
 
 const MyDiary = () => {
   const iconUrl =
@@ -228,11 +275,13 @@ const MyDiary = () => {
           <div className="desc">{mention}</div>
 
           <InfiniteScroll
+          className="infiniteScroll"
             dataLength={myDiaryData.length}
             // next={exhibitionData}
             hasMore={true}
             // loader={<h4>Loading...</h4>}
-            style={{ width: "100%", minWidth: "600px", margin: "0" }}
+            style={{ width: "100%",  margin: "0"}}
+            // style={{ width: "100%", minWidth: "600px", margin: "0" }}
           >
             {myDiaryData.map((item, index) => (
               <CardItem key={index}>
