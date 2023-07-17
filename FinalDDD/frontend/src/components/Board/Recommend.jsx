@@ -8,22 +8,26 @@ import { Link } from "react-router-dom";
 
 
 const BoardContainer = styled.div`
-    width: 75em;
-    height: 100vh;
-    background-color: white;
+    box-sizing: border-box;
+    width: 100vw;
     margin: 0 auto;
+    align-items: center;
+    justify-content: center;
     border-radius: 10px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
 
 `;
 
 const Section = styled.div`
-    width: 100%;
-    height: calc(100vh - 40px);
-    float: center;
+    width: 65vw;
+    margin: 0 auto;
+    justify-content: center;
     position: relative;
 
     .board_box {
-        margin: 1rem;
 
         a {
             font-size: 1.1rem;
@@ -33,15 +37,21 @@ const Section = styled.div`
     }
 
     table {
+        width: 65vw;
         margin-bottom: 20px;
         font-size: 16px;
         font-weight: lighter;
         border-collapse: collapse;
-        width: 100%;
+        margin: 0 auto;
         background-color: #4555AE;
         border-bottom: solid 1px #4555AE;
         text-align: center;
         table-layout: fixed;
+
+        @media (max-width: 768px) {
+          width: 100vw;
+  }
+
 
         th{padding: 10px 6px; color: white; background-color: #050E3D;}
 
@@ -66,9 +76,9 @@ const Section = styled.div`
         // 미디어쿼리 적용 시 작성자 이후 부터 안보이도록 설정
         @media (max-width: 768px) {
           td:nth-child(5), th:nth-child(5), td:last-child, th:last-child {
-            display: none;
-          }
+          display: none;
         }
+      }
 
         th:first-child, td:first-child {border-left: none; width: 70px;} // 글번호(열)
         td:first-child, td:nth-child(5), td:last-child { letter-spacing: -1px;}
@@ -92,7 +102,7 @@ const Section = styled.div`
 
     .writebtn {
         display: flex;
-        margin-bottom: 1em 0em ;
+        margin-bottom: 1em;
 
         button {
             margin: -1em 1em ;
@@ -110,8 +120,7 @@ const Section = styled.div`
     }
 
     @media (max-width: 768px) {
-      width: 768px;
-      min-width: 400px;
+      width: 100vw;
   }
 
 
@@ -188,8 +197,8 @@ const Recommend = () => {
 
     return (
         <BoardContainer>
-        <BoardSearch onSearch={handleSearch} />
         <Section id="board" className="section">
+        <BoardSearch onSearch={handleSearch} />
           <div className="board_box">
             <table>
               <tbody>

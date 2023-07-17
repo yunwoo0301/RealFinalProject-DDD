@@ -7,7 +7,6 @@ const SearchWrap = styled.div` // 검색창 활성화 안된 부분 일부 위�
 
     display: flex;
     width: 12em;
-    height: 30px;
     padding: 0 5px;
     border: solid 2px #ddd;
     background-color: white;
@@ -22,8 +21,6 @@ const SearchWrap = styled.div` // 검색창 활성화 안된 부분 일부 위�
         }
 
     @media (max-width: 768px) {
-        margin : 0 auto;
-        margin-left: 34em;
     }
 
     input {

@@ -12,7 +12,6 @@ const Wrap = styled.div`
 
 
     .boardtitle {
-        /* margin-left: 8em; */
         margin-bottom: 1em;
         display: flex;
         align-items: center;
@@ -32,9 +31,7 @@ const Wrap = styled.div`
     button {
             float: right;
             margin: -1.5em 16em ;
-            /* font-size: 1em; */
             font-size: 14px;
-            /* padding: 8px 30px; */
             padding: .5em 2em;
             border-radius: 20px;
             background-color: #050E3D;
@@ -46,8 +43,6 @@ const Wrap = styled.div`
         }
 
         @media (max-width: 768px) {
-            width: 768px;
-            min-width: 400px;
     }
 
 `;
