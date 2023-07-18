@@ -178,23 +178,25 @@ const Icons = () => {
     }
 
     useEffect(() => {
-        const reservations = async () => {
-          try {
-            const reservationList = await DDDApi.myBookedList(getId);
+            const reservations = async () => {
+              try {
+                const reservationList = await DDDApi.myBookedList(getId);
 
-            // 오늘 날짜와 일치하는 예약 건 수 계산
-            const today = new Date().toISOString().split("T")[0];
-            const todayBookings = reservationList.data.filter(
-              (booking) => booking.bookingDate === today
-            );
-            setTodayBookingCnt(todayBookings.length);
-          } catch (e) {
-            console.log(e);
-          }
-        };
+                // 오늘 날짜와 일치하는 예약 건 수 계산
+                const today = new Date().toISOString().split("T")[0];
+                const todayBookings = reservationList.data.filter((booking) => {
+                const bookingDate = new Date(booking.bookingDate).toISOString().split("T")[0]; // 예약 날짜를 YYYY-MM-DD 형식의 문자열로 변환
+                return bookingDate === today;
+                });
 
-        reservations();
-    }, []);
+                setTodayBookingCnt(todayBookings.length);
+              } catch (e) {
+                console.log(e);
+              }
+            };
+
+            reservations();
+        }, []);
 
 
     const onClickToReservation = () => {
