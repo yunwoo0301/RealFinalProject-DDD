@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import { useParams } from "react-router-dom";
 import Loading from "../../util/Loading";
+import  useStore  from '../../store'
 
 // ====== data 확인하기 =====
 
@@ -201,14 +202,16 @@ const CardItem = styled.div`
 const MyDiary = () => {
   const iconUrl =
     "https://firebasestorage.googleapis.com/v0/b/real-final-project-ddd.appspot.com/o/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png?alt=media&token=7d664c18-037d-4e60-9415-32f26fb0d430";
+    const {stealExhibition} = useStore();
 
   // const memberId = Functions.getMemberId();
   const {memberId} = useParams();
   const [myDiaryData, setMyDiaryData] = useState([]);
   const [countDiary, setCountDiary] = useState();
   const [mention, setMention] = useState("");
-  const [inputComment, setInputComment] = useState([]);
-  const [ratingStar, setRatingStar] = useState([]);
+
+  const [ratingStar, setRatingStar] = useState(Array(stealExhibition.length).fill(0));
+  const [inputComment, setInputComment] = useState(Array(stealExhibition.length).fill(""));
   const [loading, setLoading]= useState(true);
 
   const countCheck = () => {
@@ -219,26 +222,46 @@ const MyDiary = () => {
     }
   };
 
-  // console.log(myDiaryData)
+  console.log(myDiaryData)
+
   useEffect(() => {
-    const infoFetchData = async () => {
+    const infoFetchDate = async () => {
       const response = await DiaryApi.info(memberId);
+
       const newMyDiaryData = response.data;
       setMyDiaryData(newMyDiaryData);
-      console.log(newMyDiaryData);
-      // inputComment에 데이터를 일단 전부 다 담음.
-      const comments = newMyDiaryData.map((item) => item.comment);
-      setInputComment(comments);
-      console.log(inputComment);
+      console.log(newMyDiaryData); // 작동
 
-      const stars = newMyDiaryData.map((item) => item.rateStar);
+      const newComments = stealExhibition.map((exhibition) => {
+        // Find the diary with the same exhibitNo
+        const diary = newMyDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+        // console.log(diary) // 작동
 
-      setRatingStar(stars);
-      console.log(ratingStar);
-        setLoading(false);
+        // If such a diary exists, use its comment. Otherwise, use the existing comment.
+        return diary ? diary.comment : inputComment[stealExhibition.indexOf(exhibition)];
+      });
+
+      setInputComment(newComments);
+      console.log(newComments); // 작동함
+      console.log(inputComment)
+
+      const newStar = stealExhibition.map((exhibition) => {
+        // Find the diary with the same exhibitNo
+        const diary = newMyDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+
+        // If such a diary exists, use its comment. Otherwise, use the existing comment.
+        return diary ? diary.rateStar : ratingStar[stealExhibition.indexOf(exhibition)];
+      });
+
+      setRatingStar(newStar);
+      console.log(newStar); // 작동함.
+      setLoading(false)
     };
-    infoFetchData();
+    infoFetchDate();
   }, [memberId]);
+
+
+
 
   useEffect(() => {
     setCountDiary(myDiaryData.length);
@@ -247,21 +270,42 @@ const MyDiary = () => {
   }, [myDiaryData]);
 
   // 담긴 데이터는 e.target.value로 inputComment를 업데이트
-  const onChangeText = (e, index) => {
-    let updatedComments = [...inputComment];
-    updatedComments[index] = e.target.value;
-    setInputComment(updatedComments);
-  };
-  const onChangeStar = (e, index) => {
-    const newRatingStar = [...ratingStar];
-    console.log(newRatingStar);
-    console.log("처음 복사한 배열 " + newRatingStar.rateStar);
-    newRatingStar[index] = e.target.value;
-    console.log("타겟 밸류" + newRatingStar);
 
-    setRatingStar(newRatingStar);
-    console.log("마지막 저장값 " + ratingStar);
-  };
+// star 핸들러
+const onChangeStar = ((event, value, exhibitNo) => {
+  console.log('별표 작동시작');
+  // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
+  const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo);
+
+  // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
+  if (index === -1) {
+    return;
+  }
+
+  // 일치하는 diary의 comment를 업데이트합니다.
+  const newRatingStar = [...ratingStar];
+  newRatingStar[index] = Number(value);
+  setRatingStar(newRatingStar);
+});
+
+
+// 텍스트 변경 핸들러
+const onChangeText = ((e, exhibitNo) => {
+  // console.log('wkf wkr동함?')
+// stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
+const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo)
+
+
+// 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
+if (index === -1) {
+return;
+}
+
+// 일치하는 diary의 comment를 업데이트합니다.
+const newComments = [...inputComment];
+newComments[index] = e.target.value;
+setInputComment(newComments);
+});
 
 
   // backdrop openState
@@ -274,117 +318,144 @@ const MyDiary = () => {
     setTimeout(handleClose, 1000)
   };
 
+//   console.log(stealExhibition)
+//   console.log(ratingStar)
+//   console.log(myDiaryData)
+//   console.log(stealExhibition)
+console.log(stealExhibition.exhibitNo)
+
 
   return (
     <>
-      {loading ? <Loading></Loading>
-      : (
+
+    { loading ? <Loading/>: (
         <Wrap>
+            <div className="count">{countDiary}</div>
+            <div className="desc">{mention}</div>
+            <InfiniteScroll
+                className="infiniteScroll"
+                    dataLength={myDiaryData.length}
+                    // next={exhibitionData}
+                    hasMore={true}
+                    // loader={<h4>Loading...</h4>}
+                    style={{ width: "100%",  margin: "0"}}
+                    // style={{ width: "100%", minWidth: "600px", margin: "0" }}
+            >
+            { stealExhibition.map((exhibition, index) => {
 
-          <div className="count">{countDiary}</div>
-          <div className="desc">{mention}</div>
+                 const diaryData = myDiaryData.filter((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
 
-          <InfiniteScroll
-          className="infiniteScroll"
-            dataLength={myDiaryData.length}
-            // next={exhibitionData}
-            hasMore={true}
-            // loader={<h4>Loading...</h4>}
-            style={{ width: "100%",  margin: "0"}}
-            // style={{ width: "100%", minWidth: "600px", margin: "0" }}
-          >
-            {myDiaryData.map((item, index) => (
-              <CardItem key={index}>
-                <div className="exhibitionImage">
-                  <img src={item.exhibitions.imgUrl} alt="exhibition" />
-                </div>
-                <div className="exhibitionDesc">
-                  <div className="title">{item.exhibitions.exhibitName}</div>
-                  <div className="date"> {item.regDate.slice(0, 10)}</div>
-                  <Stack spacing={1} className="rateStar">
-                    <Rating
-                      name={`half-rating-${index}`}
-                      precision={0.5}
-                      onChange={(e) => onChangeStar(e, index)}
-                      value={ratingStar[index]}
-                    />
-                  </Stack>
-                </div>
-                <div className="commentBox">
-                  <textarea
-                    className="textBox"
-                    name=""
-                    id=""
-                    cols="20"
-                    rows="8"
-                    onChange={(e) => onChangeText(e, index)}
-                    value={inputComment[index]}
-                  />
-
-                 { memberId == Functions.getMemberId() ? (<div className="test">
-                    <Tooltip title="Delete">
-                      <IconButton className="deletIconBox" onClick={()=>{
-                          (async () => {
-                            const response = await DiaryApi.delete(
-                              memberId,
-                              item.exhibitions.exhibitNo,
-                            );
-                            if (response.status === 200) {
-                              handleOpen();
-                              console.log("Diary successfully saved!");
-                            } else {
-                              console.error("Failed to save diary");
-                            }
-                          })();
-                       }}>
-                        <DeleteIcon fontSize='small' />
-                      </IconButton>
-                    </Tooltip>
-                    <div
-                      className="icon"
-                      onClick={() => {
-                        (async () => {
-                          const response = await DiaryApi.save(
-                            Functions.getMemberId(),
-                            item.exhibitions.exhibitNo,
-                            ratingStar[index],
-                            inputComment[index]
-                          );
-                          if (response.status === 200) {
-                            console.log("Diary successfully saved!");
-                          } else {
-                            console.error("Failed to save diary");
-                          }
-                        })();
-                      }}
-                    >
-
-                      <Tooltip title="저장" arrow placement="top-end">
-                        <img src={iconUrl} alt="profile icon" onClick={handleOpen} />
-
-                      </Tooltip>
-                      <Backdrop
-                        sx={{
-                            backgroundColor: 'transparent', // 배경색을 투명으로 설정
-                            color: '#fff',
-                            zIndex: (theme) => theme.zIndex.drawer + 1,
-                            top: 0, // 팝업을 상단에 위치
-                        }}
-                        open={open}
-                        onClick={handleClose}
-                        >
-                            <AlertModal />
-                        </Backdrop>
+                 return diaryData.map((item, index) => (
+                <CardItem key={index}>
+                    <div className="exhibitionImage">
+                        <img src={item.exhibitions.imgUrl} alt="exhibition" />
                     </div>
-                  </div>) : null}
-                </div>
+                    <div className="exhibitionDesc">
+                        <div className="title">{item.exhibitions.exhibitName}</div>
+                        <div className="date">{item.regDate.slice(0, 10)}</div>
+                        <Stack spacing={1} className="rateStar">
+                        <Rating
+    precision={0.5}
+    value={ratingStar[stealExhibition.findIndex((diary) => diary.exhibitNo === item.exhibitions.exhibitNo)] || 0}
+    onChange={(event, value) => onChangeStar(event, value, item.exhibitions.exhibitNo)}
+/>
+
+
+                        </Stack>
+                    </div>
+
+                    <div className="commentBox">
+                        <textarea
+                            className="textBox"
+                            name=""
+                            id=""
+                            cols="20"
+                            rows="8"
+                            onChange={(e) => onChangeText(e, item.exhibitions.exhibitNo)}
+                            value={inputComment[stealExhibition.findIndex((diary) => diary.exhibitNo === item.exhibitions.exhibitNo)] || ''}
+                            />
+
+                    { memberId == Functions.getMemberId() ? (
+
+                        <div className="test">
+                            <Tooltip title="Delete">
+                                <IconButton className="deletIconBox" onClick={()=>{
+                                   (async () => {
+                                    const response = await DiaryApi.delete(
+                                        memberId,
+                                        item.exhibitions.exhibitNo,
+                                    );
+                                    if (response.status === 200) {
+                                        handleOpen();
+                                        console.log("Diary successfully saved!");
+                                    } else {
+                                        console.error("Failed to save diary");
+                                    }
+                                })();
+
+
+                                }}>
+                                    <DeleteIcon fontSize='small' />
+                                </IconButton>
+                            </Tooltip>
+                            <div
+                                className="icon"
+                                onClick={() => {
+                                (async () => {
+                                    const response = await DiaryApi.save(
+                                    Functions.getMemberId(),
+                                    item.exhibitions.exhibitNo,
+                                    ratingStar[stealExhibition.findIndex((diary) => diary.exhibitNo === item.exhibitions.exhibitNo)],
+                                    inputComment[stealExhibition.findIndex((diary) => diary.exhibitNo === item.exhibitions.exhibitNo)],
+                                    );
+                                    if (response.status === 200) {
+                                    console.log("Diary successfully saved!");
+                                    } else {
+                                    console.error("Failed to save diary");
+                                    }
+                                })();
+                                }}
+                            >
+
+                                <Tooltip title="저장" arrow placement="top-end">
+                                <img src={iconUrl} alt="profile icon" onClick={handleOpen} />
+
+                                </Tooltip>
+                                <Backdrop
+                                sx={{
+                                    backgroundColor: 'transparent', // 배경색을 투명으로 설정
+                                    color: '#fff',
+                                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                                    top: 0, // 팝업을 상단에 위치
+                                }}
+                                open={open}
+                                onClick={handleClose}
+                                >
+                                    <AlertModal />
+                                </Backdrop>
+                                </div>
+                        </div>) : null }
+
+
+
+                    </div>
               </CardItem>
-            ))}
-          </InfiniteScroll>
-        </Wrap>
-      )}
+
+
+                 ))
+
+            })}
+
+
+
+
+            </InfiniteScroll>
+
+        </Wrap>)}
     </>
-  );
-};
+
+  )
+}
+
 
 export default MyDiary;

@@ -7,7 +7,7 @@ import Functions from "../util/Functions";
 const updateProfileField = async (memberId, fieldName, fieldValue) => {
     try {
       Functions.setAuthorizationHeader(); // 헤더에 토큰을 넣는 함수
-      return await axios.post(`/mypage/${memberId}/${fieldName}`, {
+      return await axios.post(`/api/mypage/${memberId}/${fieldName}`, {
         id: memberId,
         ...fieldValue
       });
@@ -86,20 +86,38 @@ const DiaryApi = {
         ratingStarValue = parseFloat(ratingStarValue);
 
         try{
+            console.log('api 호출 시작')
             const diaryCheck = {
                 memberId : memberId,
                 exhibitionNo : exhibitNo,
                 comment : inputComment,
                 rateStar : ratingStarValue
             }
-            console.log(ratingStarValue)
-            return await axios.post(`/mypage/${memberId}/diary/${exhibitNo}`, diaryCheck)
+            console.log('API 통신 부분 멤버아이디 ' + exhibitNo)
+            console.log('API 통신 부분 전시아이디 ' + exhibitNo)
+            console.log('API 통신 부분 커멘트 ' + inputComment)
+            console.log('API 통신 부분 별 ' + ratingStarValue)
+            return await axios.post(`/api/mypage/${memberId}/diary/${exhibitNo}`, diaryCheck)
 
         } catch (error) {
             console.log("error입니다. ");
             
         }
     }, 
+
+    delete : async(memberId, exhibitNo) => {
+        try{
+            const deleteCheck = {
+                memberId : memberId,
+                exhibitionNo : exhibitNo,
+            }
+            return await axios.post(`/api/mypage/${memberId}/diary/${exhibitNo}/delete`, deleteCheck)
+
+        } catch (error) {
+            console.log("error입니다. ");
+            
+        }
+    },
 }
 
 export {MyPageApi, DiaryApi};
