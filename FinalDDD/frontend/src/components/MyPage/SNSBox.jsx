@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { SlSocialInstagram, SlPaperPlane } from 'react-icons/sl';
-import {member_info} from './Data';
+import useStore from '../../store'
 
 
 const SocialBox = styled.div`
@@ -22,10 +22,11 @@ const SocialBox = styled.div`
 `;
 
 const SNSBox = (props) => {
+  const {memberData} = useStore();
     return (
         <SocialBox>
-           <div className="icon" onClick={()=>{ }}><SlPaperPlane/></div> 
-           <div className="icon" onClick={()=>{ window.open('http://naver.com')}}><SlSocialInstagram/></div> 
+           <div className="icon" onClick={()=>{ }}><SlPaperPlane/></div>
+           <div className="icon" onClick={()=>{ window.open(`http://instagram.com/${memberData.instagram}`)}}><SlSocialInstagram/></div>
         </SocialBox>
     );
 };

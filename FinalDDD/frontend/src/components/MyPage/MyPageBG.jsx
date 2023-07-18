@@ -25,6 +25,7 @@ const Container = styled.div`
   display: flex;
 `;
 const Modal = styled.div`
+  box-sizing: border-box;
   width: 55vw;
   /* min-width: 600px; */
   /* max-width: 900px; */
