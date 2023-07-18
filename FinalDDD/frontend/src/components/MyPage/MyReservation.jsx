@@ -5,12 +5,15 @@ import ReservedDetail from './ReservedDetail';
 import PageNation from '../../util/PageNation';
 import DDDApi from '../../api/DDDApi';
 
-
 const Container = styled.div`
   width: calc(100% - 2.5rem);
   height: 100%;
   padding-left: 2.5rem;
   /* background-color: #7bc1b2; */
+  @media (max-width: 768px){
+    width: calc(100%);
+    padding-left: 1rem;
+  }
   p {
     text-align: left;
     margin: 0rem 0 .3rem 0;
@@ -30,6 +33,10 @@ const Container = styled.div`
     margin: 0rem 0 ;
     background-color: #F4F8FF;
     align-items: center;
+    @media (max-width: 768px) {
+      margin: 0;
+      width: calc(90%);
+  }
     input, select {
       border: 1px solid #eee;
     }
@@ -40,6 +47,9 @@ const Container = styled.div`
     span, input, select {
       margin-right: .6rem;
       font-size: .8rem;
+      @media (max-width: 768px) {
+      margin-right: 0.3rem;
+    }
     }
     .boldText {
       font-weight: bold;
@@ -48,10 +58,16 @@ const Container = styled.div`
     select {
       width: 8rem;
       min-height: 21px;
+      @media (max-width: 768px) {
+        width: 6rem;
+      }
     }
     .searchBar {
       width: 8rem;
       margin-right: .3rem;
+      @media (max-width: 768px) {
+      width: 5rem;
+    }
     }
     .btn {
       font-size: .8rem;
@@ -73,6 +89,7 @@ const Container = styled.div`
     min-height: 600px;
     /* background-color: blue; */
     width: 100%;
+
   }
 
   .count {
@@ -82,9 +99,14 @@ const Container = styled.div`
     align-items: center;
     display: flex;
   }
+
+
 `;
 
 const MyReservation = () => {
+  // 오늘날짜 설정
+  const currentDate = new Date().toISOString().slice(0, 10);
+
   const [selectedValue, setSelectedValue] = useState('');
   const [selectedState, setSelectedState] = useState('lastest');
   const getId = window.localStorage.getItem("memberId");
@@ -106,11 +128,8 @@ const MyReservation = () => {
     setSearchQuery(e.target.value);
   };
 
-  // 관람임박순
     // 관람일자와 오늘 날짜를 비교하여 지난 예약은 리스트맨 끝으로 이동
     const sortBookedList = (list) => {
-      const currentDate = new Date().toISOString().slice(0, 10);
-
       const upcomingReservations = list.filter((item) => {
         const visitDate = item.visitDate;
         return visitDate >= currentDate;
@@ -153,6 +172,7 @@ const MyReservation = () => {
       item.exhibitName.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredData(filteredList);
+
   }, [searchQuery, bookedList]);
 
   const ITEMS_PAGE = 3;
@@ -164,6 +184,7 @@ const MyReservation = () => {
   const pageCount = Math.ceil(bookedList.length / ITEMS_PAGE);
   const offset = currentPage * ITEMS_PAGE;
   const currentPageData = filteredData.slice(offset, offset + ITEMS_PAGE);
+
 
 
   return (
