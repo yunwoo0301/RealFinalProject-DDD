@@ -26,6 +26,18 @@ const DDDApi = {
         return await axios.post( "/api/boardList/write", postObj);
     },
 
+    // 이전글 & 다음 게시글 조회 (최종)
+    getPrevAndNextBoard: async (currentBoardNo) => {
+        try {
+          const response = await axios.get(`/api/boardList/${currentBoardNo}/navigate`);
+          console.log(response.data); // 응답 데이터 출력
+          return response; // 응답 반환
+        } catch (error) {
+          console.log(error); // 에러 로그 출력
+          throw error; // 에러 throw
+        }
+    },
+
     // 게시글 수정 **
     editBoards: async (boardNo, category, region, title, contents, imageUrl) => {
         const editObj = {

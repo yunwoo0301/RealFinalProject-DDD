@@ -14,7 +14,7 @@ import { Backdrop } from "@mui/material";
 
 
 const ViewWrap = styled.div`
-    width: 70%; // 추가
+    width: 70%;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -24,8 +24,7 @@ const ViewWrap = styled.div`
 `;
 
 const Section = styled.div`
-    /* width: 75%; */
-    width: 100%; // 추가
+    width: 100%;
     display: flex;
     flex-direction: column;
     float: center;
@@ -33,11 +32,6 @@ const Section = styled.div`
 
     .board_header {
         h2 {
-            /* padding: 10px 16px;
-            font-size: 1.8em;
-            margin-top: 30px;
-            font-weight: 900; */
-
             font-size: 1.8em;
             margin-top: 30px;
             font-weight: 900;
@@ -53,9 +47,48 @@ const Section = styled.div`
         margin-right: 30px;
     }
 
+    .listBtn {
+        margin-left: auto;  // 오른쪽으로 이동
+        margin-right: 2.1em;
+        display: flex;
+        flex-direction: row;  // 가로 방향으로 정렬
+        align-items: center;
+
+        .preBtn, .mainBtn, .nextBtn { // 이전글 버튼
+            padding: .8em 1.4em;
+            border: none;
+            border-radius: 10px;
+            background-color: #050e3d;
+            color: white;
+            cursor: pointer;
+            margin-left: 1.2em; // 추가
+            transition: all .1s ease-in;
+            text-decoration: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .listBtn {
+            margin-right: .1em;
+            background-color: transparent;
+        }
+
+        .preBtn, .mainBtn, .nextBtn {
+            display: flex;
+            flex-direction: column;
+            padding: .5em, 1em;
+            font-size: .5em;
+            color: black;
+            background: #5eadf7;
+
+
+         }
+    }
+
     .editBtn {
         margin-left: auto;  // 오른쪽으로 이동
         margin-right: 2em;
+        margin-top: 1.5em;
         display: flex;
         flex-direction: row;  // 가로 방향으로 정렬
         align-items: center;
@@ -67,7 +100,6 @@ const Section = styled.div`
             background-color: #050e3d;
             color: white;
             cursor: pointer;
-            /* margin-left: 1px; */
             transition: all .1s ease-in;
             text-decoration: none;
 
@@ -94,11 +126,14 @@ const Section = styled.div`
     @media (max-width: 768px) {
 
     .editBtn {
-        margin-left: auto;  // 오른쪽으로 이동
         margin-right: .1rem;
+
 
         .upBtn, .delBtn {
             display: flex;
+            flex-direction: column;
+            margin-left: .6em;
+            padding: .5em 1em;
 
         }
     }
@@ -108,13 +143,10 @@ const Section = styled.div`
         display: flex;
         font-weight: bold;
         justify-content: flex-end;
-        /* margin-right : 4.5em; */
         padding-right: 4.5em;
 
 
         .write_date, .views {
-            /* flex:1; */
-            /* text-align: right; */
             margin-left: 1em;
             margin-bottom:2px;
 
@@ -151,16 +183,16 @@ const Section = styled.div`
     }
 
     .comment_title {
-        display : flex;
-        flex-direction : row;
+        display: flex;
+        flex-direction: row;
         margin-top : 1em;
 
         h2, .comment_List {
-            margin-left : 1em;
-            margin-bottom : 2px;
+            margin-left: 1em;
+            margin-bottom:2px;
         }
         .comment_List {
-            margin-top : 1.6em;
+            margin-top: 1.6em;
         }
     }
 
@@ -186,7 +218,7 @@ const Contents = styled.div`
     border-radius: 12px;
     padding: 30px 18px;
     margin-top: 20px;
-    min-height: 400px;
+    height: auto;
 
     .image_area {
         display: flex;
@@ -311,11 +343,13 @@ const ModalBodyStyle = styled.div`
 const BoardView = () => {
     const params = useParams();  // url에서 boardNo를 가져오기 위해 uesParams() 사용
     let boardNo = params.no;
+
     const navigate = useNavigate();
     const [boardView, setBoardView] = useState(null); // URL에서 boardNo를 가져옴(게시판목록)
     const [commentList, setCommentList] = useState([]); // 댓글용 추가
     const [nickname, setNickname] = useState(""); // 닉네임 초기값 수정
     const [test, setTest] = useState(""); // 기본 이미지 불러오기용
+    const [category, setCategory] = useState(null); // 이전글, 다음글 카테고리 설정용
 
     // 게시글 작성일자(연도-월-일)로 추출
     const formattedDate = boardView?.writeDate.substring(0, 10);
@@ -342,10 +376,11 @@ const BoardView = () => {
     console.log("작성자 정보:", boardView?.author);
     console.log("getId:", getId);
     console.log("작성자와 Id 일치 여부:", isAuthorMatched);
+    // console.log(boardView?.email);
     console.log(boardView?.id);
 
 
-     // 수정, 삭제 버튼 노출 여부 확인
+    // 수정, 삭제 버튼 노출 여부 확인
     const showEditBtn = () => {
         return isLogin && isAuthorMatched;
     };
@@ -357,6 +392,8 @@ const BoardView = () => {
         setRegComment(true);
     }
 
+    const [prevAndNextData, setPrevAndNextData] = useState(null); // 이전글, 다음글 담을 상태변수
+
 
     // 본문 불러오기
     useEffect(() => {
@@ -367,6 +404,7 @@ const BoardView = () => {
                 if(response.status === 200) {
                     const data = response.data;
                     setBoardView(data); // 기존의 게시물 정보 설정
+                    setCategory(data.category); // 카테고리 정보 설정
 
                     // 댓글 내용 불러오기
                     const commentData = data.comments;
@@ -375,8 +413,15 @@ const BoardView = () => {
                     setNickname(rsp.data.nickname);
                     setTest(rsp.data.profileImg); // 기본프로필 이미지 불러오기
 
+                    // 이전글 및 다음글 가져오기 요청 보내기
+                    const prevAndNextResponse = await DDDApi.getPrevAndNextBoard(boardNo);
+                    if (prevAndNextResponse.status === 200) {
+                        const prevAndNextData = prevAndNextResponse.data;
+                        setPrevAndNextData(prevAndNextData);
+                    }
 
-                    if (boardView && boardView.views != null) { // 게시글 조회수 구간
+                    // if (boardView && boardView.views != null) { // 게시글 조회수 구간
+                    if (data && data.views != null) { // 게시글 조회수 구간
                         setBoardView(prevState => ({
                             ...prevState,
                             views: prevState.views + 1
@@ -391,25 +436,56 @@ const BoardView = () => {
         boardViewLoad();
     }, [boardNo, regComment]);
 
+    // prevAndNextData 상태가 업데이트될 때마다 호출되는 useEffect
+    useEffect(() => {
+        console.log(prevAndNextData); // 상태 업데이트 후 호출됨
+    }, [prevAndNextData]);
+
+
+    // 이전글 함수
+    const onClickPrev = () => {
+        if (prevAndNextData && prevAndNextData.prev) {
+            const prevBoardNo = prevAndNextData.prev.boardNo;
+            navigate(`/boardList/boardView/${prevBoardNo}`);
+        } else {
+            alert("이전 게시글이 없습니다.");
+        }
+    };
+
+    // 다음글 함수
+    const onClickNext = () => {
+        if (prevAndNextData && prevAndNextData.next) {
+            const nextBoardNo = prevAndNextData.next.boardNo;
+            navigate(`/boardList/boardView/${nextBoardNo}`);
+        } else {
+            alert("다음 게시글이 없습니다.");
+        }
+    };
+
+    // 글목록 화면으로 이동
+    const onClickMain = () => {
+        navigate('/boardList');
+    };
 
     // 게시글 수정 화면으로 이동
     const onClickEdit = () => {
         navigate(`/boardList/boardView/${boardNo}/editBoard`);
-    };
-
-
-const deleteBoard = async (boardNo) => {
-    try {
-        const response = await DDDApi.delBoards(boardNo);
-        console.log(response);
-        if (response.status === 200) {
-            setShowModal(false);
-            navigate('/boardList'); // 삭제 후 게시판 메인 이동
-        }
-    } catch (error) {
-        console.error(error);
     }
-};
+
+
+    // 게시글 삭제 함수
+    const deleteBoard = async (boardNo) => {
+        try {
+            const response = await DDDApi.delBoards(boardNo);
+            console.log(response);
+            if (response.status === 200) {
+                setShowModal(false);
+                navigate('/boardList'); // 삭제 후 게시판 메인 이동
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 
     const onClickDelete = () => {
@@ -458,7 +534,6 @@ const deleteBoard = async (boardNo) => {
         };
 
 
-
     // 댓글 삭제 모달 함수
     const [checkAgain, setCheckAgain] = useState(false);
     const [delSelect, setDelSelect] = useState(null); // 삭제할 댓글의 상태 변수
@@ -481,8 +556,6 @@ const deleteBoard = async (boardNo) => {
         ],
         icon: <FcCancel/>
       }
-
-
 
 
     return(
@@ -521,14 +594,16 @@ const deleteBoard = async (boardNo) => {
                         <MenuItem value={boardView?.region}>{boardView?.region}</MenuItem>
                         </Select>
                     </FormControl>
+
                     )}
-                    {/* 수정 및 삭제 버튼 */}
-                    {showEditBtn() ? (
-                    <div className="editBtn">
-                        <button className="upBtn" onClick={onClickEdit}>수정하기</button>
-                        <button className="delBtn" onClick={onClickDelete}>삭제하기</button>
+
+                    {/* 이전글 / 목록 / 다음글 버튼 추가 */}
+                    <div className="listBtn">
+                        <button className="preBtn" onClick={onClickPrev} >이전글</button>
+                        <button className="mainBtn" onClick={onClickMain}>글목록</button>
+                        <button className="nextBtn" onClick={onClickNext}>다음글</button>
                     </div>
-                    ) : null}
+
                 </div>
 
                 {/* 제목 구간 */}
@@ -566,6 +641,16 @@ const deleteBoard = async (boardNo) => {
                 </Contents>
             </div>
 
+            <div className="sub_category">
+                {/* 수정 및 삭제 버튼 */}
+                {showEditBtn() ? (
+                    <div className="editBtn">
+                        <button className="upBtn" onClick={onClickEdit}>수정하기</button>
+                        <button className="delBtn" onClick={onClickDelete}>삭제하기</button>
+                    </div>
+                    ) : null}
+            </div>
+
             {/* 댓글 구간 */}
             <div className="comment_title">
                 <h2>Comment</h2>
@@ -578,68 +663,71 @@ const deleteBoard = async (boardNo) => {
 
             {/* 댓글 목록 값 배열로 순회 */}
             {boardView?.comments && boardView.comments.map((comment, index) => (
-            <div key={index} className="comment">
-            <div className="commentbox">
+                <div key={index} className="comment">
+                <div className="commentbox">
 
-            {/* 댓글 작성자 정보 */}
-            <div className="userinfo">
-                <div className="profile">
-                    <img src={comment.profileImg} alt="프로필 이미지" />
-                    <div className="user">{comment.nickname}</div>
-                </div>
+                {/* 댓글 작성자 정보 */}
+                <div className="userinfo">
+                    <div className="profile">
+                        <img src={comment.profileImg} alt="프로필 이미지" />
+                        <div className="user">{comment.nickname}</div>
+                    </div>
 
-                {/* 작성일, 삭제 버튼 영역 */}
-                <div className="rightmenu">
-                    <div className="comment_write">{new Date(comment.writeDate).toLocaleString()}</div>
-                    {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
-                    {nickname === comment.nickname && (
-                    <div className="deleteBtn" onClick={()=> {setCheckAgain(true);
-                    setDelSelect(comment.commentNo);}}
-                    style={{ cursor: 'pointer', fontWeight: 'bold' }}>삭제</div>)}
+                    {/* 작성일, 삭제 버튼 영역 */}
+                    <div className="rightmenu">
+                        <div className="comment_write">{new Date(comment.writeDate).toLocaleString()}</div>
+
+                        {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
+                        {nickname === comment.nickname && (
+                        <div className="deleteBtn" onClick={()=> {setCheckAgain(true);
+                            // deleteComment(comment.commentNo);}}
+                            setDelSelect(comment.commentNo);}}
+                            style={{ cursor: 'pointer', fontWeight: 'bold' }}>삭제</div>)}
+                        </div>
                     </div>
-                    </div>
-                    {/* 댓글 텍스트 구간 */}
-                    <TextInfo>{comment.content}</TextInfo>
+                        {/* 댓글 텍스트 구간 */}
+                        <TextInfo>{comment.content}</TextInfo>
                 </div>
                 </div>
             ))}
             </Wrapper>
             )}
-                {/* 댓글 인풋창 */}
-                <BoardComment
-                    boardNo={boardNo}
-                    nickname = {nickname}
-                    commentList={commentList}
-                    setCommentList={setCommentList}
-                    regComment = {regComm}
-                    setRegComment={setRegComment}/>
+
+            {/* 댓글 인풋창 */}
+            <BoardComment
+                boardNo={boardNo}
+                nickname = {nickname}
+                commentList={commentList}
+                setCommentList={setCommentList}
+                regComment = {regComm}
+                setRegComment={setRegComment}/>
             </Section>
         </ViewWrap>
 
-            <Backdrop
-                sx={{
-                    backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
-                    opacity:'0.5',
-                    color: 'black',
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                    top: 0, // 팝업을 상단에 위치
-                }}
-                open={checkAgain}
-                onClick={()=>{setCheckAgain(false) }}>
-            {checkAgain && <ConfirmModal props={commentDelete}/>}
-            </Backdrop>
+        <Backdrop
+            sx={{
+                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                opacity:'0.5',
+                color: 'black',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0, // 팝업을 상단에 위치
+            }}
+            open={checkAgain}
+            onClick={()=>{setCheckAgain(false) }}>
+        {checkAgain && <ConfirmModal props={commentDelete}/>}
+        </Backdrop>
 
-            <Backdrop
-                sx={{
-                    backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
-                    opacity:'0.5',
-                    color: 'black',
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                    top: 0, // 팝업을 상단에 위치
-                }}
-                open={showModal}>
-            {showModal && <ConfirmModal props={boardDelete}/>}
-            </Backdrop>
+        <Backdrop
+            sx={{
+                backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                opacity:'0.5',
+                color: 'black',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0, // 팝업을 상단에 위치
+            }}
+            open={showModal}>
+        {showModal && <ConfirmModal props={boardDelete}/>}
+        </Backdrop>
 
         </>
     )
