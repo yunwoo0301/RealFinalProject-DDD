@@ -22,6 +22,7 @@ const FinalContainer = styled.div`
 
 
 const FinalReservation = ({props}) => {
+const { setShowPage} = useStore();
     const navigate = useNavigate();
     const getId = window.localStorage.getItem("memberId");
 
@@ -61,6 +62,7 @@ const FinalReservation = ({props}) => {
     }
 
     const openMyBooking = () => {
+      setShowPage('예약관리')
       navigate(`/api/mypage/${getId}`);
     }
 
