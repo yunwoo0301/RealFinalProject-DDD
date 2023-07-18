@@ -183,9 +183,11 @@ const Icons = () => {
                 const reservationList = await DDDApi.myBookedList(getId);
 
                 // 오늘 날짜와 일치하는 예약 건 수 계산
-                const today = new Date().toISOString().split("T")[0];
+                const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const today = new Date().toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 날짜 표시
+
                 const todayBookings = reservationList.data.filter((booking) => {
-                const bookingDate = new Date(booking.bookingDate).toISOString().split("T")[0]; // 예약 날짜를 YYYY-MM-DD 형식의 문자열로 변환
+                const bookingDate = new Date(booking.bookingDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 예약 날짜 표시
                 return bookingDate === today;
                 });
 

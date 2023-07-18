@@ -180,9 +180,10 @@ const DashBoard = () => {
          );
 
         // 오늘 날짜인 예약만 추출
-    const todayBookings = duplicateBookings.filter(
-        (item) => item.bookingDate === formattedToday
-      );
+      const todayBookings = bookingList.filter((item) => {
+      const formattedBookingDate = formatDate(new Date(item.bookingDate));
+      return formattedBookingDate === formattedToday;
+      });
 
       setTodayBookingCount(todayBookings.length); // 오늘 날짜인 예약 개수 설정
          if (duplicateBookings.length > 0) {
@@ -278,10 +279,10 @@ const DashBoard = () => {
     const today = new Date().toISOString().slice(0, 10);
 
     // regDate가 오늘 날짜인 데이터 개수 구하기
-    const regDateCount = result.data.filter((item) => item.regDate === today).length;
+    const regDateCount = result.data.filter((item) => item.regDate.slice(0, 10) === today).length;
 
     // deleteDate가 오늘 날짜인 데이터 개수 구하기
-    const deleteDateCount = result.data.filter((item) => item.deleteDate === today).length;
+    const deleteDateCount = result.data.filter((item) => item.deleteDate && item.deleteDate.slice(0, 10) === today).length;
 
     setRegDateCnt(regDateCount);
     setDeleteDateCnt(deleteDateCount);

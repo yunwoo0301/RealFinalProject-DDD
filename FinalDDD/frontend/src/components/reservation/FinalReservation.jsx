@@ -5,6 +5,7 @@ import { ImHome } from "react-icons/im";
 import MobileTicket from "../MyPage/MobileTicket";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import useStore from "../../store";
 
 
 const FinalContainer = styled.div`
@@ -22,7 +23,7 @@ const FinalContainer = styled.div`
 
 
 const FinalReservation = ({props}) => {
-const { setShowPage} = useStore();
+    const { setShowPage} = useStore();
     const navigate = useNavigate();
     const getId = window.localStorage.getItem("memberId");
 
