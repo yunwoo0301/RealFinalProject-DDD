@@ -11,6 +11,8 @@ import com.DDD.repository.FreeBoardRepository;
 import com.DDD.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,6 +125,18 @@ public class FreeBoardService {
 
 
         return freeboardDto;
+    }
+
+    // 이전글 조회(게시물 상세조회 내)
+    public Optional<FreeBoard> getPrevBoard(Long currentBoardNo, String category) {
+        Pageable pageable = PageRequest.of(0, 1);
+        return freeBoardRepository.findPrevBoard(currentBoardNo, category, pageable).stream().findFirst();
+    }
+
+    // 다음글 조회(게시물 상세조회 내)
+    public Optional<FreeBoard> getNextBoard(Long currentBoardNo, String category) {
+        Pageable pageable = PageRequest.of(0, 1);
+        return freeBoardRepository.findNextBoard(currentBoardNo, category, pageable).stream().findFirst();
     }
 
 

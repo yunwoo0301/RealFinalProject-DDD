@@ -4,6 +4,7 @@ import com.DDD.entity.FreeBoard;
 import com.DDD.service.FreeBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
 
 @RestController
 @Slf4j
@@ -22,6 +27,7 @@ import java.util.Map;
 public class FreeBoardController {
     @Autowired
     private final FreeBoardService freeBoardService;
+    private final ModelMapper modelMapper;
 
     // 게시글 작성
     @PostMapping("/write")
@@ -46,6 +52,29 @@ public class FreeBoardController {
     @GetMapping("/boardView/{boardNo}")
     public ResponseEntity<FreeBoardDto> getBoard(@PathVariable("boardNo") Long boardNo) {
         return new ResponseEntity(freeBoardService.selectBoardOne(boardNo), HttpStatus.OK);
+    }
+
+    // 이전글, 다음글 조회(게시물 상세조회 내)
+    @GetMapping("/{currentBoardNo}/navigate")
+    public ResponseEntity<Map<String, FreeBoardDto>> getPrevAndNextBoard(@PathVariable("currentBoardNo") Long currentBoardNo) {
+        // 해당 게시글 조회
+        FreeBoardDto currentBoard = freeBoardService.selectBoardOne(currentBoardNo);
+
+        // 해당 게시글의 카테고리 가져오기
+        String category = currentBoard.getCategory();
+
+        Optional<FreeBoard> prevBoard = freeBoardService.getPrevBoard(currentBoardNo, category);
+        Optional<FreeBoard> nextBoard = freeBoardService.getNextBoard(currentBoardNo, category);
+
+        if (!prevBoard.isPresent() && !nextBoard.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Map<String, FreeBoardDto> response = new HashMap<>();
+        prevBoard.ifPresent(board -> response.put("prev", modelMapper.map(board, FreeBoardDto.class)));
+        nextBoard.ifPresent(board -> response.put("next", modelMapper.map(board, FreeBoardDto.class)));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

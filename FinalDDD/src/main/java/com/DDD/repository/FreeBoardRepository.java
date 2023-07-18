@@ -5,6 +5,7 @@ package com.DDD.repository;
 
 import com.DDD.entity.FreeBoard;
 import com.DDD.entity.Member;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,5 +32,19 @@ public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long> {
 
     // 마이페이지 내 게시물 조회
     List<FreeBoard> findByMember(Member member);
+
+    // 이전 게시글 조회
+    @Query("SELECT fb FROM FreeBoard fb " +
+            "WHERE fb.category = :category " +
+            "AND fb.boardNo < :currentBoardNo " +
+            "ORDER BY fb.boardNo DESC")
+    List<FreeBoard> findPrevBoard(@Param("currentBoardNo") Long currentBoardNo, @Param("category") String category, Pageable pageable);
+
+    // 다음 게시글 조회
+    @Query("SELECT fb FROM FreeBoard fb " +
+            "WHERE fb.category = :category " +
+            "AND fb.boardNo > :currentBoardNo " +
+            "ORDER BY fb.boardNo ASC")
+    List<FreeBoard> findNextBoard(@Param("currentBoardNo") Long currentBoardNo, @Param("category") String category, Pageable pageable);
 }
 
