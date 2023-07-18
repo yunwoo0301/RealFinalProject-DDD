@@ -47,10 +47,19 @@ public class PaymentController {
 
 
     // 결제 진행 중 취소
-    @GetMapping("/cancel")
-    public String payCancel() {
-        // 이전 페이지로 리다이렉트
-        return "redirect:/previous-page";
+    @GetMapping("/kakaoCancel")
+    public ResponseEntity<String> cancelKakao(@RequestParam("bookingId") String bookingId) {
+        try {
+            boolean canceled = paymentService.cancelKakao(bookingId);
+            if(canceled){
+                return ResponseEntity.ok("카카오결제가 실패되었습니다. 😂😅😅");
+            } else {
+                return ResponseEntity.badRequest().body("결체 쥐소가 실패되었습니다.");
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("결제 취소 시도가 실패하였습니다.");
+        }
     }
 
     // 결제 실패

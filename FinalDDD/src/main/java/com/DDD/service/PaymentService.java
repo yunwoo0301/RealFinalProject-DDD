@@ -88,9 +88,10 @@ public class PaymentService {
         String approvalUrl = "http://myexhibitions.store/pay/kakaoSuccess?id=" + id + "&bookingId=" + bookingId;
         params.add("approval_url", approvalUrl);
         // 취소 시  url
-        params.add("cancel_url", "http://myexhibitions.store/pay/cancel");
+        String cancelUrl = "http://myexhibitions.store/pay/kakaoCancel?bookingId=" + bookingId;
+        params.add("cancel_url", cancelUrl);
         // 실패 시  url
-        params.add("fail_url", "http://myexhibitions.store/pay/fail");
+        params.add("fail_url", cancelUrl);
 
         // 하나의 맵안에 헤더와 파라미터값 담음
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, this.getHeaders());
@@ -148,6 +149,21 @@ public class PaymentService {
         }
 
         return approveResponse;
+    }
+
+    // 카카오페이 결제 취소 및 결제 실패
+    public boolean cancelKakao(String bookingId) {
+        try{
+            Booking booking = bookingRepository.findByBookingId(Long.valueOf(bookingId));
+
+            bookingRepository.delete(booking);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     // 무통장입금
