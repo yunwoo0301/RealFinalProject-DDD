@@ -9,11 +9,17 @@ import { useNavigate } from "react-router-dom";
 
 const Modal = styled.div`
     position: fixed;
-    width: 20rem;
+    width: 80%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 3rem;
+
+    @media (max-width: 768px) {
+    width: 100%;
+    height: 90%;
+    overflow-y: auto;
+    }
 `;
 
 export const Container = styled.div`
