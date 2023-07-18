@@ -9,8 +9,13 @@ import { DiaryApi } from "../../api/MyPageApi";
 import Functions from "../../util/Functions";
 import Backdrop from "@mui/material/Backdrop";
 import AlertModal from "../../util/Alert";
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import { useParams } from "react-router-dom";
+import Loading from "../../util/Loading";
 
 // ====== data 확인하기 =====
+
 
 const Wrap = styled.div`
   width: 100%;
@@ -41,11 +46,11 @@ const Wrap = styled.div`
     .infiniteScroll{
       @media (max-width: 1024px) {
         width: 100%;
-        
+
       }
     }
 
-  
+
 `;
 const CardItem = styled.div`
   /* background-color: aqua; */
@@ -62,7 +67,7 @@ const CardItem = styled.div`
   /* @media (max-width: 1024px) {
     width: calc(100%-0.8rem);
     background-color: blue;
-    
+
   } */
 
   .exhibitionImage {
@@ -78,7 +83,7 @@ const CardItem = styled.div`
     width: 35%;
     padding:0;
     margin: 0;
-    
+
   }
     img {
       width: 80%;
@@ -92,9 +97,9 @@ const CardItem = styled.div`
         margin: 0;
         min-width: rem;
         width: 50%;
-    
+
   } */
-      
+
     }
   }
 
@@ -111,7 +116,7 @@ const CardItem = styled.div`
     @media (max-width: 1024px) {
     width: 40%;
     margin: 0;
-    
+
   }
     .title {
       font-weight: bold;
@@ -135,7 +140,7 @@ const CardItem = styled.div`
     display: flex;
     @media (max-width: 1024px) {
     width: 80%;
-    
+
   }
 
 
@@ -153,7 +158,7 @@ const CardItem = styled.div`
       border-bottom-right-radius: 0;
       @media (max-width: 1024px) {
         min-width: 4rem;
-        
+
       }
     }
     .textBox:focus {
@@ -193,17 +198,18 @@ const CardItem = styled.div`
   }
 `;
 
-
 const MyDiary = () => {
   const iconUrl =
     "https://firebasestorage.googleapis.com/v0/b/real-final-project-ddd.appspot.com/o/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png?alt=media&token=7d664c18-037d-4e60-9415-32f26fb0d430";
 
-  const memberId = Functions.getMemberId();
+  // const memberId = Functions.getMemberId();
+  const {memberId} = useParams();
   const [myDiaryData, setMyDiaryData] = useState([]);
   const [countDiary, setCountDiary] = useState();
   const [mention, setMention] = useState("");
   const [inputComment, setInputComment] = useState([]);
   const [ratingStar, setRatingStar] = useState([]);
+  const [loading, setLoading]= useState(true);
 
   const countCheck = () => {
     for (let key in commentAboutCount) {
@@ -229,6 +235,7 @@ const MyDiary = () => {
 
       setRatingStar(stars);
       console.log(ratingStar);
+        setLoading(false);
     };
     infoFetchData();
   }, [memberId]);
@@ -256,6 +263,8 @@ const MyDiary = () => {
     console.log("마지막 저장값 " + ratingStar);
   };
 
+
+  // backdrop openState
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -268,7 +277,8 @@ const MyDiary = () => {
 
   return (
     <>
-      {myDiaryData && (
+      {loading ? <Loading></Loading>
+      : (
         <Wrap>
 
           <div className="count">{countDiary}</div>
@@ -311,7 +321,25 @@ const MyDiary = () => {
                     value={inputComment[index]}
                   />
 
-                    { memberId == Functions.getMemberId() ? (<div className="test">
+                 { memberId == Functions.getMemberId() ? (<div className="test">
+                    <Tooltip title="Delete">
+                      <IconButton className="deletIconBox" onClick={()=>{
+                          (async () => {
+                            const response = await DiaryApi.delete(
+                              memberId,
+                              item.exhibitions.exhibitNo,
+                            );
+                            if (response.status === 200) {
+                              handleOpen();
+                              console.log("Diary successfully saved!");
+                            } else {
+                              console.error("Failed to save diary");
+                            }
+                          })();
+                       }}>
+                        <DeleteIcon fontSize='small' />
+                      </IconButton>
+                    </Tooltip>
                     <div
                       className="icon"
                       onClick={() => {
@@ -330,13 +358,14 @@ const MyDiary = () => {
                         })();
                       }}
                     >
+
                       <Tooltip title="저장" arrow placement="top-end">
                         <img src={iconUrl} alt="profile icon" onClick={handleOpen} />
 
                       </Tooltip>
                       <Backdrop
                         sx={{
-                            backgroundColor: 'transparent', // 배경색을 투명
+                            backgroundColor: 'transparent', // 배경색을 투명으로 설정
                             color: '#fff',
                             zIndex: (theme) => theme.zIndex.drawer + 1,
                             top: 0, // 팝업을 상단에 위치
