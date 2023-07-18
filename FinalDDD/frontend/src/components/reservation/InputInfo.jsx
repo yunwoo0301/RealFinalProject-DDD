@@ -184,18 +184,48 @@ const InputInfo = ({rootData, reservationData, id, selectedDate}) => {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   let price = 0;
-  // 넘어오는 가격의 값이 문자열일경우와 그냥 숫자일 경우 다르게 처리
-  if (typeof reservationData.exhibitPrice === 'string') {
-    const priceString = reservationData.exhibitPrice.replace(/[^0-9]/g, '');
-    // 문자부분제거 후 앞 4자리숫자만 사용하여 티켓값 추출
-    const trimmedPriceString = priceString.substring(0, 4);
-    // 무료일경우 0값출력
-    if (trimmedPriceString !== '') {
-      price = parseFloat(trimmedPriceString);
+
+    if (typeof reservationData.exhibitPrice === 'string') {
+    const priceString = reservationData.exhibitPrice;
+
+    // "성인"이라는 글자가 포함된 경우
+    if (priceString.includes("성인")) {
+      const pattern = /성인\s*(?:\([^)]*\))?\s*(\d+(?:,\d+)*)/;
+
+      const match = priceString.match(pattern);
+
+      if (match) {
+        const priceValue = parseFloat(match[1].replace(/,/g, ''));
+        price = priceValue;
+      }
     }
-  } else if (typeof reservationData.exhibitPrice === 'number') {
-    price = reservationData.exhibitPrice;
-  }
+    // "성인"이라는 글자가 없는 경우
+    else {
+      const priceString = reservationData.exhibitPrice.replace(/[^0-9]/g, '');
+      const numbers = priceString.match(/\d+/g);
+
+      if (numbers) {
+        const pattern = /[1-9]\d*000/;
+
+        let match = null;
+        for (let i = 0; i < numbers.length; i++) {
+          if (pattern.test(numbers[i])) {
+            match = numbers[i];
+            break;
+          }
+        }
+
+        if (match) {
+          const extractedPrice = match.match(/\d{0,4}/)[0];
+          price = parseFloat(extractedPrice);
+        }
+
+      }
+    }
+    } else if (typeof reservationData.exhibitPrice === 'number') {
+      price = reservationData.exhibitPrice;
+    }
+
   const [totalPrice, setTotalPrice] = useState(price * quantity);
 
   const [buyerInfo, setBuyerInfo] = useState({
