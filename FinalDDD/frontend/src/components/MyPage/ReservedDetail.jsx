@@ -37,6 +37,7 @@ const Container = styled.div`
         object-position: top;
         border-radius: 0.3rem;
         border: 1px solid #ddd;
+
     }
     .justfyTop{
         align-items: bottom;
@@ -45,6 +46,10 @@ const Container = styled.div`
         width: 100%;
         height: 76%;
         align-items: stretch;
+        @media (max-width: 768px) {
+            margin-left: 3.7rem;
+            width: 80%;
+        }
 
         .leftBox{
         display: flex;
@@ -54,6 +59,11 @@ const Container = styled.div`
         margin: 0 .2rem;
         width: 100%;
         font-size: .8rem;
+        @media (max-width: 768px) {
+            width: 80%;
+            margin: 0;
+        }
+
         }
         span{
             font-weight: bold;
@@ -62,6 +72,9 @@ const Container = styled.div`
             font-size: .8rem;
             float: left;
             /* background-color: red; */
+            @media (max-width: 768px) {
+            margin: 0;
+        }
 
         }
 
@@ -74,11 +87,20 @@ const Container = styled.div`
                 width: 50%;
                 /* background-color: aqua; */
                 float: right;
+                @media (max-width: 768px) {
+                    width: 100%;
+                }
 
             }
             .text{
                 color: ${({ isPast }) => (isPast ? 'black' : 'red')};
                 }
+
+            @media (max-width: 768px) {
+                .media{
+                    display: none;
+                }
+            }
 
         }
     }
@@ -158,11 +180,11 @@ const ReservedDetail = ({exhibitionData, currentPageData, setExhibitionData}) =>
                                     <div><span>전시명</span> {e.exhibitName}</div>
                                     <div><span>전시관</span>{e.exhibitLocation}</div>
                                     <div className='flexRow'>
-                                        <div className='row2'><span>관람인원</span>{e.paymentDTO.paymentCnt}</div>
+                                        <div className='row2 media'><span>관람인원</span>{e.paymentDTO.paymentCnt}</div>
                                         <div className='row2 text'><span>관람일시</span>{e.visitDate}</div>
                                     </div>
                                     <div className='flexRow'>
-                                        <div className='row2'><span>금액</span>{e.paymentDTO.paidPrice}</div>
+                                        <div className='row2 media'><span>금액</span>{e.paymentDTO.paidPrice}</div>
                                         <div className='row2'><span>결제일시</span>{formatDate(e.paymentDTO.paymentDate)}</div>
                                     </div>
                                 </div>
