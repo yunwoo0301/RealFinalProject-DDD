@@ -420,8 +420,8 @@ const BoardView = () => {
                         setPrevAndNextData(prevAndNextData);
                     }
 
-                    // if (boardView && boardView.views != null) { // 게시글 조회수 구간
-                    if (data && data.views != null) { // 게시글 조회수 구간
+                     if (boardView && boardView.views != null) { // 게시글 조회수 구간
+//                    if (data && data.views != null) { // 게시글 조회수 구간
                         setBoardView(prevState => ({
                             ...prevState,
                             views: prevState.views + 1
