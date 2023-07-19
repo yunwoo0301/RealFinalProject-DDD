@@ -52,4 +52,19 @@ public class MessageController {
     public List<MessageDTO> getAllSendMsg(@RequestParam("senderId") String senderId) {
         return messageService.sendMessageList(senderId);
     }
+
+    // 메세지 열고닫음 수정
+    @PostMapping("/isOpened/{messageNo}")
+    public ResponseEntity<String> updateIsOpened(@PathVariable String messageNo, @RequestBody MessageDTO messageDTO) {
+        try {
+            boolean result = messageService.updateIsOpened(messageNo, messageDTO);
+            if (result) {
+                return ResponseEntity.ok("메세지를 열람하셨습니다.");
+            } else {
+                return ResponseEntity.badRequest().body("메세지 열람에 실패했습니다.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+    }
 }

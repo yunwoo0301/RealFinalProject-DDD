@@ -184,6 +184,16 @@ const DDDApi = {
             contents: contents
         }
         return await axios.post("/message/sendMsg", msgData);
+    },
+
+    // 받은쪽지가지고오기
+    receivedMsg: async(receiverId) => {
+        return await axios.get(`/message/receiveMsgList?receiverId=${receiverId}`);
+    },
+
+    // 보낸쪽지
+    sentMsg: async(sendId) => {
+        return await axios.get(`/message/sendMsgList?senderId=${sendId}`);
     }
 
 

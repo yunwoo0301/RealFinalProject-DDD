@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -83,6 +84,18 @@ public class MessageService {
             messageDTOS.add(messageDTO);
         }
         return messageDTOS;
+    }
+
+    // 읽은 족지
+    public boolean updateIsOpened(String messageNo, MessageDTO messageDTO) {
+        Message message = messageRepository.findById(Long.valueOf(messageNo))
+                .orElseThrow(() -> new EntityNotFoundException("해당 메세지가 없습니다.🥲"));
+        message.setIsOpened(Math.toIntExact(messageDTO.getIsOpened()));
+
+        messageRepository.save(message);
+
+        return true;
+
     }
 
 }
