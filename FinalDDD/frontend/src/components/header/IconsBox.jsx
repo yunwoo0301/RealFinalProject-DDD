@@ -232,7 +232,7 @@ const Icons = () => {
     }
     const goToMyMessage = () => {
         setShowPage('내쪽지함')
-        navigate(`/api/mypage/${memberId}`)
+        navigate(`/api/mypage/${getId}`)
     }
 
 
