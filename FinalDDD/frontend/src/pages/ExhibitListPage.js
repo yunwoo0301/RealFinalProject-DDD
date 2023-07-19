@@ -123,7 +123,7 @@ const ExhibitListPage = () => {
   // 카테고리
   const [category, setCategory] = useState('menu1');
   // 검색
-  const [seachName, setSearchName] = useState('');
+  const [searchName, setSearchName] = useState('');
   // 검색한 내용다시
   const [filteredData, setFilteredData] = useState([]);
   // 지역
@@ -180,7 +180,7 @@ const ExhibitListPage = () => {
   };
   // 전시검색
   const searchExhibitions = () => {
-    const searchTerm = seachName.toLowerCase();
+    const searchTerm = searchName.toLowerCase();
     return filteredData.filter((exhibition) =>
       exhibition.exhibitName.toLowerCase().includes(searchTerm)
     );
@@ -237,7 +237,7 @@ const ExhibitListPage = () => {
           <div className="select">
             <SelectBtn selectedOption={selectedOption} setSelectedOption={setSelectedOption} options={['갤러리', '리스트']} />
             <div className="searchBox">
-              <input className="searchBar" type="text" value={seachName} onChange={handleChangeExhibition} />
+              <input className="searchBar" type="text" value={searchName} onChange={handleChangeExhibition} />
               <div className="searchIcon">
                 <FiSearch />
               </div>

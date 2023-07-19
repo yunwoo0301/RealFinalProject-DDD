@@ -157,6 +157,12 @@ const Icons = () => {
     const getId = window.localStorage.getItem("memberId");
     // 오늘 예약 건수 계산
     const [todayBookingCnt, setTodayBookingCnt] = useState(0);
+    // 오늘 받은 메세지
+    const [todayMsg, setTodayMsg] = useState(0);
+
+    // 오늘 날짜를 사용자의 컴퓨터 타임존으로 변경
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const today = new Date().toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 날짜 표시
 
     // console.log(profileImg)
     // console.log(loginState)
@@ -182,10 +188,6 @@ const Icons = () => {
               try {
                 const reservationList = await DDDApi.myBookedList(getId);
 
-                // 오늘 날짜와 일치하는 예약 건 수 계산
-                const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                const today = new Date().toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 날짜 표시
-
                 const todayBookings = reservationList.data.filter((booking) => {
                 const bookingDate = new Date(booking.bookingDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 예약 날짜 표시
                 return bookingDate === today;
@@ -198,6 +200,24 @@ const Icons = () => {
             };
 
             reservations();
+        }, []);
+
+        // 오늘날짜로 받은 메세지 뱃지
+        useEffect(() => {
+            const message = async() => {
+                try {
+                    const msgList = await DDDApi.receivedMsg(getId);
+
+                    const todayMsgs = msgList.data.filter((msg) => {
+                        const msgDate = new Date(msg.messageDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-");
+                        return msgDate === today;
+                    })
+                    setTodayMsg(todayMsgs.length);
+                }catch(e) {
+                    console.log(e);
+                }
+            }
+            message();
         }, []);
 
 
@@ -228,8 +248,11 @@ const Icons = () => {
 
 <LoginIconBox>
             <div className="login-icon" onClick={onClickToLogin}>
-                    {loginState ?  (<img src={memberData.profileImg} alt="😫" />) : (<BsPersonCircle/>)}
-
+                {loginState ?  (
+                    <Badge className="login-icon" badgeContent={todayMsg} color="primary" overlap="circular" variant="dot">
+                        <img src={memberData.profileImg} alt="😫" />
+                    </Badge>)
+                    : (<BsPersonCircle/>)}
             </div>
 
             {loginState ? ( <div className="loginToggle">
@@ -241,7 +264,11 @@ const Icons = () => {
                     <div className="infoBox">
                         <div className="nickname"  onClick={goToMypage}>{memberData.nickname}</div>
                         <div className="infoBoxBtn"   onClick={goToMypage}>마이 페이지</div>
-                        <div className="infoBoxBtn">내 쪽지함</div>
+                        <div className="infoBoxBtn">
+                            <Badge badgeContent={todayMsg} color="primary"variant="dot">
+                            내 쪽지함
+                            </Badge>
+                        </div>
                         <div className="infoBoxBtn" onClick={removeLocalstorage}>로그아웃</div>
                     </div>
                 </div>
