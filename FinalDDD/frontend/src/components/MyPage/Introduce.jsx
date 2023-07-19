@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { MyPageApi } from "../../api/MyPageApi.js";
 import useStore from "../../store";
 import Functions from "../../util/Functions";
+import { FcSms, FcCalendar, FcDatabase, FcSupport } from "react-icons/fc";
+import { SlBubbles } from "react-icons/sl";
 
 const Container = styled.div`
   /* background-color  : beige; */
@@ -48,14 +50,13 @@ const TextBox = styled.div`
   }
 `;
 
-
 const Introduce = ({memberData, myDiaryData}) => {
   const { setShowPage } = useStore();
   const { memberId } = useParams();
   const LoginMemberId = Functions.getMemberId();
   // console.log(myDiaryData)
   console.log(memberData)
-  
+
   return (
     <>
       <Container>
@@ -76,11 +77,10 @@ const Introduce = ({memberData, myDiaryData}) => {
             setShowPage("내게시물");
           }}
         >
-          게시물
+         <FcDatabase/> 게시물
         </span>
         <br />
-        {/* <hr/>
-                <span className='text' onClick={()=>{props.setShowPage('내게시물')}}>채팅</span> <br/> */}
+
         {LoginMemberId == memberId ? (
           <>
             <hr />
@@ -90,9 +90,11 @@ const Introduce = ({memberData, myDiaryData}) => {
                 setShowPage("예약관리");
               }}
             >
-              예약 관리
+              <FcCalendar/> 예약 관리
             </span>
             <br />
+            <hr/>
+            <span className='text' onClick={()=>{setShowPage('내쪽지함')}}> <FcSms/> 내 쪽지함</span> <br/>
             <hr />
             <span
               className="text"
@@ -100,7 +102,7 @@ const Introduce = ({memberData, myDiaryData}) => {
                 setShowPage("내정보수정");
               }}
             >
-              내 정보 수정
+              <FcSupport/> 내 정보 수정
             </span>
           </>
         ) : null}

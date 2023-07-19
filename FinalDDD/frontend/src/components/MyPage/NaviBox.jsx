@@ -27,7 +27,7 @@ const Container = styled.div`
   /* background-color: red; */
   @media (max-width:768px) {
     margin: 1rem .2rem;
-    font-size: 0.051rem; 
+    font-size: 10px; 
 
     
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { SlArrowRight } from "react-icons/sl";
+import { FcKindle } from "react-icons/fc";
 import useStore from "../../store";
 
 const DiaryBox = styled.div`
@@ -101,7 +101,7 @@ const Diary = () => {
     <>
 {  myDiaryData &&    <DiaryBox>
         <p
-          className="title"> 다이어리 </p>
+          className="title"> <FcKindle/> 다이어리 </p>
                   
 
             <DiaryImage ref={diaryImageRef} onClick={() => { setShowPage("다이어리");}}>
@@ -114,7 +114,7 @@ const Diary = () => {
                 ))) :
                 (
                   <NothingBlock> 
-                    <img src={chorong} alt="" /> 
+                    {/* <img src={chorong} alt="" />  */}
                     <div>다녀온 전시회를 평가해주세요!😉</div>
                   </NothingBlock>
                 )

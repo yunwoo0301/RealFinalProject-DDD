@@ -8,6 +8,7 @@ import NaviBox from "./NaviBox";
 import SNSBox from "./SNSBox";
 import MyReservation from "./MyReservation";
 import MyDiary from "./MyDiary";
+import MyMessage from "./MyMessage";
 import useStore from "../../store";
 import Functions from "../../util/Functions";
 import { MyPageApi, DiaryApi } from "../../api/MyPageApi";
@@ -130,6 +131,13 @@ const MyPageBG = () => {
               />
             </>
           )}
+           {showPage === "내쪽지함" && (
+                <>
+                  {memberData && <Thumnail memberData={memberData}/>}
+                  <NaviBox />
+                  <MyMessage />
+                </>
+              )}
           {showPage === "내정보수정" && (
             <>
               {memberData && <EditThumnail memberData={memberData}/>}
