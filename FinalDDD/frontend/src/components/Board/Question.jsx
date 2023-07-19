@@ -4,7 +4,6 @@ import DDDApi from "../../api/DDDApi";
 import styled from "styled-components";
 import BoardSearch from "./BoardSearch";
 import PageNation from "../../util/PageNation";
-import { Link } from "react-router-dom";
 
 const BoardContainer = styled.div`
     box-sizing: border-box;
@@ -26,19 +25,10 @@ const Section = styled.div`
     justify-content: center;
     position: relative;
 
-    .board_box {
-
-        a{
-            font-size: 1.1rem;
-            color:  inherit;
-            text-decoration: none;
-        }
-    }
-
     table {
         width: 65vw;
         margin-bottom: 20px;
-        font-size: 16px;
+        font-size: 1.1em;
         font-weight: lighter;
         border-collapse: collapse;
         margin: 0 auto;
@@ -192,6 +182,11 @@ const Question = () => {
         }
     };
 
+    // 게시글 상세 페이지로 이동
+    const boardDetailClick = (boardNo) => {
+      navigate(`/boardList/boardView/${boardNo}`);
+    };
+
 
     return (
         <BoardContainer>
@@ -223,14 +218,7 @@ const Question = () => {
                       <td>{boardList.boardNo}</td>
                       <td>{boardList.category === 'Question' ? '질문하기' : boardList.category}</td>
                       {/* <td>{boardList.category}</td> */}
-                      <td>
-                        <Link
-                          to={`/boardList/boardView/${boardList.boardNo}`}
-                          className="boardView_link"
-                        >
-                          {boardList.title}
-                        </Link>
-                      </td>
+                      <td onClick={() => boardDetailClick(boardList.boardNo)}>{boardList.title}</td>
                       <td>{boardList.author}</td>
                       <td>{boardList.views}</td>
                       <td>
