@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PageNation from '../../util/PageNation';
 import DDDApi from '../../api/DDDApi';
+import ShowMsg from '../Message/ShowMessage';
+import {MdOutlinePersonPin} from "react-icons/md";
+import {GiLoveLetter} from  "react-icons/gi";
 
 
 
@@ -84,6 +87,18 @@ const MyMessage = () => {
     // 보낸메세지
     const [sentMsgData, setSentMsgData] = useState([]);
     const [sentCurrentPage, setSentCurrentPage] = useState(0);
+    // 쪽지모달열고닫음
+    const [openMsg, setOpenMsg] = useState(false);
+    // 쪽지모달에게 정보전달
+    const [msgProps, setMsgProps] = useState({
+        messageNo: "",
+        msg: "",
+        icon: "",
+        name: "",
+        title: "",
+        contents: "",
+        close: () => setOpenMsg(false)
+      });
 
 
     // 작성일자 yyyy-MM-dd 형식으로 변환
@@ -130,10 +145,42 @@ const MyMessage = () => {
     const sentCurrentPageData = sentMsgData.slice(offset2, offset2 + ITEM_PAGE2);
 
 
+    // 받은메세지 확인
+    const openToMsg = (messageNo, senderNickname, title, contents) => {
+         // 쪽지로 보내줄 정보들
+         setMsgProps({
+            ...msgProps,
+            messageNo: messageNo,
+            msg: "받은메세지",
+            icon: <MdOutlinePersonPin/>,
+            name: senderNickname,
+            title: title,
+            contents: contents,
+            close: () => setOpenMsg(false)
+          });
+        setOpenMsg(true);
+    }
+
+    // 보낸메세지 확인
+    const openToSentMsg = (messageNo, receiverNickname, title, contents) => {
+        setMsgProps({
+            ...msgProps,
+            messageNo: messageNo,
+            msg: "보낸메세지",
+            icon: <GiLoveLetter/>,
+            name: receiverNickname,
+            title: title,
+            contents: contents,
+            close: () => setOpenMsg(false)
+        });
+        setOpenMsg(true);
+    }
+
+
     return (
         <>
+        {openMsg && <ShowMsg props={msgProps}/>}
         <PostWrap>
-
             <div className='title' >내 쪽지함</div>
             <div className='moreBox'>
                 <span>받은 쪽지함</span>
@@ -151,9 +198,9 @@ const MyMessage = () => {
                    currentPageData.length > 0 && currentPageData.map((post, index) => (
                         <tr key={index}>
                         <td
-                            style={{cursor: 'pointer' }}
-                            onClick={(post.messageNo)}>{post.title}
-                        </td>
+                        style={{cursor: 'pointer' }}
+                        onClick={() => openToMsg(post.messageNo, post.senderNickname, post.title, post.contents)}
+                        >{post.title}</td>
                         <td>{post.senderNickname}</td>
                         <td>{formatDate(post.messageDate)}</td>
                         </tr>
@@ -191,6 +238,7 @@ const MyMessage = () => {
                         <tr key={index}>
                             <td
                             style={{ cursor: 'pointer' }}
+                            onClick={()=>openToSentMsg(sent.messageNo, sent.receiverNickname, sent.title, sent.contents)}
                              >{sent.title}
                             </td>
                             <td>{sent.receiverNickname}</td>
