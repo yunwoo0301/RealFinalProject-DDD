@@ -194,6 +194,14 @@ const DDDApi = {
     // 보낸쪽지
     sentMsg: async(sendId) => {
         return await axios.get(`/message/sendMsgList?senderId=${sendId}`);
+    },
+
+    // 열람 추가
+    openedMsg: async(messageNo, isOpened) => {
+        const updateStatus = {
+            isOpened: isOpened
+        }
+        return await axios.post(`/message/isOpened/${messageNo}`, updateStatus);
     }
 
 

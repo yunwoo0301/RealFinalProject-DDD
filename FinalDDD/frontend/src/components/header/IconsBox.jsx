@@ -203,22 +203,25 @@ const Icons = () => {
         }, []);
 
         // 오늘날짜로 받은 메세지 뱃지
-        useEffect(() => {
-            const message = async() => {
-                try {
-                    const msgList = await DDDApi.receivedMsg(getId);
+                useEffect(() => {
+                    const message = async() => {
+                        try {
+                            const msgList = await DDDApi.receivedMsg(getId);
+                            console.log("메세지 리스트 : ", msgList.data);
 
-                    const todayMsgs = msgList.data.filter((msg) => {
-                        const msgDate = new Date(msg.messageDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-");
-                        return msgDate === today;
-                    })
-                    setTodayMsg(todayMsgs.length);
-                }catch(e) {
-                    console.log(e);
-                }
-            }
-            message();
-        }, []);
+                            const todayMsgs = msgList.data.filter((msg) => {
+                                const msgDate = new Date(msg.messageDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-");
+                                const isOpened = msg.isOpened === 0;
+                                const isToday = msgDate === today;
+                                return isToday && isOpened;
+                              });
+                              setTodayMsg(todayMsgs.length);
+                        }catch(e) {
+                            console.log(e);
+                        }
+                    }
+                    message();
+                }, []);
 
 
     const onClickToReservation = () => {
