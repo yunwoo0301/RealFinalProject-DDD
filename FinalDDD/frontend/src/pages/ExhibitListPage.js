@@ -11,6 +11,7 @@ import InfoModal from "../components/exhibition/InfoModal";
 import ClickInfoBox from "../components/exhibition/ClickInfoBox";
 import DDDApi from "../api/DDDApi";
 import Header from "../components/header/Header";
+import {FiSearch} from "react-icons/fi";
 
 const Container = styled.div`
     .header {
@@ -40,8 +41,43 @@ const Container = styled.div`
         border-radius:5px;
         .select{
             position: absolute;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
             right: 5px;
             top: 5px;
+            @media (max-width: 768px) {
+                  justify-content: center;
+                }
+            .searchBox{
+              margin-right: 1rem;
+              display: flex;
+              flex-direction: row;
+              @media (max-width: 768px) {
+                  margin-left: 2rem;
+                  margin-bottom: 1rem;
+                }
+              .searchBar{
+                margin-right: 0.5rem;
+                width: 12rem;
+                border: 1px solid #eee;
+                @media (max-width: 768px) {
+
+                }
+              }
+              .searchIcon{
+                cursor: pointer;
+                text-align: center;
+                color: #fff;
+                width: 1rem;
+                height: 1rem;
+                padding: 0.3rem;
+                border-radius: 100%;
+                background-color: #5EADF7;
+              }
+            }
         }
         /* @media (max-width: 768px) {
         width: 40%;
@@ -67,6 +103,7 @@ const Container = styled.div`
     @media (max-width: 768px) {
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
+      margin-top: 1rem;
     }
 
 
@@ -78,128 +115,147 @@ const Container = styled.div`
 
 
 
-
 const ExhibitListPage = () => {
-    // 전시 목록보기
-    const [exhibitionList, setExhibitionList] = useState([]);
-    //셀렉트박스 상태관리
-    const [selectedOption, setSelectedOption] = useState('');
-     //메뉴 바 상태 관리
-    const [category,setCategory] = useState('menu1');
-    //카테고리 배열
-    const categories = [
-      {name :'menu1',text : '인기순'},
-      {name :'menu2',text : '장소/지역'},
-      {name :'menu3',text : '최신순'}]
-     //보여질 페이지 개수
-   const ITEMS_PAGE = 12;
-   const [currentPage, setCurrentPage] = useState(0);
-   const handlePageClick = (selectedPage) => {
+  // 전시목록
+  const [exhibitionList, setExhibitionList] = useState([]);
+  // 셀렉트박스(갤러리, 리스트)
+  const [selectedOption, setSelectedOption] = useState('');
+  // 카테고리
+  const [category, setCategory] = useState('menu1');
+  // 검색
+  const [seachName, setSearchName] = useState('');
+  // 검색한 내용다시
+  const [filteredData, setFilteredData] = useState([]);
+  // 지역
+  const [areaCategory, setAreaCategory] = useState('서울');
+  // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectEx, setSelectEx] = useState('');
+
+  const categories = [
+    { name: 'menu1', text: '인기순' },
+    { name: 'menu2', text: '장소/지역' },
+    { name: 'menu3', text: '최신순' }
+  ];
+  const ITEMS_PAGE = 12;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const exhibitListData = await DDDApi.exhibitionList();
+        setExhibitionList(exhibitListData.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (category === 'menu1') {
+      setFilteredData(exhibitionList);
+    } else if (category === 'menu2') {
+      const areaData = exhibitionList.filter((item) =>
+        item.region.includes(areaCategory)
+      );
+      setFilteredData(areaData);
+    } else {
+      // 최신순으로 정렬
+      const dateData = [...exhibitionList].sort((a, b) => {
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+        return dateB - dateA;
+      });
+      setFilteredData(dateData);
+    }
+  }, [category, exhibitionList, areaCategory]);
+
+  const handleChangeExhibition = (e) => {
+    setSearchName(e.target.value);
+  };
+
+  const handlePageClick = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
-    const onSelect = useCallback(category => {
-        setCategory(category);
-        setCurrentPage(0);
-    },[]);
+  // 전시검색
+  const searchExhibitions = () => {
+    const searchTerm = seachName.toLowerCase();
+    return filteredData.filter((exhibition) =>
+      exhibition.exhibitName.toLowerCase().includes(searchTerm)
+    );
+  };
 
-    // 전시리스트 불러오기
-    useEffect(() => {
-      const exhibitions = async () => {
-        try {
-          const exhibitListData = await DDDApi.exhibitionList();
-          setExhibitionList(exhibitListData.data);
-        } catch(e) {
-          console.log(e);
-        }
-      }
-      exhibitions();
-    }, []);
+  const filteredExhibitions = searchExhibitions();
+  const pageCount = Math.ceil(filteredExhibitions.length / ITEMS_PAGE);
+  const offset = currentPage * ITEMS_PAGE;
+  const currentPageData = filteredExhibitions.slice(offset, offset + ITEMS_PAGE);
 
-
-    useEffect(() => {
-        if (category === "menu1") {
-        // 인기순 데이터로 리셋
-        setFilteredData(exhibitionList);
-
-        } else if (category === "menu2") {
-          setAreaCategory("서울");
-          const areaData = exhibitionList.filter((item) =>
-            item.region.includes(areaCategory)
-          );
-          setFilteredData(areaData);
-
-        } else {
-          // 최신순 데이터로 리셋
-          const dateData = [...exhibitionList].sort((a, b) => {
-            const dateA = new Date(a.startDate);
-            const dateB = new Date(b.startDate);
-            return dateB - dateA;
-          });
-          setFilteredData(dateData);
-        }
-      }, [category, exhibitionList]);
-
-     //필터 데이터
-   const [filteredData, setFilteredData] = useState([]);
-    //지역 메뉴바 상태관리
-    const [areaCategory,setAreaCategory] = useState('서울');
-    const AreaOnSelect = useCallback(areaCategory =>{
-        setAreaCategory(areaCategory);
-        if(category === 'menu2'){
-            const areaData = exhibitionList.filter(item=> item.region.includes(areaCategory))
-            setFilteredData(areaData);
-            console.log(areaData);
-        }
-
-    },[category]);
-
-  const pageCount = Math.ceil(filteredData.length / ITEMS_PAGE); // 전체 페이지 수
-  const offset = currentPage * ITEMS_PAGE; // 현재 페이지에서 보여줄 아이템의 시작 인덱스
-  const currentPageData = filteredData.slice(offset, offset + ITEMS_PAGE);
-
-  const [modalOpen,setModalOpen] = useState(false);
-  const closeModal =() => {
+  const closeModal = () => {
     setModalOpen(false);
+  };
 
-  }
-  //선택한 전시 정보 상태 관리
-  const [selectEx, setSelectEx] = useState('');
-  const exClick=(selectEx) => {
+  const exClick = (selectEx) => {
     setModalOpen(true);
     setSelectEx(selectEx);
+  };
 
-  }
-    return(
-      <>
-      <Header/>
-        <Container>
+  const onSelect = useCallback((category) => {
+    setCategory(category);
+    setCurrentPage(0);
+  }, []);
 
+  const AreaOnSelect = useCallback(
+    (areaCategory) => {
+      setAreaCategory(areaCategory);
+      if (category === 'menu2') {
+        const areaData = exhibitionList.filter((item) =>
+          item.region.includes(areaCategory)
+        );
+        setFilteredData(areaData);
+      }
+    },
+    [category, exhibitionList]
+  );
+
+  return (
+    <>
+      <Header />
+      <Container>
         <div className="apiBox">
-            <Carousel data={exhibitionList}/>
+          <Carousel data={exhibitionList} />
         </div>
         <div className="category">
-            <Categroy category={category} onSelect={onSelect}categories={categories}/>
+          <Categroy category={category} onSelect={onSelect} categories={categories} />
         </div>
         <div className="section">
-            {category==='menu2' &&
+          {category === 'menu2' && (
             <div className="areaSelectBox">
-            <AreaCategroy category={areaCategory} onSelect={AreaOnSelect}/>
+              <AreaCategroy category={areaCategory} onSelect={AreaOnSelect} />
             </div>
-            }
-            <div className="select">
-            <SelectBtn selectedOption={selectedOption} setSelectedOption={setSelectedOption} options={['갤러리','리스트']} />
+          )}
+          <div className="select">
+            <SelectBtn selectedOption={selectedOption} setSelectedOption={setSelectedOption} options={['갤러리', '리스트']} />
+            <div className="searchBox">
+              <input className="searchBar" type="text" value={seachName} onChange={handleChangeExhibition} />
+              <div className="searchIcon">
+                <FiSearch />
+              </div>
             </div>
-            <div className="imgBoxs">
+          </div>
+          <div className="imgBoxs">
             {currentPageData.map((data) => (
-            <InfoBox key={data.exhibitNo} data={data}  selectedOption={selectedOption} onClick={()=>exClick(data)}/>
+              <InfoBox key={data.exhibitNo} data={data} selectedOption={selectedOption} onClick={() => exClick(data)} />
             ))}
-            </div>
-          <PageNation pageCount={pageCount} onPageChange={handlePageClick} selected={currentPage+1}  />
+          </div>
+          <PageNation pageCount={pageCount} onPageChange={handlePageClick} selected={currentPage + 1} />
         </div>
-        <InfoModal open={modalOpen} close={closeModal}> <ClickInfoBox data={selectEx}/></InfoModal>
-        </Container>
-        </>
-    );
-}
+        <InfoModal open={modalOpen} close={closeModal}>
+          <ClickInfoBox data={selectEx} />
+        </InfoModal>
+      </Container>
+    </>
+  );
+};
 
 export default ExhibitListPage;

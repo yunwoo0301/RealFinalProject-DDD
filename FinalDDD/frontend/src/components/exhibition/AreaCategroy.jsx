@@ -15,6 +15,7 @@ const Container = styled.div`
   }
   @media (max-width: 768px) {
     justify-content: flex-end;
+    margin-top: 1rem;
   }
 `;
 
