@@ -96,6 +96,7 @@ const MyMessage = () => {
         msg: "",
         icon: "",
         id:"",
+        isOpened:"",
         name: "",
         title: "",
         contents: "",
@@ -153,22 +154,28 @@ const MyMessage = () => {
 
 
     // 받은메세지 확인
-    const openToMsg = (messageNo, senderId, senderNickname, title, contents) => {
-         // 쪽지로 보내줄 정보들
-         setMsgProps({
-            ...msgProps,
-            messageNo: messageNo,
-            msg: "받은메세지",
-            icon: <MdOutlinePersonPin/>,
-            id: senderId,
-            name: senderNickname,
-            title: title,
-            contents: contents,
-            button: [<Button className="message" onClick={closeMsg}>확인</Button>,
-            <Button className="message" onClick={openToReply}>답장하기</Button>]
-          });
-        setOpenMsg(true);
-    }
+const openToMsg = async (messageNo, senderId, isOpened, senderNickname, title, contents) => {
+    // isOpened 값을 1로 변경
+    await isOpenedCheck(messageNo, 1);
+
+    // 쪽지로 보내줄 정보들
+    setMsgProps({
+        ...msgProps,
+        messageNo: messageNo,
+        msg: "받은메세지",
+        icon: <MdOutlinePersonPin/>,
+        id: senderId,
+        isOpened: isOpened,
+        name: senderNickname,
+        title: title,
+        contents: contents,
+        button: [
+            <Button className="message" onClick={closeMsg}>확인</Button>,
+            <Button className="message" onClick={openToReply}>답장하기</Button>
+        ]
+    });
+    setOpenMsg(true);
+}
 
     // 보낸메세지 확인
     const openToSentMsg = (messageNo, receiverNickname, title, contents) => {
@@ -189,6 +196,10 @@ const MyMessage = () => {
         setOpenMsg(false);
     }
 
+    // isOpened 값을 변경하는 함수
+    const isOpenedCheck = async (messageNo, isOpened) => {
+        await DDDApi.openedMsg(messageNo, isOpened);
+    }
 
     return (
         <>
@@ -213,7 +224,12 @@ const MyMessage = () => {
                         <tr key={receiveMsg.messageNo}>
                         <td
                         style={{cursor: 'pointer' }}
-                        onClick={() => openToMsg(receiveMsg.messageNo, receiveMsg.senderId, receiveMsg.senderNickname, receiveMsg.title, receiveMsg.contents)}
+                        onClick={() => openToMsg(receiveMsg.messageNo,
+                            receiveMsg.senderId,
+                            receiveMsg.isOpened,
+                            receiveMsg.senderNickname,
+                            receiveMsg.title,
+                            receiveMsg.contents)}
                         >{receiveMsg.title}</td>
                         <td>{receiveMsg.senderNickname}</td>
                         <td>{formatDate(receiveMsg.messageDate)}</td>
