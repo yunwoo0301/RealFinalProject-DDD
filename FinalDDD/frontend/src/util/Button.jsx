@@ -26,8 +26,11 @@ cursor: pointer;
         color: #5EADF7;
     }
 }
-
 &.message{
+    background-color: #5EADF7;
+}
+&.oneMessage{
+    width: 50%;
     background-color: #5EADF7;
 }
 

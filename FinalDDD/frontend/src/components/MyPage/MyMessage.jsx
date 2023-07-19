@@ -5,6 +5,7 @@ import DDDApi from '../../api/DDDApi';
 import ShowMsg from '../Message/ShowMessage';
 import {MdOutlinePersonPin} from "react-icons/md";
 import {GiLoveLetter} from  "react-icons/gi";
+import Button from '../../util/Button';
 
 
 
@@ -97,7 +98,7 @@ const MyMessage = () => {
         name: "",
         title: "",
         contents: "",
-        close: () => setOpenMsg(false)
+        button: ""
       });
 
 
@@ -156,7 +157,8 @@ const MyMessage = () => {
             name: senderNickname,
             title: title,
             contents: contents,
-            close: () => setOpenMsg(false)
+            button: [<Button className="message" onClick={closeMsg}>확인</Button>,
+            <Button className="message">답장하기</Button>]
           });
         setOpenMsg(true);
     }
@@ -171,9 +173,13 @@ const MyMessage = () => {
             name: receiverNickname,
             title: title,
             contents: contents,
-            close: () => setOpenMsg(false)
+            button: (<Button className="oneMessage" onClick={closeMsg}>확인</Button>)
         });
         setOpenMsg(true);
+    }
+
+    const closeMsg = () => {
+        setOpenMsg(false);
     }
 
 
@@ -210,7 +216,7 @@ const MyMessage = () => {
                     currentPageData.length === 0 &&
                     (
                         <tr>
-                            <td colSpan={6}>작성 한 게시글이 없습니다. </td>
+                            <td colSpan={6}>받은 메세지가 없습니다.🥲</td>
                         </tr>
                     )
                 }
@@ -250,7 +256,7 @@ const MyMessage = () => {
                     sentCurrentPageData.length === 0 &&
                     (
                         <tr>
-                            <td colSpan={6}>작성 한 댓글이 없습니다. </td>
+                            <td colSpan={6}>보낸 메세지가 없습니다.🥲 </td>
                         </tr>
                     )
                 }
