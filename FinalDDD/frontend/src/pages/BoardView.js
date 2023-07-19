@@ -55,34 +55,30 @@ const Section = styled.div`
         align-items: center;
 
         .preBtn, .mainBtn, .nextBtn { // 이전글 버튼
-            padding: .8em 1.4em;
+            padding: .4em .2em;
             border: none;
             border-radius: 10px;
-            background-color: #050e3d;
-            color: white;
+            font-weight: bold;
             cursor: pointer;
-            margin-left: 1.2em; // 추가
+            margin-left: 1em;
             transition: all .1s ease-in;
             text-decoration: none;
         }
+
     }
 
     @media (max-width: 768px) {
         .listBtn {
-            margin-right: .1em;
-            background-color: transparent;
+            display: flex;
+            flex-direction: row;
+            margin-right: 0;
         }
 
         .preBtn, .mainBtn, .nextBtn {
             display: flex;
-            flex-direction: column;
-            padding: .5em, 1em;
-            font-size: .5em;
-            color: black;
-            background: #5eadf7;
+            font-size: .7em;
 
-
-         }
+        }
     }
 
     .editBtn {
@@ -228,8 +224,8 @@ const Contents = styled.div`
     }
 
     img {
-        width: 60%; /* 이미지의 최대 가로 너비를 설정 */
-        height: 50%;
+        width: 50%; /* 이미지의 최대 가로 너비를 설정 */
+        height: auto;
         border-radius: 12px;
         align-items: center;
         justify-content: center;
@@ -376,8 +372,12 @@ const BoardView = () => {
     console.log("작성자 정보:", boardView?.author);
     console.log("getId:", getId);
     console.log("작성자와 Id 일치 여부:", isAuthorMatched);
-    // console.log(boardView?.email);
     console.log(boardView?.id);
+
+    // 글목록 화면으로 이동
+    const onClickMain = () => {
+        navigate('/boardList');
+    };
 
 
     // 수정, 삭제 버튼 노출 여부 확인
@@ -420,8 +420,8 @@ const BoardView = () => {
                         setPrevAndNextData(prevAndNextData);
                     }
 
-                     if (boardView && boardView.views != null) { // 게시글 조회수 구간
-//                    if (data && data.views != null) { // 게시글 조회수 구간
+                    if (boardView && boardView.views != null) { // 게시글 조회수 구간
+                    // if (data && data.views != null) { // 게시글 조회수 구간
                         setBoardView(prevState => ({
                             ...prevState,
                             views: prevState.views + 1
@@ -442,7 +442,6 @@ const BoardView = () => {
     }, [prevAndNextData]);
 
 
-    // 이전글 함수
     const onClickPrev = () => {
         if (prevAndNextData && prevAndNextData.prev) {
             const prevBoardNo = prevAndNextData.prev.boardNo;
@@ -452,7 +451,6 @@ const BoardView = () => {
         }
     };
 
-    // 다음글 함수
     const onClickNext = () => {
         if (prevAndNextData && prevAndNextData.next) {
             const nextBoardNo = prevAndNextData.next.boardNo;
@@ -462,10 +460,6 @@ const BoardView = () => {
         }
     };
 
-    // 글목록 화면으로 이동
-    const onClickMain = () => {
-        navigate('/boardList');
-    };
 
     // 게시글 수정 화면으로 이동
     const onClickEdit = () => {
@@ -545,9 +539,6 @@ const BoardView = () => {
             댓글을 삭제하시겠습니까?  <br />
             <div className="warn">삭제하신 댓글은 저장되지 않습니다. <br/>
             </div>
-            <div className="checkBox">
-
-            </div>
         </ModalBodyStyle>
         ),
         button: [
@@ -567,7 +558,7 @@ const BoardView = () => {
 
                 {/* 게시판 카테고리 */}
                 <div className="sub_category">
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <FormControl sx={{ m: 1, minWidth: 110 }}>
                         <InputLabel id="demo-simple-select-readonly-label">카테고리</InputLabel>
                         <Select
                         labelId="demo-simple-select-readonly-label"
@@ -582,7 +573,7 @@ const BoardView = () => {
 
                     {/* 지역 카테고리 추천수다 & 질문하기 선택 시 노출X */}
                     {boardView?.category !== 'Recommend' && boardView?.category !== 'Question' && (
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <FormControl sx={{ m: 0.5, minWidth: 80 }}>
                         <InputLabel id="demo-simple-select-readonly-label">지역선택</InputLabel>
                         <Select
                         labelId="demo-simple-select-readonly-label"
@@ -599,11 +590,10 @@ const BoardView = () => {
 
                     {/* 이전글 / 목록 / 다음글 버튼 추가 */}
                     <div className="listBtn">
-                        <button className="preBtn" onClick={onClickPrev} >이전글</button>
-                        <button className="mainBtn" onClick={onClickMain}>글목록</button>
-                        <button className="nextBtn" onClick={onClickNext}>다음글</button>
+                        <div className="preBtn"  onClick={onClickPrev} >이전글</div>
+                        <div className="mainBtn" onClick={onClickMain}>글목록</div>
+                        <div className="nextBtn" onClick={onClickNext}>다음글</div>
                     </div>
-
                 </div>
 
                 {/* 제목 구간 */}
