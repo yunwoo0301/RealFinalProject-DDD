@@ -216,11 +216,12 @@ const MyDiary = () => {
 
   const countCheck = () => {
     for (let key in commentAboutCount) {
-      if (countDiary < key) {
+      if (countDiary < Number(key)) {
         return commentAboutCount[key];
       }
     }
-  };
+    return "당신은 전시 전문가! 하산하세요";
+};
 
   console.log(myDiaryData)
 

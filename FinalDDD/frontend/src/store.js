@@ -20,6 +20,9 @@ const useStore = create((set) => ({
     search: "",
     setSearch: (word) => set({ search: word }),
 
+    filterExhibition: [],
+    setFilterExhibition : (data) => set((state) =>  ({filterExhibition : data})),
+
 }));
 
 

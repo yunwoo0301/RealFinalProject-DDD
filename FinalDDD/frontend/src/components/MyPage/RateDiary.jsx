@@ -8,6 +8,7 @@ import profileImage from '../../resources/기본프로필.png';
 import { DiaryApi } from '../../api/MyPageApi';
 import Backdrop from '@mui/material/Backdrop';
 import AlertModal from '../../util/Alert';
+import SearchExhibition from './SearchExhibition';
 
 const Container = styled.div`
     width: 100%;
@@ -152,38 +153,45 @@ const BlackBG = styled.div`
 
 const RateDiary = () => {
 
-  const { stealExhibition, search , setSearch, myDiaryData} =useStore(); // 데이터 받아옴.
+  const { stealExhibition, search , setSearch, myDiaryData, setMyDiaryData } = useStore();
   const [ filterExhibition, setFilterExhibition ] = useState([]);
+  const [ratingStar, setRatingStar] = useState(Array(stealExhibition.length).fill(0));
+  const [inputComment, setInputComment] = useState(Array(stealExhibition.length).fill(""));
+  const [loading, setLoading] = useState(false);
+  const memberId = Functions.getMemberId();
 
-    // ratingStar와 inputComment 상태 정의
-    const [ratingStar, setRatingStar] = useState(Array(stealExhibition.length).fill(0));
-    const [inputComment, setInputComment] = useState(Array(stealExhibition.length).fill(""));
-    const [loading, setLoading] = useState(false);
-    const memberId = Functions.getMemberId();
+  const updateCommentsAndStars = (exhibitions, diaryData) => {
+    const newComments = exhibitions.map((exhibition) => {
+      const diary = diaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+      return diary ? diary.comment : '';
+    });
+    setInputComment(newComments);
 
-     // 처음에 myDiaryData에 있던 값 합치기
-     useEffect(()=>{ // 마운트 되면
-      const newComments = stealExhibition.map((exhibition) => {
-        // 다이어리 and 전시회리스트에서 exhibitNo가 같은 값 찾기
-        const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-        // diary = { memberId: 1, diaryId: 19, regDate: '2023-07-19T14:49:57.558976', rateStar: 5, comment: '김포 다도 박물관 0329', …}
-        // 같은 값을 찾았으면, 이걸 가지고 comment에 넣음
-        return diary ? diary.comment : inputComment[stealExhibition.indexOf(exhibition)];
-      });
-      setInputComment(newComments); // 받아온 데이터의 comment만 업데이트
-      // console.log(inputComment) // 0: "김포 다도 박물관 0329" 1: "" ...
+    const newStar = exhibitions.map((exhibition) => {
+      const diary = diaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+      return diary ? diary.rateStar : 0;
+    });
+    setRatingStar(newStar);
+  }
 
-      const newStar = stealExhibition.map((exhibition) => {
-        const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-        // console.log(diary) // 0: "김포 다도 박물관 0329" 1: "" ...
+  // 초기 값 설정
+useEffect(() => {
+  updateCommentsAndStars(stealExhibition, myDiaryData);
+  setLoading(true);
+}, []);
 
-        return diary ? diary.rateStar : ratingStar[stealExhibition.indexOf(exhibition)];
+useEffect(() => {
+  const infoFetchDate = async () => {
+    const response = await DiaryApi.info(memberId);
 
-      });
-      setRatingStar(newStar);
-      // console.log(ratingStar) // / 0: 5 1:0 ...
-      setLoading(true)
-    },[])
+    const newMyDiaryData = response.data;
+    setMyDiaryData(newMyDiaryData);
+
+    updateCommentsAndStars(stealExhibition, newMyDiaryData);
+    setLoading(false);
+  };
+  infoFetchDate();
+}, [memberId, search, filterExhibition]);
 
 
 // 검색 부분
@@ -231,23 +239,6 @@ newComments[index] = e.target.value;
 setInputComment(newComments);
 };
 
-console.log(inputComment)
-
-
-useEffect(() => {
-const newComments = stealExhibition.map((exhibition) => {
-const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-return diary ? diary.comment : '';
-});
-setInputComment(newComments);
-
-const newStar = stealExhibition.map((exhibition) => {
-const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-return diary ? diary.rateStar : 0;
-});
-setRatingStar(newStar);
-}, [filterExhibition, search]);
-
   // backdrop openState
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
@@ -260,11 +251,14 @@ setRatingStar(newStar);
 
 
     return (
+      <>
+      <SearchExhibition/>
 
-
+      <Container>
         <>
-                <input type="text" value={search} onChange={handleFind}/>
- <Container>
+                {/* <input type="text" value={search} onChange={handleFind}/> */}
+
+
             <div className="wrap">
            {filterExhibition.map((item, index) => {
                 return (
@@ -321,8 +315,11 @@ setRatingStar(newStar);
             >
                 <AlertModal />
             </Backdrop>
-        </Container>
         </>
+        </Container>
+      </>
+
+
     );
 };
 export default RateDiary;

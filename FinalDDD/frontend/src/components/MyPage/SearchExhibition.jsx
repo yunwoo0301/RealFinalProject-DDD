@@ -1,144 +1,80 @@
-import {React, useState, useEffect} from 'react';
-import useStore from '../../store';
-import Functions from '../../util/Functions';
+import {React, useEffect} from 'react';
 import styled from 'styled-components';
-import Rating from "@mui/material/Rating";
-import Stack from "@mui/material/Stack";
-import profileImage from '../../resources/기본프로필.png';
-import { DiaryApi } from '../../api/MyPageApi';
-import Backdrop from '@mui/material/Backdrop';
-import AlertModal from '../../util/Alert';
+import useStore from '../../store';
+
+const Container = styled.div`
+  width: 100%;
+  height: 50vh; // 이 부분을 수정
+  overflow: hidden;
+  position: relative; // 이 부분을 추가
+  .videoBox {
+    width: 100vw;
+    height: 50vh;
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .searchBar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18rem;
+    height: 3rem;
+    z-index: 1;
+    border-radius: 10rem;
+    padding: 0 2rem;
+    outline: none;
+    border: 1px solid #c2c2c2;
+  }
+`;
+
+const BlackBG = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+`;
 
 
 const SearchExhibition = () => {
-    const { stealExhibition, search , setSearch, myDiaryData} =useStore(); // 데이터 받아옴.
-    const [ filterExhibition, setFilterExhibition ] = useState([]);
-    const [ratingStar, setRatingStar] = useState(Array(stealExhibition.length).fill(0));
-    const [inputComment, setInputComment] = useState(Array(stealExhibition.length).fill(""));
-    const [loading, setLoading] = useState(false);
+  const { search, setSearch, stealExhibition, setFilterExhibition } = useStore();
 
-     // 처음에 myDiaryData에 있던 값 합치기
-     useEffect(()=>{ // 마운트 되면
-      const newComments = stealExhibition.map((exhibition) => {
-        // 다이어리 and 전시회리스트에서 exhibitNo가 같은 값 찾기
-        const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-        // diary = { memberId: 1, diaryId: 19, regDate: '2023-07-19T14:49:57.558976', rateStar: 5, comment: '김포 다도 박물관 0329', …}
-        // 같은 값을 찾았으면, 이걸 가지고 comment에 넣음
-        return diary ? diary.comment : inputComment[stealExhibition.indexOf(exhibition)];
-      });
-      setInputComment(newComments); // 받아온 데이터의 comment만 업데이트
-      // console.log(inputComment) // 0: "김포 다도 박물관 0329" 1: "" ...
-
-      const newStar = stealExhibition.map((exhibition) => {
-        const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-        // console.log(diary) // 0: "김포 다도 박물관 0329" 1: "" ...
-
-        return diary ? diary.rateStar : ratingStar[stealExhibition.indexOf(exhibition)];
-
-      });
-      setRatingStar(newStar);
-      // console.log(ratingStar) // / 0: 5 1:0 ...
-      setLoading(true)
-    },[])
-
-// 검색 부분
-    const handleFind = (e) => {
-        const currentWord = e.target.value;
-        setSearch(currentWord);
-    };
-
-    useEffect(() => {
-        const filterSearch = stealExhibition.filter((item) =>
-            item.exhibitName.toString().includes(search.toString())
-        );
-        setFilterExhibition(filterSearch);
-    }, [search, stealExhibition]);
-
-    // 별점 수정
-    const onChangeStar = (e, exhibitNo) => {
-      const newRatingStar = [...ratingStar];
-        // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
-        const index = stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === exhibitNo);
-
-        // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
-        if (index === -1) {
-          return;
-        }
-
-      newRatingStar[index] = Number(e.target.value); // 숫자로 변환
-      setRatingStar(newRatingStar);
-      // console.log(ratingStar)
-    };
-
-
-  // 텍스트 핸들링
-  const onChangeText = (e, exhibitNo) => {
-    const newComments = [...inputComment]; //불변성의 원칙으로 새로운 배열 생성
-    // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
-    const index = stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === exhibitNo);
-    // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
-    if (index === -1) {
-      return;
-    }
-
-    // 일치하는 diary의 comment를 업데이트합니다.
-    newComments[index] = e.target.value;
-    setInputComment(newComments);
+  // const videoUrl = "https://s3.eu-west-1.amazonaws.com/eu-west-1.vimeo.com/videos/638/229/638229488.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZRUUNWVAWWO32QM7%2F20230719%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230719T155004Z&X-Amz-Expires=172800&X-Amz-SignedHeaders=host&X-Amz-Signature=98cc865d21dc0c048d3517c804c87b7c86d63c4f01238b765a067da71e7d1d7f";
+  const imgUrl ="https://images.unsplash.com/photo-1501270067467-8298cce1babb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80"
+  const handleFind = (e) => {
+    const currentWord = e.target.value;
+    setSearch(currentWord);
   };
 
-  console.log(inputComment)
-
-
-useEffect(() => {
-    const newComments = stealExhibition.map((exhibition) => {
-      const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-      return diary ? diary.comment : '';
-    });
-    setInputComment(newComments);
-
-    const newStar = stealExhibition.map((exhibition) => {
-      const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-      return diary ? diary.rateStar : 0;
-    });
-    setRatingStar(newStar);
-  }, [filterExhibition, search]);
-
-
-
-
+  useEffect(() => {
+    const filterSearch = stealExhibition.filter((item) =>
+      item.exhibitName.toString().includes(search.toString())
+    );
+    setFilterExhibition(filterSearch);
+  }, [search, stealExhibition]);
 
 
     return (
-        <>
-        <input type="text" value={search} onChange={handleFind}/>
-            {filterExhibition.map((item, index) => (
-                 <div key={item.exhibitNo}>
-                    {item.exhibitName}
-
-                    <div style={{backgroundColor:'aqua'}}>
-                    {ratingStar[stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === item.exhibitNo)]}
-                    <Stack spacing={1} className="rateStar">
-                        <Rating
-                            precision={0.5}
-                            value={ratingStar[stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === item.exhibitNo)]}
-                            onChange={(e) => onChangeStar(e, item.exhibitNo)}
-                        />
-                        </Stack>
-
-                    </div>
-                    <div style={{backgroundColor:'aqua'}}>
-                        <textarea name="" id="" cols="30" rows="10"
-                            onChange={(e) => onChangeText(e, item.exhibitNo)}
-                            value={inputComment[stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === item.exhibitNo)]}
-                        />
-
-                    </div>
-
-                 </div>
-                ))}
-
-
-        </>
+        <Container>
+          <div className='videoBox'>
+            <input type="text" className='searchBar' placeholder='전시회를 검색하세요' value={search} onChange={handleFind}/>
+            <BlackBG/>
+            {/* <video autoPlay loop muted >
+              <source src={videoUrl} type="video/mp4" />
+            </video> */}
+            <img src={imgUrl} alt="" />
+          </div>
+        </Container>
     );
 };
 
