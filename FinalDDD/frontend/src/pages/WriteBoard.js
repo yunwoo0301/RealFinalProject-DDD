@@ -11,7 +11,8 @@ import { Backdrop } from "@mui/material";
 import { FcCloseUpMode } from 'react-icons/fc';
 
 const Wrap = styled.div`
-    width: 82vw;
+//    width: 82vw;
+    width: 80vw;
     height: 100%;
     margin: 0 auto;
     align-items: center;
@@ -70,12 +71,6 @@ const Section = styled.div`
     display: flex;
     flex-direction: column;
 
-
-    /* div { // 헤더 및 카테고리 박스
-        width: 100%;
-        border: 1px solid red;
-    } */
-
     .board_header { // 게시물 작성 영역
         h2 {
             font-size: 1.8em;
@@ -86,7 +81,8 @@ const Section = styled.div`
     }
 
     table {
-      width: 80vw;
+//    width: 80vw;
+      width: 70vw;
       margin: 0 auto;
       border-collapse: collapse;
       background-color: #4555AE;
@@ -200,12 +196,13 @@ const Section = styled.div`
 `;
 
 const TextWrap = styled.div`
-  width: 80vw;
-  margin: 0 auto;
-  margin-bottom:20px;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1em;
+//  width: 80vw;
+    width: 70vw;
+    margin: 0 auto;
+    margin-bottom:20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
 
 
     .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
@@ -332,7 +329,6 @@ const WriteBoard = () => {
       console.log("Result Number:", linkNo);
 
       if (linkNo === true) {
-        // alert("문의글 작성이 완료되었습니다.");
         setShowModal(true);
       }
     } catch (error) {
@@ -435,11 +431,8 @@ const WriteBoard = () => {
                       </button>) : (<button>
                         <input type="file" id="file-upload" onChange={previewImage} style={{ display: "none" }}/>
                         <label htmlFor="file-upload">사진</label>
-                      </button>)}
-                      {/* <button>
-                        <input type="file" id="file-upload" onChange={previewImage} style={{ display: "none" }}/>
-                        <label htmlFor="file-upload">사진 업로드</label>
-                      </button> */}
+                      </button>
+                      )}
                     </div>
                   </td>
                 </tr>

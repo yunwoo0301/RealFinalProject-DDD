@@ -11,7 +11,8 @@ import { Backdrop } from "@mui/material";
 
 
 const EditWrap = styled.div`
-    width: 82vw;
+//    width: 82vw;
+    width: 80vw;
     height: 100%;
     margin: 0 auto;
     align-items: center;
@@ -67,13 +68,6 @@ const Section = styled.div`
     display: flex;
     flex-direction: column;
 
-
-    /* div { // 헤더 및 카테고리 박스
-        width: 100%;
-        border: 1px solid red;
-    } */
-
-
     .board_header { // 게시물 수정 영역
         h2 {
             font-size: 1.8em;
@@ -84,7 +78,8 @@ const Section = styled.div`
     }
 
     table {
-        width: 80vw;
+//        width: 80vw;
+        width: 70vw;
         margin: 0 auto;
         border-collapse: collapse;
         background-color: #4555AE;
@@ -126,10 +121,6 @@ const Section = styled.div`
         td:nth-child(3) {width: 70%; text-align: left; padding-left: 20px;}
 
         td:nth-child(4) {text-align: center;}
-
-        /* @media (max-width: 780px) {
-        td:nth-child(4) { display: flex; flex-direction: column; justify-content: center; align-items: center;}
-        } */
 
     }
 
@@ -202,7 +193,8 @@ const Section = styled.div`
 
 
 const TextWrap = styled.div`
-    width: 80vw;
+//    width: 80vw;
+    width: 70vw;
     margin: 0 auto;
     margin-bottom:20px;
     justify-content: center;
@@ -214,7 +206,7 @@ const TextWrap = styled.div`
 
   .ck-editor__main {padding: 0;}
 
-  @media (max-width: 768px) { // 추가
+  @media (max-width: 768px) {
     width: 100%;
   }
 
@@ -300,7 +292,6 @@ const EditBoard = () => {
 
     // 조회된 상태에서 수정 후 값 저장
     const onClickUpdate = async () => {
-        // if (title.length === 0 || category.length === 0 || contents === "") {
         if (title === boardEdit.title && contents === boardEdit.contents) { //제목 or 내용 무조건 수정하도록 조건식 적용
           alert("제목 또는 내용을 수정해 주세요.");
         } else {
@@ -380,7 +371,6 @@ const EditBoard = () => {
         </ModalBodyStyle>
         ),
         button: [
-        // <button style = {{ backgroundColor : '#2B5EC2' }} onClick={()=> onClickUpdate(boardNo)}>확인</button>,
         <button style = {{ backgroundColor : '#2B5EC2' }} onClick={editConfirmClick}>확인</button>,
         <button style = {{ backgroundColor : '#2B5EC2' }} onClick={()=> setShowModal(false)}>취소</button>
         ],
@@ -454,13 +444,10 @@ const EditBoard = () => {
 
                 {/* 이미지 미리보기 및 업로드 */}
                 <div className="addBoard-wrapper">
-                    {/* {previewUrl && <img src={previewUrl} alt="Preview" />} 제외 */}
-
                     {previewUrl && !image?.previewUrl && <img src={previewUrl} alt="Preview" />}
                     {!previewUrl && boardEdit && boardEdit.image && (
                     <img src={boardEdit.image} alt="Upload" />
                 )}
-                    {/* {image && image.previewUrl && <img src={image.previewUrl} alt="Uploaded" />} 제외 */}
                     {image?.previewUrl && <img src={image.previewUrl} alt="Uploaded" />}
                 </div>
             </div>
