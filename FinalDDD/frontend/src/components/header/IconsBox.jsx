@@ -74,7 +74,7 @@ const LoginIconBox = styled.div`
     top: -50%;
     right: 200%;
     width: 9.0rem;
-    height: 6rem;
+    height: 8rem;
     margin-top: 1rem;
     display: none;
 
@@ -227,9 +227,12 @@ const Icons = () => {
     };
 
     const goToMypage = () => {
-
         setShowPage('마이페이지')
         navigate(`/api/mypage/${getId}`)
+    }
+    const goToMyMessage = () => {
+        setShowPage('내쪽지함')
+        navigate(`/api/mypage/${memberId}`)
     }
 
 
@@ -264,7 +267,8 @@ const Icons = () => {
                     <div className="infoBox">
                         <div className="nickname"  onClick={goToMypage}>{memberData.nickname}</div>
                         <div className="infoBoxBtn"   onClick={goToMypage}>마이 페이지</div>
-                        <div className="infoBoxBtn">
+                        <div className="infoBoxBtn"   onClick={()=>{navigate(`/ratediary`)}}>평가하기</div>
+                        <div className="infoBoxBtn" onClick={goToMyMessage}>
                             <Badge badgeContent={todayMsg} color="primary"variant="dot">
                             내 쪽지함
                             </Badge>

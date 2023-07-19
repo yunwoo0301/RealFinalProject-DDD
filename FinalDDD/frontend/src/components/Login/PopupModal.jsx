@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { SlCheck } from "react-icons/sl";
+import { FcFeedback } from "react-icons/fc";
 
 const Container = styled.div`
   /* background-color: aqua; */
-  width: 0;
-  height: 0;
+  width: 100vw;
+  height: 100vh;
   box-sizing: border-box;
 `;
 const Modal = styled.div`
@@ -42,7 +42,7 @@ const Modal = styled.div`
     padding-top: 2rem;
   }
   .title {
-    font-size: 2rem;
+    font-size: 1.2rem;
     font-weight: bold;
     /* background-color: red; */
     text-align: center;
@@ -68,7 +68,7 @@ const Modal = styled.div`
       height: 2.3rem;
       border-radius: 3rem;
       margin: 0 6px;
-      background-color: #5eadf7;
+      background-color: #050e3d;
       border: 1px solid #f4f8ff;
       color: white;
       font-size: 0.8rem;
@@ -83,12 +83,12 @@ const PopupModal = (props) => {
       <Container>
         <Modal>
           <div className="checkIcon">
-            <SlCheck fill="#2B5EC2" />
+            <FcFeedback/>
           </div>
-          <div className="title">회원가입 완료🎉</div>
+          <div className="title">이메일을 인증해주세요!</div>
           <div className="desc">
-            DDD의 회원가입이 완료되었습니다. <br /> 로그인 후 다양한 서비스를
-            이용해주세요 :&#41;
+            DDD의 회원가입이 완료되었습니다. <br />
+            이메일 인증 후 로그인해주세요! :&#41;
           </div>
           <div className="btnBlock">
             <button onClick={props.showLogin}>확인</button>

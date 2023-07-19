@@ -11,15 +11,14 @@ const useStore = create((set) => ({
     myDiaryData : [],
     setMyDiaryData :(data) => set((state) => ({myDiaryData : data})),
 
-    profileImg : [],
-    setProfileImg : (data) => set((state) => ({profileImg : data})),
-
     stealExhibition : [],
     setStealExhibition : (data) => set((state) => ({stealExhibition : data})),
 
     profileImg : {},
-    setProfileImg : (data) => set((state)=> ({profileImg : data}))
+    setProfileImg : (data) => set((state)=> ({profileImg : data})),
 
+    search: "",
+    setSearch: (word) => set({ search: word }),
 
 }));
 

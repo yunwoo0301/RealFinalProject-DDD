@@ -152,79 +152,101 @@ const BlackBG = styled.div`
 
 const RateDiary = () => {
 
-    const {stealExhibition} = useStore();
-    const [myDiaryData, setMyDiaryData] = useState([]);
+  const { stealExhibition, search , setSearch, myDiaryData} =useStore(); // 데이터 받아옴.
+  const [ filterExhibition, setFilterExhibition ] = useState([]);
 
     // ratingStar와 inputComment 상태 정의
     const [ratingStar, setRatingStar] = useState(Array(stealExhibition.length).fill(0));
     const [inputComment, setInputComment] = useState(Array(stealExhibition.length).fill(""));
-    // console.log(stealExhibition)
+    const [loading, setLoading] = useState(false);
     const memberId = Functions.getMemberId();
 
-    useEffect(() => {
-      const infoFetchDate = async () => {
-        const response = await DiaryApi.info(memberId);
+     // 처음에 myDiaryData에 있던 값 합치기
+     useEffect(()=>{ // 마운트 되면
+      const newComments = stealExhibition.map((exhibition) => {
+        // 다이어리 and 전시회리스트에서 exhibitNo가 같은 값 찾기
+        const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+        // diary = { memberId: 1, diaryId: 19, regDate: '2023-07-19T14:49:57.558976', rateStar: 5, comment: '김포 다도 박물관 0329', …}
+        // 같은 값을 찾았으면, 이걸 가지고 comment에 넣음
+        return diary ? diary.comment : inputComment[stealExhibition.indexOf(exhibition)];
+      });
+      setInputComment(newComments); // 받아온 데이터의 comment만 업데이트
+      // console.log(inputComment) // 0: "김포 다도 박물관 0329" 1: "" ...
 
-        const newMyDiaryData = response.data;
-        setMyDiaryData(newMyDiaryData);
-        console.log(newMyDiaryData); // 작동
+      const newStar = stealExhibition.map((exhibition) => {
+        const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+        // console.log(diary) // 0: "김포 다도 박물관 0329" 1: "" ...
 
-        const newComments = stealExhibition.map((exhibition) => {
-          // Find the diary with the same exhibitNo
-          const diary = newMyDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+        return diary ? diary.rateStar : ratingStar[stealExhibition.indexOf(exhibition)];
 
-          // If such a diary exists, use its comment. Otherwise, use the existing comment.
-          return diary ? diary.comment : inputComment[stealExhibition.indexOf(exhibition)];
-        });
-
-        setInputComment(newComments);
-        console.log(newComments);
-
-        const newStar = stealExhibition.map((exhibition) => {
-          // Find the diary with the same exhibitNo
-          const diary = newMyDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
-
-          // If such a diary exists, use its comment. Otherwise, use the existing comment.
-          return diary ? diary.rateStar : ratingStar[stealExhibition.indexOf(exhibition)];
-        });
-
-        setRatingStar(newStar);
-        console.log(newStar);
-      };
-      infoFetchDate();
-    }, []);
+      });
+      setRatingStar(newStar);
+      // console.log(ratingStar) // / 0: 5 1:0 ...
+      setLoading(true)
+    },[])
 
 
-
-// 별점 변경 핸들러
-const onChangeStar = (e, exhibitNo) => {
-    // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
-    const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo);
-
-    // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
-    if (index === -1) {
-      return;
-    }
-  const newRatingStar = [...ratingStar];
-  newRatingStar[index] = Number(e.target.value); // 숫자로 변환
-  setRatingStar(newRatingStar);
+// 검색 부분
+const handleFind = (e) => {
+  const currentWord = e.target.value;
+  setSearch(currentWord);
 };
 
-// 텍스트 변경 핸들러
-const onChangeText = ((e, exhibitNo) => {
+useEffect(() => {
+  const filterSearch = stealExhibition.filter((item) =>
+      item.exhibitName.toString().includes(search.toString())
+  );
+  setFilterExhibition(filterSearch);
+}, [search, stealExhibition]);
+
+// 별점 수정
+const onChangeStar = (e, exhibitNo) => {
+const newRatingStar = [...ratingStar];
   // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
-  const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo);
+  const index = stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === exhibitNo);
 
   // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
   if (index === -1) {
     return;
   }
 
-  // 일치하는 diary의 comment를 업데이트합니다.
-  const newComments = [...inputComment];
-  newComments[index] = e.target.value;
-  setInputComment(newComments);
+newRatingStar[index] = Number(e.target.value); // 숫자로 변환
+setRatingStar(newRatingStar);
+// console.log(ratingStar)
+};
+
+
+// 텍스트 핸들링
+const onChangeText = (e, exhibitNo) => {
+const newComments = [...inputComment]; //불변성의 원칙으로 새로운 배열 생성
+// stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
+const index = stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === exhibitNo);
+// 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
+if (index === -1) {
+return;
+}
+
+// 일치하는 diary의 comment를 업데이트합니다.
+newComments[index] = e.target.value;
+setInputComment(newComments);
+};
+
+console.log(inputComment)
+
+
+useEffect(() => {
+const newComments = stealExhibition.map((exhibition) => {
+const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+return diary ? diary.comment : '';
 });
+setInputComment(newComments);
+
+const newStar = stealExhibition.map((exhibition) => {
+const diary = myDiaryData.find((item) => item.exhibitions.exhibitNo === exhibition.exhibitNo);
+return diary ? diary.rateStar : 0;
+});
+setRatingStar(newStar);
+}, [filterExhibition, search]);
 
   // backdrop openState
   const [open, setOpen] = React.useState(false);
@@ -241,9 +263,10 @@ const onChangeText = ((e, exhibitNo) => {
 
 
         <>
+                <input type="text" value={search} onChange={handleFind}/>
  <Container>
             <div className="wrap">
-           {stealExhibition.map((item, index) => {
+           {filterExhibition.map((item, index) => {
                 return (
                     <CardItem key={item.exhibitNo}>
                     <BlackBG/>
@@ -253,14 +276,14 @@ const onChangeText = ((e, exhibitNo) => {
                         <Stack spacing={1} className="rateStar">
                         <Rating
                             precision={0.5}
-                            value={ratingStar[index]}
+                            value={ratingStar[stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === item.exhibitNo)]}
                             onChange={(e) => onChangeStar(e, item.exhibitNo)}
                         />
                         </Stack>
                         <div className='textBox'>
                         <textarea className='comment' name="" id="" cols="18" rows="2"
-                            onChange={(e) => onChangeText(e, item.exhibitNo)} 
-                            value={inputComment[index]}
+                            onChange={(e) => onChangeText(e, item.exhibitNo)}
+                            value={inputComment[stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === item.exhibitNo)]}
                         />
                         <div className="saveIcon"
                          onClick={() => {
@@ -268,8 +291,8 @@ const onChangeText = ((e, exhibitNo) => {
                               const response = await DiaryApi.save(
                                 Functions.getMemberId(),
                                 item.exhibitNo,
-                                ratingStar[index],
-                                inputComment[index]
+                                ratingStar[stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === item.exhibitNo)],
+                                inputComment[stealExhibition.findIndex((exhibition) => exhibition.exhibitNo === item.exhibitNo)]
                               );
                               if (response.status === 200) {
                                 handleOpen();
