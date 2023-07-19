@@ -24,6 +24,8 @@ public class Message {
     private String messageTitle;
     private String messageContents;
     private LocalDateTime messageDate;
+    @Column(columnDefinition = "int default 0") // isOpened 필드의 기본값을 0으로 설정
+    private int isOpened; // 확인했는지 여부확인
 
 
 }

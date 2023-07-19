@@ -95,11 +95,17 @@ const MyMessage = () => {
         messageNo: "",
         msg: "",
         icon: "",
+        id:"",
         name: "",
         title: "",
         contents: "",
-        button: ""
+        button: "",
       });
+    //답장모달
+    const [openReply, setOpenReply] = useState(false);
+    const openToReply = () => {
+        setOpenReply(true);
+    }
 
 
     // 작성일자 yyyy-MM-dd 형식으로 변환
@@ -147,18 +153,19 @@ const MyMessage = () => {
 
 
     // 받은메세지 확인
-    const openToMsg = (messageNo, senderNickname, title, contents) => {
+    const openToMsg = (messageNo, senderId, senderNickname, title, contents) => {
          // 쪽지로 보내줄 정보들
          setMsgProps({
             ...msgProps,
             messageNo: messageNo,
             msg: "받은메세지",
             icon: <MdOutlinePersonPin/>,
+            id: senderId,
             name: senderNickname,
             title: title,
             contents: contents,
             button: [<Button className="message" onClick={closeMsg}>확인</Button>,
-            <Button className="message">답장하기</Button>]
+            <Button className="message" onClick={openToReply}>답장하기</Button>]
           });
         setOpenMsg(true);
     }
@@ -185,7 +192,8 @@ const MyMessage = () => {
 
     return (
         <>
-        {openMsg && <ShowMsg props={msgProps}/>}
+        {openMsg && <ShowMsg props={msgProps} openReply={openReply}
+          setOpenReply={setOpenReply}/>}
         <PostWrap>
             <div className='title' >내 쪽지함</div>
             <div className='moreBox'>
@@ -201,14 +209,14 @@ const MyMessage = () => {
                 </thead>
                 <tbody>
                 {
-                   currentPageData.length > 0 && currentPageData.map((post, index) => (
-                        <tr key={index}>
+                   currentPageData.length > 0 && currentPageData.map((receiveMsg) => (
+                        <tr key={receiveMsg.messageNo}>
                         <td
                         style={{cursor: 'pointer' }}
-                        onClick={() => openToMsg(post.messageNo, post.senderNickname, post.title, post.contents)}
-                        >{post.title}</td>
-                        <td>{post.senderNickname}</td>
-                        <td>{formatDate(post.messageDate)}</td>
+                        onClick={() => openToMsg(receiveMsg.messageNo, receiveMsg.senderId, receiveMsg.senderNickname, receiveMsg.title, receiveMsg.contents)}
+                        >{receiveMsg.title}</td>
+                        <td>{receiveMsg.senderNickname}</td>
+                        <td>{formatDate(receiveMsg.messageDate)}</td>
                         </tr>
                     ))
                 }
@@ -240,8 +248,8 @@ const MyMessage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {sentCurrentPageData.length > 0 && sentCurrentPageData.map((sent, index) => (
-                        <tr key={index}>
+                {sentCurrentPageData.length > 0 && sentCurrentPageData.map((sent) => (
+                        <tr key={sent.messageNo}>
                             <td
                             style={{ cursor: 'pointer' }}
                             onClick={()=>openToSentMsg(sent.messageNo, sent.receiverNickname, sent.title, sent.contents)}

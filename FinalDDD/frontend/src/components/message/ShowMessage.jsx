@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {BsEnvelopePaperHeart} from "react-icons/bs";
-import Button from "../../util/Button";
-import DDDApi from "../../api/DDDApi";
-import {BsEnvelopeHeart} from "react-icons/bs";
-import ConfirmModal from "../../util/ConfirmModal";
+import MessageForm from "./MessageForm";
 
 const Modal = styled.div`
     position: fixed;
@@ -85,9 +81,10 @@ export const Container = styled.div`
       }
 
     .btnContainer{
-        margin-top: 3rem;
+        margin-top: 1rem;
         display: flex;
         flex-direction: row;
+        justify-content: center;
         width: 15rem;
         height: 2rem;
         gap: 1rem;
@@ -113,29 +110,17 @@ export const Container = styled.div`
 
 
 
-const ShowMsg = ({props}) => {
-  const [openReply, setOpenReply] = useState(false);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  // 답장으로 보내는 props
+const ShowMsg = ({props, openReply, setOpenReply}) => {
+  const getId = window.localStorage.getItem("memberId");
 
 
-
-  // const propss = {
-  //   icon: <BsEnvelopeHeart color="#FF69B4"/>,
-  //   body: (
-  //     <h4>{receiverName}님에게 메세지가 성공적으로 보내졌습니다🥰</h4>
-  //   ),
-  //   button:(
-  //     <button onClick={closeConfirm}>확인</button>
-  //   )
-  // }
-
-
-
+  const closeReply = () => {
+    setOpenReply(false);
+  }
 
     return(
         <>
-        {openConfirm && <ConfirmModal props={props}/>}
+        {openReply && <MessageForm senderId={getId} receiverId={props.id} receiverName={props.name} close={closeReply}/>}
         <Modal>
         <Container>
             <div className="reservationBox">
@@ -160,8 +145,7 @@ const ShowMsg = ({props}) => {
                 </div>
           </div>
           <div className="btnContainer">
-                  <Button className="message" onClick={props.close}>확인</Button>
-                  <Button className="message" >답장하기</Button>
+                  {props.button}
           </div>
           </div>
         </Container>

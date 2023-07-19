@@ -17,6 +17,7 @@ public class MessageDTO {
     private String title;
     private String contents;
     private LocalDateTime messageDate;
+    private Long isOpened;
 
 
 }

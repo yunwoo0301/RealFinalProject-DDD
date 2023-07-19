@@ -13,7 +13,7 @@ const Modal = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 3rem;
-    z-index: 90;
+    z-index: 92;
 `;
 
 export const Container = styled.div`
