@@ -131,7 +131,6 @@ const MessageForm = ({senderId, receiverId, receiverName, close}) => {
   }
 
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const closeConfirm = () => {
     setOpenConfirm(false);
     close();
@@ -140,7 +139,7 @@ const MessageForm = ({senderId, receiverId, receiverName, close}) => {
   const props = {
     icon: <BsEnvelopeHeart color="#FF69B4"/>,
     body: (
-      <h4>{receiverName}님에게 메세지가 성공적으로 보내졌습니다</h4>
+      <h4>{receiverName}님에게 메세지가 성공적으로 보내졌습니다🥰</h4>
     ),
     button:(
       <button onClick={closeConfirm}>확인</button>

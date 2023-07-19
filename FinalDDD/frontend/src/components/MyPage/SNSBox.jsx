@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import { SlSocialInstagram, SlPaperPlane } from 'react-icons/sl';
 import useStore from '../../store'
+import { useParams } from 'react-router-dom';
+import MessageForm from '../Message/MessageForm';
 
 
 const SocialBox = styled.div`
@@ -23,9 +25,23 @@ const SocialBox = styled.div`
 
 const SNSBox = (props) => {
   const {memberData} = useStore();
+  const {memberId} = useParams();
+  const getId = window.localStorage.getItem("memberId");
+  const nickname = memberData.nickname;
+  const[openMsg, setOpenMsg] = useState(false);
+      const openToMsg = () => {
+        setOpenMsg(true);
+      }
+      const closeToMsg = () => {
+        setOpenMsg(false);
+
+      }
+
+
     return (
         <SocialBox>
-           <div className="icon" onClick={()=>{ }}><SlPaperPlane/></div>
+           {openMsg && <MessageForm senderId={getId} receiverId={memberId} receiverName={nickname} close={closeToMsg}/>}
+           <div className="icon" onClick={openToMsg}><SlPaperPlane/></div>
            <div className="icon" onClick={()=>{ window.open(`http://instagram.com/${memberData.instagram}`)}}><SlSocialInstagram/></div>
         </SocialBox>
     );
