@@ -413,13 +413,6 @@ const BoardView = () => {
                     setNickname(rsp.data.nickname);
                     setTest(rsp.data.profileImg); // 기본프로필 이미지 불러오기
 
-                    // 이전글 및 다음글 가져오기 요청 보내기
-                    const prevAndNextResponse = await DDDApi.getPrevAndNextBoard(boardNo);
-                    if (prevAndNextResponse.status === 200) {
-                        const prevAndNextData = prevAndNextResponse.data;
-                        setPrevAndNextData(prevAndNextData);
-                    }
-
                     if (boardView && boardView.views != null) { // 게시글 조회수 구간
                     // if (data && data.views != null) { // 게시글 조회수 구간
                         setBoardView(prevState => ({
@@ -435,6 +428,25 @@ const BoardView = () => {
         };
         boardViewLoad();
     }, [boardNo, regComment]);
+
+    // 이전글 및 다음글 가져오기
+    useEffect(() => {
+        const loadPrevAndNextBoard = async () => {
+            try {
+                // 이전글 및 다음글 가져오기 요청 보내기
+                const prevAndNextResponse = await DDDApi.getPrevAndNextBoard(boardNo);
+                if (prevAndNextResponse.status === 200) {
+                    const prevAndNextData = prevAndNextResponse.data;
+                    setPrevAndNextData(prevAndNextData);
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        loadPrevAndNextBoard();
+    }, [boardNo]);
+
+
 
     // prevAndNextData 상태가 업데이트될 때마다 호출되는 useEffect
     useEffect(() => {
