@@ -29,11 +29,11 @@ public class ExhibitCommentService {
     private final ExhibitCommentRepository exhibitCommentRepository;
 
     // 한줄 평 작성
-    public boolean writeComment(String id, String exhibitNo, String starRates, String comment) {
+    public boolean writeComment(String memberId, String exhibitNo, String starRates, String comment) {
         try {
 
             // 회원번호로 회원찾기
-            Optional<Member> member = memberRepository.findById(Long.parseLong(id));
+            Optional<Member> member = memberRepository.findById(Long.parseLong(memberId));
             if (member.isEmpty()) {
                 throw new IllegalArgumentException("없는 회원 ID 입니다!");
             }

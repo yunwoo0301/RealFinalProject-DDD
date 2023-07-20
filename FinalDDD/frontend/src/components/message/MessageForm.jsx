@@ -13,6 +13,7 @@ const Modal = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 3rem;
+    box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.3), 0.2rem 0.2rem 1rem rgba(0, 0, 0, 0.3);
     z-index: 92;
 `;
 

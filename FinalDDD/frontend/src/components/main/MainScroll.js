@@ -47,7 +47,11 @@ const ScrollStyle = styled.div`
 .service .icon{
   float: left;
   z-index: 99;
-}
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  border-radius: 100%;
+  text-align: center;
+  background-color: #f4f8ff;
+ }
 
 .second-layer{
   justify-content: center;

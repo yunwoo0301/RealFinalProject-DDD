@@ -22,11 +22,14 @@ public class ExhibitCommentController {
 
     // 한줄평작성
     @PostMapping("/write")
-    public ResponseEntity<String> writeComment(@RequestParam String id,
-                                               @RequestParam String exhibitNo,
-                                               @RequestParam String starRates,
-                                               @RequestParam String comment) {
-        boolean success = exhibitCommentService.writeComment(id, exhibitNo, starRates, comment);
+    public ResponseEntity<String> writeComment(@RequestBody ExhibitCommentDTO exhibitCommentDTO) {
+        boolean success = exhibitCommentService.writeComment(
+                exhibitCommentDTO.getMemberId(),
+                exhibitCommentDTO.getExhibitNo(),
+                String.valueOf(exhibitCommentDTO.getStarRates()),
+                exhibitCommentDTO.getComment()
+        );
+
         if (success) {
             return ResponseEntity.ok("한줄평 저장성공!🥰");
         } else {
