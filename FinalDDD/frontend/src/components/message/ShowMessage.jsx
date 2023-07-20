@@ -9,7 +9,6 @@ const Modal = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 3rem;
-    box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.3), 0.2rem 0.2rem 1rem rgba(0, 0, 0, 0.3);
     z-index: 90;
 `;
 
@@ -20,6 +19,7 @@ export const Container = styled.div`
     align-items: center;
     z-index: 99;
     .reservationBox{
+        box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.3), 0.2rem 0.2rem 1rem rgba(0, 0, 0, 0.3);
         background-color: #F4F8FF;
         width: 30rem;
         display: flex;

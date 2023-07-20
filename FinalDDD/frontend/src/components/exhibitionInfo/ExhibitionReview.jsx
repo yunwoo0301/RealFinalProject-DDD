@@ -77,6 +77,11 @@ const Container = styled.div`
         }
     }
   }
+  .hoverContent{
+    border-radius: 1rem;
+    color: #5EADF7;
+    font-weight: bold;
+  }
 
 `;
 
@@ -234,6 +239,7 @@ const ExhibitionReview = ({ data }) => {
 
     // 다른 멤버에게 쪽지보내기 또는 프로필 보기메뉴
     const [isHovered, setIsHovered] = useState({});
+    const [openedComment, setOpenedComment] = useState(null);
 
     const openProfile = (memberId) => {
        // 로그인이 안되어있으면 로그인 모달띄움
@@ -242,11 +248,15 @@ const ExhibitionReview = ({ data }) => {
       openToWarnModal();
       return;
     }
-      navigate(`/mypage/${memberId}`);
+      navigate(`/api/mypage/${memberId}`);
     };
 
     const handleMouseEnter = (commentNo) => {
+      if (openedComment !== null) {
+        setIsHovered((prev) => ({ ...prev, [openedComment]: false }));
+      }
       setIsHovered((prev) => ({ ...prev, [commentNo]: !prev[commentNo] }));
+      setOpenedComment((prev) => (prev === commentNo ? null : commentNo));
     };
 
     // 쪽지보내기로 props 보내기
