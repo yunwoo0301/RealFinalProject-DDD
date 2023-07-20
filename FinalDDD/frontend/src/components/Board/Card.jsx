@@ -9,7 +9,8 @@ import DDDApi from "../../api/DDDApi";
 
 const Wrapper = styled.div` // 동행찾기 게시판 전체 컨테이너 영역
     box-sizing: border-box;
-    width: 100vw;
+//    width: 100vw;
+    width: 100%;
     display:flex;
     flex-direction: column;
     align-items: center;
@@ -115,7 +116,7 @@ const CardContainer = styled.div` // 전체 카드아이템 컨테이너
 
         .icon {
         margin-left: 1.2rem;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
         }
     }
 
@@ -147,7 +148,7 @@ const SelectBox = styled.select`
     float: right;
 
     option{
-        font-size: 20px;
+        font-size: 1.2em;
     }
 
     @media (max-width: 768px) {

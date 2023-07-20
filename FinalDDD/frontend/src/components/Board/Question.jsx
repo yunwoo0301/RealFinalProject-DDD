@@ -28,7 +28,7 @@ const Section = styled.div`
     table {
         width: 65vw;
         margin-bottom: 20px;
-        font-size: 1.1em;
+        font-size: .9em;
         font-weight: lighter;
         border-collapse: collapse;
         margin: 0 auto;
