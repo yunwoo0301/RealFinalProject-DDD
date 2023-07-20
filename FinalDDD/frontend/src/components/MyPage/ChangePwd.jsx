@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { MyPageApi } from '../../api/MyPageApi';
 import Functions from '../../util/Functions';
 import AlertModal from '../../util/Alert';
+import { Backdrop } from '@mui/material';
 
 const Container = styled.div`
     width: 60%;
@@ -59,13 +60,20 @@ const Container = styled.div`
           display: flex;
           flex-direction: column;
         }
-        
+
         .item{
         width: 100%;
         height: auto;
         /* background-color: red; */
 
         }
+        .hint{
+                /* background-color: red; */
+                width: 86%;
+                height: 1rem;
+                text-align: right;
+                font-size: .7rem;
+            }
 
         .last-item {
         grid-column: span 2;
@@ -75,13 +83,7 @@ const Container = styled.div`
             flex-direction: column;
             width: 50%;
             float: right;
-            .hint{
-                /* background-color: red; */
-                width: 86%;
-                height: 1rem;
-                text-align: right;
-                font-size: .7rem;
-            }
+
         }
 
         input{
@@ -133,7 +135,6 @@ const Container = styled.div`
 
 
 
-
 const ChangePwd = () => {
 
     const memberId = Functions.getMemberId();
@@ -144,16 +145,16 @@ const ChangePwd = () => {
     const [conMessage, setConMessage] = useState();
     const [ isPwd, setIsPwd ] = useState(false);
     const [pwdCheck, setPwdCheck] = useState(false);
-    
+
     const msg = {
         regex: "숫자+영문자+특수문자의 8자리 이상",
         correct: "올바른 형식 입니다.",
         match: '비밀번호가 일치합니다.',
         mismatch: '새로운 비밀번호가 일치하지 않습니다.',
         error : '변경이 실패하였습니다. '
-        
+
       }
-      
+
 
     // 새 비밀번호 유효성 검사
     const onChangePwd = (e) => {
@@ -162,13 +163,13 @@ const ChangePwd = () => {
         const pwdCheck = regexPwd.test(e.target.value);
         if (!pwdCheck) {
             setErrorMessage(msg.regex);
-            setIsPwd(false);    
+            setIsPwd(false);
         } else {
             setErrorMessage(msg.correct);
             setIsPwd(true);
         }
     }
-    
+
     const onChangeConPw = (e) => {
         setInputNewPwdCheck(e.target.value);
         if(e.target.value !== inputNewPwd) {
@@ -183,8 +184,8 @@ const ChangePwd = () => {
     const onChangeCurrentPw = (e) => {
         setInputCurrentPwd(e.target.value)
     }
-    
-      
+
+
 const pwdFetchDate = async () => {
     try {
       const response = await MyPageApi.password(memberId, inputCurrentPwd, inputNewPwd);
@@ -208,54 +209,64 @@ const pwdFetchDate = async () => {
     const handleClose = () => {
       setOpen(false);
     };
-  
+
     return (
         <>
-        <Container>
-            <div className='title'>비밀번호 변경</div>
-            <div className="textBlock">
-                <p>
-                비밀번호 변경을 위하여 <br/>
-                현재 비밀번호와 새로운 비밀번호를 입력해주세요.</p>
-            </div>
-            <div className="inputBlock">
-                <div className="item">
-                <p>현재 비밀번호 </p>
-                    <input type="password" placeholder="Email@:DDD.com" onChange={(e)=>{onChangeCurrentPw(e)}} value={inputCurrentPwd} tabIndex={1}/>
-                    {/* <div className="hint">{errorMessage}</div> */}
+            <Container>
+                <div className='title'>비밀번호 변경</div>
+                <div className="textBlock">
+                    <p>
+                    비밀번호 변경을 위하여 <br/>
+                    현재 비밀번호와 새로운 비밀번호를 입력해주세요.</p>
                 </div>
-                <div className="item">
-                    
-                </div>
-                <div className="item">
-                <p>새 비밀번호 확인</p>
-                    <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangeConPw(e)} value={inputNewPwdCheck} tabIndex={3}/> 
-                    <div className="hint">{conMessage}</div>
-                </div>
-                <div className="item">
-                <p>새 비밀번호</p>
-                    <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangePwd(e)} value={inputNewPwd} tabIndex={2}/> 
-                    <div className="hint">{errorMessage}</div>
-                </div>
-                <div className="item last-item">
-                <div className="btnBlock">
-            <button 
-                    style={isPwd && pwdCheck ?  null : { backgroundColor: '#ddd'}  }
-                    disabled={!isPwd || !pwdCheck }
-                onClick={onClickChange}>변경</button>
-                {
-                    open && <AlertModal />
-                }
-                <button>돌아가기</button> 
-            </div>
-                </div>
-                
-            </div>
+                <div className="inputBlock">
+                    <div className="item">
+                    <p>현재 비밀번호 </p>
+                        <input type="password" placeholder="Email@:DDD.com" onChange={(e)=>{onChangeCurrentPw(e)}} value={inputCurrentPwd} tabIndex={1}/>
+                        {/* <div className="hint">{errorMessage}</div> */}
+                    </div>
+                    <div className="item">
 
-            
-            
-        </Container>
-    </>
+                    </div>
+                    <div className="item">
+                    <p>새 비밀번호</p>
+                        <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangePwd(e)} value={inputNewPwd} tabIndex={2}/>
+                        <div className="hint">{errorMessage}</div>
+                    </div>
+                    <div className="item">
+                    <p>새 비밀번호 확인</p>
+                        <input type="password" placeholder="비밀번호를 입력하세요"  onChange={(e) => onChangeConPw(e)} value={inputNewPwdCheck} tabIndex={3}/>
+                        <div className="hint">{conMessage}</div>
+                    </div>
+                    <div className="item last-item">
+                    <div className="btnBlock">
+                <button
+                        style={isPwd && pwdCheck ?  null : { backgroundColor: '#ddd'}  }
+                        disabled={!isPwd || !pwdCheck }
+                    onClick={onClickChange}>변경</button>
+
+                    <button>돌아가기</button>
+                </div>
+                    </div>
+
+                </div>
+                <Backdrop
+            sx={{
+                backgroundColor: 'transparent', // 배경색을 투명으로 설정
+                color: '#fff',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0, // 팝업을 상단에 위치
+            }}
+            open={open}
+            onClick={handleClose}
+            >
+                <AlertModal />
+            </Backdrop>
+
+
+
+            </Container>
+        </>
     );
 };
 

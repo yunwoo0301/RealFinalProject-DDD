@@ -46,7 +46,7 @@ public class AuthService {
             // Compose email content
             String subject = "Email Confirmation";
             String body = "Click this link to confirm your email: " +
-                    "<a href=\"http://localhost:8111/user/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>";
+                    "<a href=\"http://localhost:8111/login/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>";
 
             // Send email
             emailService.sendMail(member.getEmail(), subject, body);

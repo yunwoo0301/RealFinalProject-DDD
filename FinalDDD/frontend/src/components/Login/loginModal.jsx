@@ -13,6 +13,10 @@ const Container = styled.div`
   overflow: hidden;
   justify-content: center;
   /* background-color: aqua; */
+  p{
+    margin: 0;
+    padding: 0;
+  }
 
 `;
 const Modal = styled.div`
@@ -48,11 +52,9 @@ const Modal = styled.div`
   .title {
     font-size: 1.5rem;
     font-weight: bold;
-    margin-top: 5rem;
+    margin-top: 4rem;
     text-align: center;
-    p {
-      margin: 0;
-    }
+
   }
   .inputBlock {
     width: 90%;
@@ -61,6 +63,7 @@ const Modal = styled.div`
       text-align: left;
       margin-left: 10%;
       margin-bottom: 0.3rem;
+      margin-top: 1rem;
       font-size: 0.8rem;
       /* font-size: .8rem; */
       font-weight: bold;
@@ -122,13 +125,14 @@ const Modal = styled.div`
     font-size: 0.6rem;
     padding-top: 0.4rem;
     color: red;
+
   }
   .AskBlock {
-    width: 70%;
+    width: 100%;
     height: 4rem;
     /* background-color: aqua; */
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: end;
     p {
       margin-bottom: 0.3rem;
@@ -140,7 +144,7 @@ const Modal = styled.div`
 `;
 
 const LoginModal = (props) => {
-const { profileImg, setProfileImg, setMemberData } = useStore();
+  const { profileImg, setProfileImg, setMemberData } = useStore();
 
   const naviagte = useNavigate("");
 
@@ -170,10 +174,10 @@ const { profileImg, setProfileImg, setMemberData } = useStore();
 
         const memberInfoResponse = await MyPageApi.info(memberId);
         setProfileImg(memberInfoResponse.data.profileImg)
-         setMemberData(memberInfoResponse.data)
+        setMemberData(memberInfoResponse.data)
         // console.log(profileImg)
         // localStorage에 email, token 저장
-        // window.localStorage.setItem("storageEmail", email);
+        window.localStorage.setItem("storageEmail", email);
         // window.localStorage.setItem("accessToken", accessToken);
         window.localStorage.setItem("memberId", memberId);
         // console.log(window.localStorage.getItem('accessToken'));
@@ -211,9 +215,8 @@ const { profileImg, setProfileImg, setMemberData } = useStore();
     <Container>
       <Modal>
         <div className="title">
-          {" "}
-          <p>안녕하세요!</p>{" "}
-          <p style={{ marginTop: "1rem" }}>:DDD에 로그인해보세요</p>
+          안녕하세요!<br/>
+          <span style={{lineHeight:'2.5rem'}}>:DDD에 로그인해보세요</span>
         </div>
         <div className="inputBlock">
           <p>이메일</p>
@@ -235,13 +238,10 @@ const { profileImg, setProfileImg, setMemberData } = useStore();
         <div className="loginMsg">{errorMsg}</div>
         <div className="btnBlock">
           <button onClick={onClickLogin}>로그인</button>
-          <button style={{ backgroundColor: "#F9E000", color: "#6F4F28" }} >
-            <div></div>카카오로그인
-          </button>
+          <button onClick={props.showAgree}>회원가입</button>
         </div>
         <div className="AskBlock">
-          <p onClick={props.showAgree}>:DDD가 처음이신가요?</p>
-          <p onClick={props.showPw}>비밀번호를 잊어버리셨나요?</p>
+          <div onClick={props.showPw}> <p>비밀번호를 잊어버리셨나요?</p> </div>
         </div>
       </Modal>
     </Container>

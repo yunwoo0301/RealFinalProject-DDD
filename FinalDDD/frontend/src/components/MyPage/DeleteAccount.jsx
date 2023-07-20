@@ -5,6 +5,7 @@ import  Functions from '../../util/Functions'
 import ConfirmModal from '../../util/ConfirmModal';
 import { FcCancel } from 'react-icons/fc';
 import { Backdrop } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
     width: 60%;
@@ -53,7 +54,7 @@ const Container = styled.div`
         margin-top: 1.4rem;
         @media (max-width:768px) {
             flex-direction: column;
-            
+
         }
 
         input{
@@ -115,10 +116,7 @@ const DeleteAccount = () => {
     const memberId = Functions.getMemberId();
     const [inputEmail, setInputEmail ] = useState();
     const [inputPwd, setInputPwd ] = useState();
-    console.log('이메일 ' + inputEmail)
-    console.log('패스워드' + inputPwd)
-
-
+    const navigate = useNavigate();
 
     const onChangeEmail = (e) => {
         const emailCurrent = e.target.value;
@@ -131,6 +129,16 @@ const DeleteAccount = () => {
 
       };
 
+      const removeLocalstorage = () =>{
+        console.log('로그아웃 클릭')
+        localStorage.removeItem("isLogin");
+        localStorage.removeItem("storageEmail");
+        localStorage.removeItem("memberId");
+        localStorage.removeItem("accessToken");
+        navigate('/')
+    }
+
+
       const onClickDelete = async(inputEmail, inputPwd ) => {
           console.log('버튼 클릭')
           console.log(memberId)
@@ -138,16 +146,21 @@ const DeleteAccount = () => {
               const response = await MyPageApi.delete(memberId, inputEmail, inputPwd);
             if(response.status === 200){
                 console.log('회원 탈퇴 완료')
+                removeLocalstorage()
             } else{
                 console.log('실패')
             }
         } catch (e) {
             console.log(e);
-          }
+            console.log("Setting fail modal to true");
+            setFailModal(true);
+        }
+
     }
+
     const [checkAgain, setCheckAgain] = useState(false);
 
-    
+
     const deleteProps  ={
         title: "회원탈퇴",
         body: (
@@ -166,11 +179,33 @@ const DeleteAccount = () => {
         ],
         icon: <FcCancel/>
       }
+      const [failModal, setFailModal] =useState(false);
+
+      const failProps = {
+        title: "회원 탈퇴 실패",
+        body: (
+        <ModalBodyStyle>
+            이메일과 패스워드를 다시 한 번 확인해주세요 <br />
+            <div className="warn"> <br/>
+            </div>
+            <div className="checkBox">
+
+            </div>
+        </ModalBodyStyle>
+        ),
+        button: [
+        <button onClick={()=>setFailModal(false)}>닫기</button>,
+        ],
+        icon: <FcCancel/>
+      }
+
+
 
 
     return (
         <>
             <Container>
+            <button onClick={()=>{setFailModal(true) }}>test하기</button>
                 <div className='title'>회원탈퇴</div>
                 <div className="textBlock">
                     <span> :DDD 에서 회원을 탈퇴하시겠습니까?</span>
@@ -185,7 +220,7 @@ const DeleteAccount = () => {
                     </div>
                     <div>
                     <p>비밀번호</p>
-                    <input type="password" placeholder="비밀번호를 입력하세요" onChange={onChangePwd} value={inputPwd}/> 
+                    <input type="password" placeholder="비밀번호를 입력하세요" onChange={onChangePwd} value={inputPwd}/>
                     </div>
                 </div>
                 <div className="btnBlock">
@@ -193,18 +228,20 @@ const DeleteAccount = () => {
                     <button>돌아가기</button>
                 </div>
                 <Backdrop
-                        sx={{
-                            backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
-                            opacity:'0.5',
-                            color: 'black',
-                            zIndex: (theme) => theme.zIndex.drawer + 1,
-                            top: 0, // 팝업을 상단에 위치
-                        }}
-                        open={checkAgain}
-                        onClick={()=>{setCheckAgain(false) }}
-                        >
-                    {checkAgain && <ConfirmModal props={deleteProps}/>}
-                </Backdrop>
+                    sx={{
+                        backgroundColor: 'rgb(0,0,0,0.5)', // 배경색을 투명
+                        opacity:'0.5',
+                        color: 'black',
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                        top: 0, // 팝업을 상단에 위치
+                    }}
+                    open={checkAgain || failModal}  // checkAgain 또는 failModal 중 하나라도 true라면 Backdrop을 열어라.
+                    onClick={()=> {setCheckAgain(false); setFailModal(false);}} // Backdrop을 클릭하면 checkAgain과 failModal 모두 false로 설정
+                    >
+                    {checkAgain && <ConfirmModal props={deleteProps} minWidth='400px' minHeight="360px"/>}
+                    {failModal && <ConfirmModal props={failProps} minWidth='400px' minHeight="360px"/>}
+                    </Backdrop>
+
 
                 
             </Container>
@@ -214,8 +251,3 @@ const DeleteAccount = () => {
 };
 
 export default DeleteAccount;
-
-{/* <div className="btnBlock">
-<button onClick={onClickDelete}>탈퇴하기</button>
-<button>돌아가기</button>
-</div> */}

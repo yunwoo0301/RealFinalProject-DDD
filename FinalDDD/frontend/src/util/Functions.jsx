@@ -10,6 +10,19 @@ const Functions = {
     getLoginStatus : () => {
       return window.localStorage.getItem("isLogin")
     },
+
+
+    fetchMemberDate : async (memberId, setMemberData, MyPageApi) => {
+      try {
+        const memberInfoResponse = await MyPageApi.info(memberId);
+        setMemberData(memberInfoResponse.data)
+        if (memberInfoResponse.status === 200 && setMemberData){
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
     //accessToken 세터
     setAccessToken : (accessToken) => {
         window.localStorage.setItem("accessToken", accessToken);
@@ -48,7 +61,7 @@ const Functions = {
           refreshToken : Functions.getRefreshToken()
         }
         const rsp = await axios.post(KH_DOMAIN + "/auth/token", token)
-        Functions.setAccessToken(rsp.data.accessToken); 
+        Functions.setAccessToken(rsp.data.accessToken);
         Functions.setAuthorizationHeader();
       },
 
@@ -68,6 +81,3 @@ const Functions = {
 }
 
 export default Functions;
-
-      // await Functions.handleApiError(error);  // api 에러 401을 받으면 로컬에 저장된 리프레쉬 토큰을 보내 액세스 토큰을 재발급 받는 axios 요청을 보내는 함수(await 필수)
-      // return await axios.get(DDD_DOMAIN + `/mypage/info?email=${storageEmail}`); // 요청 재실행

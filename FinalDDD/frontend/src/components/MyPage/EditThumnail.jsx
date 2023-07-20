@@ -1,4 +1,4 @@
-import {React, useState }from 'react';
+import {React, useState, useEffect}from 'react';
 import styled from 'styled-components';
 import { Tooltip } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -9,7 +9,9 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Functions from '../../util/Functions';
 import { MyPageApi } from '../../api/MyPageApi';
 import AlertModal from "../../util/Alert";
-
+import useStore from '../../store';
+import { Backdrop } from '@mui/material';
+import Loading from '../../util/Loading';
 
 const Container = styled.div`
     /* background-color: aqua; */
@@ -42,8 +44,8 @@ const Container = styled.div`
         color: #727272;
     }
 
-        
-    
+
+
     .Thumnail{
         background-size : 100% ;
         width: 100%;
@@ -135,6 +137,8 @@ const BlackBG = styled.div`
 
 
 const EditThumnail = ({memberData}) => {
+  const {setMemberData} = useStore
+  const [loading, setLoading] = useState(false);
   const memberId = Functions.getMemberId();
 
     // 버튼 조작
@@ -150,12 +154,12 @@ const EditThumnail = ({memberData}) => {
         image_file: null,
         previewUrl: null,
     });
-  
+
     const [backgroundImage, setBackgroundImage] = useState({
         image_file: null,
         previewUrl: null,
     });
-  
+
 // 프로필 이미지 미리보기
 const previewProfileImage = (e) => {
     e.preventDefault();
@@ -170,7 +174,7 @@ const previewProfileImage = (e) => {
       });
     };
   };
-  
+
   // 배경 이미지 미리보기
   const previewBackgroundImage = (e) => {
     e.preventDefault();
@@ -185,9 +189,11 @@ const previewProfileImage = (e) => {
       });
     };
   };
-  
+
   // 프로필 이미지 업로드
   const uploadProfileImage = async () => {
+
+    setLoading(true)
     let imageUrl = "";
     if (profileImage && profileImage.image_file) {
       const storageRef = storage.ref();
@@ -196,10 +202,10 @@ const previewProfileImage = (e) => {
         await fileRef.put(profileImage.image_file);
         imageUrl = await fileRef.getDownloadURL();
         setProfileImage({ ...profileImage, image_url: imageUrl });
-        
+
         // 백엔드에 넘겨줌
         const response = await MyPageApi.profileImage(memberId, imageUrl);
-      
+
         if (response.status === 200) {
           console.log('프로필 이미지 업데이트 성공');
           setOpen(true);
@@ -212,12 +218,18 @@ const previewProfileImage = (e) => {
         console.log(error);
         alert("이미지 업로드 중 오류가 발생했습니다.");
         return;
+      }finally {
+        setTimeout(()=>{
+          setLoading(false)
+        }, 300)
+
       }
     }
   };
-  
+
   // 배경 이미지 업로드
   const uploadBackgroundImage = async () => {
+    setLoading(true)
     let imageUrl = "";
     if (backgroundImage && backgroundImage.image_file) {
       const storageRef = storage.ref();
@@ -226,14 +238,15 @@ const previewProfileImage = (e) => {
         await fileRef.put(backgroundImage.image_file);
         imageUrl = await fileRef.getDownloadURL();
         setBackgroundImage({ ...backgroundImage, image_url: imageUrl });
-        
+
         // 백엔드에 넘겨줌
         const response = await MyPageApi.backgroundImage(memberId, imageUrl);
-      
+
         if (response.status === 200) {
           console.log('프로필 이미지 업데이트 성공');
           setOpen(true);
           setTimeout(handleClose, 1000);
+
         } else {
           console.log('프로필 이미지 업데이트 실패');
         }
@@ -241,6 +254,10 @@ const previewProfileImage = (e) => {
         console.log(error);
         alert("이미지 업로드 중 오류가 발생했습니다.");
         return;
+      } finally {
+        setTimeout(()=>{
+          setLoading(false)
+        }, 300)
       }
     }
   };
@@ -249,9 +266,16 @@ const previewProfileImage = (e) => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    Functions.fetchMemberDate(memberId, setMemberData, MyPageApi);
+    // console.log(memberData)
+}, [memberId, setMemberData]);
+
+
+
     return (
         <>
-          { memberData &&
+         { loading && memberData ? <Loading/> : (
             <Container>
               <div className='Thumnail' >
                 <BlackBG/>
@@ -259,7 +283,7 @@ const previewProfileImage = (e) => {
 
                 <div className='btnBox'>
                   <label style={{backgroundColor:'#e5e5e5', color:'#727272'}}>
-                    <MoreVertIcon onClick={handleMoreBtn}/> 
+                    <MoreVertIcon onClick={handleMoreBtn}/>
                   </label>
                   { btnOpen && (
                     <>
@@ -286,7 +310,7 @@ const previewProfileImage = (e) => {
                 </div>
                 <div className='btnBox2'>
                   <label>
-                    <MoreHorizIcon onClick={handleMoreBtn2}/> 
+                    <MoreHorizIcon onClick={handleMoreBtn2}/>
                   </label>
                   { btnOpen2 && (
                     <>
@@ -306,8 +330,21 @@ const previewProfileImage = (e) => {
                   )}
                 </div>
               </div>
+              <Backdrop
+            sx={{
+                backgroundColor: 'transparent', // 배경색을 투명으로 설정
+                color: '#fff',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0, // 팝업을 상단에 위치
+            }}
+            open={open}
+            onClick={handleClose}
+            >
+                <AlertModal />
+            </Backdrop>
+
             </Container>
-          }
+          )}
         </>
       );
     };

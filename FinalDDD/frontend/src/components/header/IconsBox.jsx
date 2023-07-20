@@ -171,7 +171,7 @@ const Icons = () => {
 
     const onClickToLogin = () => {
         loginState ?
-        navigate(`/api/mypage/${getId}`) : navigate("/login");
+        navigate(`/mypage/${getId}`) : navigate("/login");
     }
 
 
@@ -226,16 +226,16 @@ const Icons = () => {
 
     const onClickToReservation = () => {
             setShowPage('예약관리')
-        navigate(`/api/mypage/${getId}`);
+        navigate(`/mypage/${getId}`);
     };
 
     const goToMypage = () => {
         setShowPage('마이페이지')
-        navigate(`/api/mypage/${getId}`)
+        navigate(`/mypage/${getId}`)
     }
     const goToMyMessage = () => {
         setShowPage('내쪽지함')
-        navigate(`/api/mypage/${getId}`)
+        navigate(`/mypage/${getId}`)
     }
 
 

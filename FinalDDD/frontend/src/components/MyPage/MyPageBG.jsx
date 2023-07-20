@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Thumnail from "./Thumnail";
 import Introduce from "./Introduce";
@@ -14,6 +14,7 @@ import Functions from "../../util/Functions";
 import { MyPageApi, DiaryApi } from "../../api/MyPageApi";
 import EditThumnail from "./EditThumnail";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -34,7 +35,7 @@ const Modal = styled.div`
   min-height: 1024px;
   background-color: white;
   /* position: relative;
-    top: 0%; 
+    top: 0%;
     left: 50%;
     transform: translate3d(-50%, -20%, 0); */
   border-radius: 2rem;
@@ -60,96 +61,92 @@ const MyPageBG = () => {
   // const [ myDiaryData,  ] = useState();
 
   useEffect(() => {
-    const memberFetchDate = async () => {
-      const response = await MyPageApi.info(memberId);
-      console.log(response);
-      setMemberData(response.data);
-      console.log('함수안에있음 콘솔 : ' + memberData)
-    };
-    memberFetchDate();
-  }, [showPage, memberId]);
+    Functions.fetchMemberDate(memberId, setMemberData, MyPageApi);
+    // console.log(memberData)
+}, [showPage, memberId]);
+
 
   useEffect(() => {
     const diaryFetchDate = async () => {
       const response = await DiaryApi.info(memberId);
       const newMyDiaryData = response.data;
       setMyDiaryData(newMyDiaryData);
-      console.log(newMyDiaryData);
+      // console.log(newMyDiaryData);
     };
     diaryFetchDate();
   }, [showPage, memberId]);
 
-  // console.log('밖에있는 콘솔 : ' + memberData)
-  // console.log('밖에있는 콘솔 : ' + myDiaryData)
-    const [ testInput, setTestInput ] = useState();
-    const handleTest = (e) => {
-      setTestInput(e.target.value)
-    }
-    const navigate = useNavigate();
-    const findMember = () => {
-      navigate(`/api/mypage/${testInput}`)
-    }
+  console.log('밖에있는 콘솔 : ' + memberData)
+  console.log('밖에있는 콘솔 : ' + myDiaryData)
 
-
+  const [ testInput, setTestInput ] = useState();
+  const handleTest = (e) => {
+    setTestInput(e.target.value)
+  }
+  const navigate = useNavigate();
+  const findMember = () => {
+    navigate(`/api/mypage/${testInput}`)
+  }
 
 
   return (
     <>
-          <input type="text" value={testInput} onChange={handleTest}/>
-          <button onClick={findMember}>member찾기</button>
-{ memberData && myDiaryData &&
-(
-      <Container style={showPage === "다이어리" ? { height: "auto" } : null}>
-        <Modal>
-          {showPage === "마이페이지" &&  (
-            <>
-              {memberData && <Thumnail memberData={memberData}/>}
-              <SNSBox />
-              {memberData && <Introduce memberData={memberData} myDiaryData={myDiaryData}/>}
-            </>
-          )}
-          {showPage === "다이어리" && (
-            <>
-              {memberData && <Thumnail memberData={memberData}/>}
-              <NaviBox />
-              <MyDiary />
-            </>
-          )}
-          {showPage === "예약관리" && (
-            <>
-              {memberData && <Thumnail memberData={memberData}/>}
-              <NaviBox />
-              <MyReservation />
-            </>
-          )}
-          {showPage === "내게시물" && (
-            <>
-              {memberData && <Thumnail memberData={memberData}/>}
-              <NaviBox />
-              <MyPost
-              memberId={memberId}
-              />
-            </>
-          )}
-           {showPage === "내쪽지함" && (
+    {/* <input type="text" value={testInput} onChange={handleTest}/>
+    <button onClick={findMember}>member찾기</button> */}
+
+    { memberData && myDiaryData &&
+    (
+          <Container style={showPage === "다이어리" ? { height: "auto" } : null}>
+            <Modal>
+              {showPage === "마이페이지" &&  (
+                <>
+                  {memberData && <Thumnail memberData={memberData}/>}
+                  <SNSBox />
+                  {memberData && <Introduce memberData={memberData} myDiaryData={myDiaryData}/>}
+                </>
+              )}
+              {showPage === "다이어리" && (
+                <>
+                  {memberData && <Thumnail memberData={memberData}/>}
+                  <NaviBox />
+                  <MyDiary />
+                </>
+              )}
+              {showPage === "예약관리" && (
+                <>
+                  {memberData && <Thumnail memberData={memberData}/>}
+                  <NaviBox />
+                  <MyReservation />
+                </>
+              )}
+              {showPage === "내게시물" && (
+                <>
+                  {memberData && <Thumnail memberData={memberData}/>}
+                  <NaviBox />
+                  <MyPost
+                  memberId={memberId}
+                  />
+                </>
+              )}
+              {showPage === "내쪽지함" && (
                 <>
                   {memberData && <Thumnail memberData={memberData}/>}
                   <NaviBox />
                   <MyMessage />
                 </>
               )}
-          {showPage === "내정보수정" && (
-            <>
-              {memberData && <EditThumnail memberData={memberData}/>}
-              <NaviBox />
-              <EditMemberMain />
-            </>
-          )}
-        </Modal>
-      </Container>)
-}
-      
-    </>
+              {showPage === "내정보수정" && (
+                <>
+                  {memberData && <EditThumnail memberData={memberData}/>}
+                  <NaviBox />
+                  <EditMemberMain />
+                </>
+              )}
+            </Modal>
+          </Container>)
+    }
+
+        </>
   );
 };
 

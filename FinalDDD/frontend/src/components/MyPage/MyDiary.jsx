@@ -209,9 +209,10 @@ const MyDiary = () => {
   const [myDiaryData, setMyDiaryData] = useState([]);
   const [countDiary, setCountDiary] = useState();
   const [mention, setMention] = useState("");
-
-  const [ratingStar, setRatingStar] = useState(Array(stealExhibition.length).fill(0));
-  const [inputComment, setInputComment] = useState(Array(stealExhibition.length).fill(""));
+  const [ratingStar, setRatingStar] = useState(0);
+  const [inputComment, setInputComment] = useState('');
+  // const [ratingStar, setRatingStar] = useState(Array(stealExhibition.length).fill(0));
+  // const [inputComment, setInputComment] = useState(Array(stealExhibition.length).fill(""));
   const [loading, setLoading]= useState(true);
 
   const countCheck = () => {
@@ -274,32 +275,31 @@ const MyDiary = () => {
 
 // star 핸들러
 const onChangeStar = ((event, value, exhibitNo) => {
-  console.log('별표 작동시작');
-  // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
-  const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo);
+    console.log('별표 작동시작');
+    // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
+    const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo);
 
-  // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
-  if (index === -1) {
-    return;
-  }
+    // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
+    if (index === -1) {
+      return;
+    }
 
-  // 일치하는 diary의 comment를 업데이트합니다.
-  const newRatingStar = [...ratingStar];
-  newRatingStar[index] = Number(value);
-  setRatingStar(newRatingStar);
+    // 일치하는 diary의 comment를 업데이트합니다.
+    const newRatingStar = [...ratingStar];
+    newRatingStar[index] = Number(value);
+    setRatingStar(newRatingStar);
 });
-
 
 // 텍스트 변경 핸들러
 const onChangeText = ((e, exhibitNo) => {
-  // console.log('wkf wkr동함?')
+    // console.log('wkf wkr동함?')
 // stealExhibition의 데이터중 exhibitNo와 입력중인 exhibitNo가 같은 index를 찾음.
 const index = stealExhibition.findIndex((diary) => diary.exhibitNo === exhibitNo)
 
 
 // 일치하는 diary가 없는 경우 아무런 동작도 하지 않습니다.
 if (index === -1) {
-return;
+  return;
 }
 
 // 일치하는 diary의 comment를 업데이트합니다.
@@ -307,7 +307,6 @@ const newComments = [...inputComment];
 newComments[index] = e.target.value;
 setInputComment(newComments);
 });
-
 
   // backdrop openState
   const [open, setOpen] = React.useState(false);
@@ -360,7 +359,6 @@ console.log(stealExhibition.exhibitNo)
     value={ratingStar[stealExhibition.findIndex((diary) => diary.exhibitNo === item.exhibitions.exhibitNo)] || 0}
     onChange={(event, value) => onChangeStar(event, value, item.exhibitions.exhibitNo)}
 />
-
 
                         </Stack>
                     </div>

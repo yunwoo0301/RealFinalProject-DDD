@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import useStore from "../../store";
 import { Backdrop } from "@mui/material";
 import AlertModal from "../../util/Alert";
+import Functions from "../../util/Functions";
 
 const EditBlock = styled.div`
   /* width: calc(70%-1rem); */
@@ -133,7 +134,7 @@ const LeftBox = styled.div`
       width: 100%;
       margin-left: 1rem;
       /* background-color: red; */
-      
+
     }
 
     /* background-color: aqua; */
@@ -159,6 +160,7 @@ const LeftBox = styled.div`
       }
 
 `;
+
 
 const EditInfo = (props) => {
   const { memberId } = useParams();
@@ -194,7 +196,8 @@ const EditInfo = (props) => {
       }
     };
     infoFetchDate();
-  }, [open]);
+  }, []);
+  // }, [open]);
 
   // onChangeHandling
   const onChangeName = (e) => {
@@ -273,7 +276,7 @@ const EditInfo = (props) => {
     handleOpen()
   };
 
-  const { setShowPage } = useStore();
+  const { setShowPage, setMemberData } = useStore();
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -283,111 +286,117 @@ const EditInfo = (props) => {
     setTimeout(handleClose, 1000);
   };
 
+
+  useEffect(() => {
+    Functions.fetchMemberDate(memberId, setMemberData, MyPageApi);
+    // console.log(memberData)
+}, [memberId, setMemberData]);
+
   return (
     <>
-    {responseData && (
-      <EditBlock>
-        <div className="title">내 정보 수정</div>
-        <Edit>
-          <LeftBox>
-            <div className="inputBlock">
-              <div className="item">
-                <p>이메일</p>
-                <div className="textBox">
-                  <input
-                    type="text"
-                    style={{ backgroundColor: "#eee", border: "1px solid #888" }}
-                    defaultValue={responseData.email}
-                    disabled
-                  />
+      {responseData && (
+        <EditBlock>
+          <div className="title">내 정보 수정</div>
+          <Edit>
+            <LeftBox>
+              <div className="inputBlock">
+                <div className="item">
+                  <p>이메일</p>
+                  <div className="textBox">
+                    <input
+                      type="text"
+                      style={{ backgroundColor: "#eee", border: "1px solid #888" }}
+                      defaultValue={responseData.email}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="item">
+                  <p>닉네임</p>
+                  <div className="textBox">
+                    <input type="text" onChange={onChangeNick} value={inputNick} />
+                  </div>
+                  <div className="hint">{nickMessage}</div>
+                </div>
+                <div className="item">
+                    <p>인스타그램(선택사항)</p>
+                  <div className="textBox">
+                    <input type="text" onChange={onChangeInst} value={inputInst} />
+                  </div>
+                </div>
+                <div className="item">
+                <p>이름</p>
+              <div className="textBox">
+                <input type="text" onChange={onChangeName} value={inputName} />
+              </div>
+
+                </div>
+                <div className="item">
+
+                <p>연락처</p>
+              <div className="textBox">
+                <input type="tel" onChange={onChangeTel} value={inputTel} />
+              </div>
+
+
+                </div>
+                <div className="item"></div>
+                <div className="item last-item">
+
+                <div className="introducBlock">
+            <p>내 소개</p>
+            <textarea
+              className="introarea"
+              name=""
+              id=""
+              cols="20"
+              rows="5"
+              style={{ width: "88%" }}
+              onChange={onChangeIntro}
+              value={inputIntro}
+            />
+          </div>
                 </div>
               </div>
-              <div className="item">
-                <p>닉네임</p>
-                <div className="textBox">
-                  <input type="text" onChange={onChangeNick} value={inputNick} />
-                </div>
-                <div className="hint">{nickMessage}</div>
+              <div className="item ">
+              <div className="btnBlock">
+            <button
+              onClick={handleOnclick}
+              disabled={!isNick}
+              style={isNick ? null : { backgroundColor: "#ddd" }}
+            >
+              저장
+            </button>
+            <Backdrop
+              sx={{
+                backgroundColor: "transparent",
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0, // 팝업을 상단에 위치
+              }}
+              open={open}
+              onClick={handleClose}
+            >
+              <AlertModal />
+            </Backdrop>
+            <button
+              onClick={() => {
+                setShowPage("마이페이지");
+              }}
+            >
+              취소
+            </button>
+          </div>
               </div>
-              <div className="item">
-                  <p>인스타그램(선택사항)</p>
-                <div className="textBox">
-                  <input type="text" onChange={onChangeInst} value={inputInst} />
-                </div>
-              </div>
-              <div className="item">
-              <p>이름</p>
-            <div className="textBox">
-              <input type="text" onChange={onChangeName} value={inputName} />
-            </div>
-
-              </div>
-              <div className="item">
-
-              <p>연락처</p>
-            <div className="textBox">
-              <input type="tel" onChange={onChangeTel} value={inputTel} />
-            </div>
 
 
-              </div>
-              <div className="item"></div>
-              <div className="item last-item">
-
-              <div className="introducBlock">
-          <p>내 소개</p>
-          <textarea
-            className="introarea"
-            name=""
-            id=""
-            cols="20"
-            rows="5"
-            style={{ width: "88%" }}
-            onChange={onChangeIntro}
-            value={inputIntro}
-          />
-        </div>
-              </div>
-            </div>
-            <div className="item ">
-            <div className="btnBlock">
-          <button
-            onClick={handleOnclick}
-            disabled={!isNick}
-            style={isNick ? null : { backgroundColor: "#ddd" }}
-          >
-            저장
-          </button>
-          <Backdrop
-            sx={{
-              backgroundColor: "transparent", 
-              color: "#fff",
-              zIndex: (theme) => theme.zIndex.drawer + 1,
-              top: 0, // 팝업을 상단에 위치
-            }}
-            open={open}
-            onClick={handleClose}
-          >
-            <AlertModal />
-          </Backdrop>
-          <button
-            onClick={() => {
-              setShowPage("마이페이지");
-            }}
-          >
-            취소
-          </button>
-        </div>
-            </div>
-           
-
-          </LeftBox>
-        </Edit>
+            </LeftBox>
+          </Edit>
 
 
-      </EditBlock>
-    )}
-  </>
+        </EditBlock>
+      )}
+    </>
   );
 };
 
