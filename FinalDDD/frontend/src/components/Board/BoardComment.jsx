@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import profile from "./../../resources/라이언프로필.png"
 import DDDApi from "../../api/DDDApi";
 import { useNavigate } from "react-router-dom";
 import BoardAlert from "../../util/BoardAlert";
@@ -21,15 +20,15 @@ const Wrapper = styled.div`
       display: flex;
       align-items: center;
       background-color: #F4F8FF;
-      /* flex-direction: row; */
+      flex-direction: row;
       border-radius: 20px;
       margin: 1rem;
       padding: 1em;
 
 
         img {
-            width: 4em;
-            height: 4em;
+            width: 3em;
+            height: 3em;
             border-radius: 50%;
             margin-left: .3em;
             object-fit: cover;
@@ -37,7 +36,7 @@ const Wrapper = styled.div`
 
         .user {
           font-size: .8em;
-
+          margin-left: .5em;
         }
 
         .writedate {
@@ -82,15 +81,13 @@ const Wrapper = styled.div`
             }
         }
 
-    @media (max-width: 600px) {
-      flex-direction: column;
-    }
-
-
+         @media (max-width: 768px) {
+            flex-direction: column;
+         }
   }
 `;
 
-const BoardComment = ({ boardNo, nickname, test,commentList, setCommentList, regComment, setRegComment }) => {
+const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList, regComment, setRegComment }) => {
 
   const getId = window.localStorage.getItem("memberId");
   const isLogin = window.localStorage.getItem("isLogin");
