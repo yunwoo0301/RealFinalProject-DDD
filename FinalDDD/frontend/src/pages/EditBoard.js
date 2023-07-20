@@ -11,8 +11,8 @@ import { Backdrop } from "@mui/material";
 
 
 const EditWrap = styled.div`
-//    width: 82vw;
-    width: 80vw;
+    width: 82vw;
+//    width: 80vw;
     height: 100%;
     margin: 0 auto;
     align-items: center;
@@ -20,6 +20,7 @@ const EditWrap = styled.div`
 
     .btn_area {
         text-align: center;
+        margin-bottom: 1em;
 
         .editbtn { // 수정 버튼 속성
             margin-top: 1em;
@@ -30,7 +31,7 @@ const EditWrap = styled.div`
             background-color: #050E3D;
             transition: all .1s ease-in;
             font-weight: 600;
-            font-size: 14px;
+            font-size: .9em;
             cursor: pointer;
 
             &:hover {background-color: #5EADF7;
@@ -45,7 +46,7 @@ const EditWrap = styled.div`
                 background-color: #050E3D;
                 transition: all .1s ease-in;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: .9em;
                 cursor: pointer;
 
                 &:hover {background-color: #FA6060;
@@ -79,7 +80,7 @@ const Section = styled.div`
 
     table {
 //        width: 80vw;
-        width: 70vw;
+        width: 75vw;
         margin: 0 auto;
         border-collapse: collapse;
         background-color: #4555AE;
@@ -125,7 +126,7 @@ const Section = styled.div`
     }
 
     .input_title {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         width: 100%;
         outline: none;
         display: block;
@@ -194,7 +195,7 @@ const Section = styled.div`
 
 const TextWrap = styled.div`
 //    width: 80vw;
-    width: 70vw;
+    width: 75vw;
     margin: 0 auto;
     margin-bottom:20px;
     justify-content: center;
