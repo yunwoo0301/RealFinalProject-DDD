@@ -6,6 +6,7 @@ import ShowMsg from '../Message/ShowMessage';
 import {MdOutlinePersonPin} from "react-icons/md";
 import {GiLoveLetter} from  "react-icons/gi";
 import Button from '../../util/Button';
+import {useNavigate} from "react-router-dom";
 
 
 
@@ -54,7 +55,10 @@ const Table = styled.table`
     border-collapse: collapse;
     border: none;
 
-
+    .new{
+      color: red;
+      font-weight: bold;
+    }
 
     th,td{
         font-size: .8rem;
@@ -81,6 +85,7 @@ const Table = styled.table`
 
 
 const MyMessage = () => {
+    const navigate = useNavigate();
     const getId = window.localStorage.getItem("memberId");
     // 받은메세지
     const [msgData, setMsgData] = useState([]);
@@ -115,12 +120,11 @@ const MyMessage = () => {
         return formattedDate;
     };
 
+    const checkMsg = async() => {
+      const msgList = await DDDApi.receivedMsg(getId);
+      setMsgData(msgList.data);
+    }
     useEffect(() => {
-        const checkMsg = async() => {
-            const msgList = await DDDApi.receivedMsg(getId);
-            setMsgData(msgList.data);
-            console.log("메세지들어오는거  : ", msgList.data);
-        }
         checkMsg();
     }, []);
 
@@ -193,6 +197,7 @@ const openToMsg = async (messageNo, senderId, isOpened, senderNickname, title, c
     }
 
     const closeMsg = () => {
+        checkMsg();
         setOpenMsg(false);
     }
 
@@ -201,95 +206,96 @@ const openToMsg = async (messageNo, senderId, isOpened, senderNickname, title, c
         await DDDApi.openedMsg(messageNo, isOpened);
     }
 
-    return (
-        <>
-        {openMsg && <ShowMsg props={msgProps} openReply={openReply}
-          setOpenReply={setOpenReply}/>}
-        <PostWrap>
-            <div className='title' >내 쪽지함</div>
-            <div className='moreBox'>
-                <span>받은 쪽지함</span>
-            </div>
-            <Table>
-                <thead>
-                    <tr>
-                        <th style={{width:'42%'}}>제목</th>
-                        <th style={{width:'18%'}}>보낸사람</th>
-                        <th style={{width:'14%'}}>작성일</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {
-                   currentPageData.length > 0 && currentPageData.map((receiveMsg) => (
-                        <tr key={receiveMsg.messageNo}>
-                        <td
-                        style={{cursor: 'pointer' }}
-                        onClick={() => openToMsg(receiveMsg.messageNo,
-                            receiveMsg.senderId,
-                            receiveMsg.isOpened,
-                            receiveMsg.senderNickname,
-                            receiveMsg.title,
-                            receiveMsg.contents)}
-                        >{receiveMsg.title}</td>
-                        <td>{receiveMsg.senderNickname}</td>
-                        <td>{formatDate(receiveMsg.messageDate)}</td>
-                        </tr>
-                    ))
-                }
-                    {
-                    currentPageData.length === 0 &&
-                    (
-                        <tr>
-                            <td colSpan={6}>받은 메세지가 없습니다.🥲</td>
-                        </tr>
-                    )
-                }
-                </tbody>
-            </Table>
-            <div className="pageArea">
-                <PageNation pageCount={pageCount} onPageChange={handlePageClick}/>
-            </div>
+return (
+  <>
+  {openMsg && <ShowMsg props={msgProps} openReply={openReply}
+    setOpenReply={setOpenReply}/>}
+  <PostWrap>
+    <div className='title' >내 쪽지함</div>
+    <div className='moreBox'>
+        <span>받은 쪽지함</span>
+    </div>
+    <Table>
+        <thead>
+            <tr>
+                <th style={{width:'5%'}}></th>
+                <th style={{width:'45%'}}>제목</th>
+                <th style={{width:'25%'}}>보낸사람</th>
+                <th style={{width:'25%'}}>작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+        {currentPageData.length > 0 && currentPageData.map((receiveMsg) => (
+          <tr key={receiveMsg.messageNo}>
+          <td>
+          {receiveMsg.isOpened === 0 ? <span className="new">new</span> : null}
+          </td>
+          <td
+          style={{cursor: 'pointer' }}
+          onClick={() => openToMsg(receiveMsg.messageNo,
+              receiveMsg.senderId,
+              receiveMsg.isOpened,
+              receiveMsg.senderNickname,
+              receiveMsg.title,
+              receiveMsg.contents)}
+          >{receiveMsg.title}</td>
+          <td>{receiveMsg.senderNickname}</td>
+          <td>{formatDate(receiveMsg.messageDate)}</td>
+          </tr>
+          ))}
+          {currentPageData.length === 0 &&
+            (
+                <tr>
+                    <td colSpan={6}>받은 메세지가 없습니다.🥲</td>
+                </tr>
+            )
+        }
+        </tbody>
+    </Table>
+    <div className="pageArea">
+        <PageNation pageCount={pageCount} onPageChange={handlePageClick}/>
+    </div>
 
-            <div className="buffer"/>
+    <div className="buffer"/>
 
-            <div className='moreBox' style={{marginTop:'2rem'}}>
-                <span>보낸 쪽지함</span>
-            </div>
-            <Table>
-                <thead>
-                    <tr>
-                        <th style={{width:'42%'}}>제목</th>
-                        <th style={{width:'18%'}}>받는사람</th>
-                        <th style={{width:'14%'}}>보낸날짜</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {sentCurrentPageData.length > 0 && sentCurrentPageData.map((sent) => (
-                        <tr key={sent.messageNo}>
-                            <td
-                            style={{ cursor: 'pointer' }}
-                            onClick={()=>openToSentMsg(sent.messageNo, sent.receiverNickname, sent.title, sent.contents)}
-                             >{sent.title}
-                            </td>
-                            <td>{sent.receiverNickname}</td>
-                            <td>{formatDate(sent.messageDate)}</td>
-                        </tr>
-                    ))
-                }
-                {
-                    sentCurrentPageData.length === 0 &&
-                    (
-                        <tr>
-                            <td colSpan={6}>보낸 메세지가 없습니다.🥲 </td>
-                        </tr>
-                    )
-                }
-                </tbody>
-            </Table>
-            <PageNation pageCount={pageCount2} onPageChange={handleSentMsgClick}/>
-        </PostWrap>
-    </>
-    );
+    <div className='moreBox' style={{marginTop:'2rem'}}>
+        <span>보낸 쪽지함</span>
+    </div>
+    <Table>
+        <thead>
+            <tr>
+                <th style={{width:'50%'}}>제목</th>
+                <th style={{width:'25%'}}>받는사람</th>
+                <th style={{width:'25%'}}>보낸날짜</th>
+            </tr>
+        </thead>
+        <tbody>
+        {sentCurrentPageData.length > 0 && sentCurrentPageData.map((sent) => (
+                <tr key={sent.messageNo}>
+                    <td
+                    style={{ cursor: 'pointer' }}
+                    onClick={()=>openToSentMsg(sent.messageNo, sent.receiverNickname, sent.title, sent.contents)}
+                      >{sent.title}
+                    </td>
+                    <td>{sent.receiverNickname}</td>
+                    <td>{formatDate(sent.messageDate)}</td>
+                </tr>
+            ))
+        }
+        {
+            sentCurrentPageData.length === 0 &&
+            (
+                <tr>
+                    <td colSpan={6}>보낸 메세지가 없습니다.🥲 </td>
+                </tr>
+            )
+        }
+        </tbody>
+      </Table>
+      <PageNation pageCount={pageCount2} onPageChange={handleSentMsgClick}/>
+  </PostWrap>
+</>
+);
 };
 
 export default MyMessage;
