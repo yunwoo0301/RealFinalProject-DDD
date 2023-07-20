@@ -233,7 +233,7 @@ const ExhibitionReview = ({ data }) => {
     }
 
     // 다른 멤버에게 쪽지보내기 또는 프로필 보기메뉴
-    const [isHovered, setIsHovered] = useState(false);
+    const [isHovered, setIsHovered] = useState({});
 
     const openProfile = (memberId) => {
        // 로그인이 안되어있으면 로그인 모달띄움
@@ -245,8 +245,8 @@ const ExhibitionReview = ({ data }) => {
       navigate(`/mypage/${memberId}`);
     };
 
-    const handleMouseEnter = () => {
-      setIsHovered(!isHovered);
+    const handleMouseEnter = (commentNo) => {
+      setIsHovered((prev) => ({ ...prev, [commentNo]: !prev[commentNo] }));
     };
 
     // 쪽지보내기로 props 보내기
@@ -340,9 +340,9 @@ const ExhibitionReview = ({ data }) => {
               <img
               src={e.memberPic}
               alt=""
-              onClick={handleMouseEnter}
+              onClick={() => handleMouseEnter(e.commentNo)}
             />
-            {isHovered && (
+            {isHovered[e.commentNo] && (
               <div className="hoverContent">
                 <p onClick={() => openToMsg(e.memberId, e.memberName)}>쪽지보내기</p>
                 <p onClick={() => openProfile(e.memberId)}>프로필보기</p>
