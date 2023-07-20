@@ -135,10 +135,17 @@ const DDDApi = {
         return await axios.post( `/pay/kakaoReady?id=${getId}&exhibitNo=${exhibitNo}&quantity=${ticketCnt}&price=${totalPrice}&bookingId=${bookingId}`);
     },
 
-    // 전시상세 한줄평작성
-    writeExhibitComment: async(getId, exhibitNo, stars, comment) => {
-        return await axios.post(`/exhibitComment/write?id=${getId}&exhibitNo=${exhibitNo}&starRates=${stars}&comment=${comment}`);
-    },
+   // 전시상세 한줄평작성
+      writeExhibitComment: async(getId, exhibitNo, stars, comment) => {
+          const commentData = {
+              memberId: getId,
+              exhibitNo: exhibitNo,
+              starRates: stars,
+              comment: comment
+
+          }
+          return await axios.post("/exhibitComment/write", commentData);
+      },
 
     // 전시상세 한줄평출력
     commentList: async(exhibitNo) =>{

@@ -353,7 +353,7 @@ const ExhibitionReview = ({ data }) => {
               </div>
 
               <div className="memberInfo">
-                <Rating name="read-only" value={e.starRates} readOnly />
+                <Rating name="read-only" value={e.starRates} readOnly  precision={0.5} />
                 <div className="comment">{e.comment}</div>
 
               </div>

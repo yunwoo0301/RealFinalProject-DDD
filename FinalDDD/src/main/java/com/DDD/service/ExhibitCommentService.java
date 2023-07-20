@@ -68,8 +68,9 @@ public class ExhibitCommentService {
         List<ExhibitComment> exhibitCommentList = exhibitCommentRepository.findByExhibitions_ExhibitNo(Long.valueOf(exhibitNo));
         for(ExhibitComment e : exhibitCommentList) {
             ExhibitCommentDTO exhibitCommentDTO = new ExhibitCommentDTO();
-            exhibitCommentDTO.setCommentNo(e.getCommentNo());
-            exhibitCommentDTO.setExhibitNo(e.getExhibitions().getExhibitNo());
+            exhibitCommentDTO.setCommentNo(String.valueOf(e.getCommentNo()));
+            exhibitCommentDTO.setExhibitNo(String.valueOf(e.getExhibitions().getExhibitNo()));
+            exhibitCommentDTO.setMemberId(String.valueOf(e.getMember().getId()));
             exhibitCommentDTO.setMemberName(e.getMember().getNickname());
             exhibitCommentDTO.setMemberPic(e.getMember().getProfileImg());
             exhibitCommentDTO.setStarRates(e.getStarRates());
