@@ -14,6 +14,7 @@ const Wrapper = styled.div`
     border-radius: 12px;
     padding: 15px 18px;
     margin-top: 20px;
+    margin-bottom: 1em; // 하단 여백 추가
 
 
     .commentbox {
