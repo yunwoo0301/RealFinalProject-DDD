@@ -9,9 +9,6 @@ import PageNation from '../../util/PageNation';
 const PostWrap = styled.div`
     width: calc(100% - 2rem);
     height: 100%;
-    /* background-color: #fed081; */
-    /* position : relative;
-    top: 12%; */
     padding-left: 2.5rem;
     p {
         text-align: left;
@@ -20,7 +17,6 @@ const PostWrap = styled.div`
         font-weight: bold;
     }
     .title {
-        /* background-color: red; */
         height: 2.8rem;
         font-weight: bold;
     }
@@ -39,14 +35,12 @@ const PostWrap = styled.div`
     .buffer{
         width: 90%;
         height: 5%;
-        /* background-color: aqua; */
         border-bottom : 1px solid #ddd;
     }
 `;
 
 const Table = styled.table`
     width: 92%;
-    /* background-color: aqua; */
     text-align: center;
     border-collapse: collapse;
     border: none;
@@ -164,10 +158,9 @@ const MyPost = ({ memberId }) => {
                         <tr>
                             <th style={{width:'8%'}}>번호</th>
                             <th style={{width:'10%'}}>카테고리</th>
-                            <th style={{width:'42%'}}>제목</th>
+                            <th style={{width:'50%'}}>제목</th>
                             <th style={{width:'18%'}}>작성자</th>
-                            <th style={{width:'7%'}}>조회수</th>
-                            <th style={{width:'15%'}}>작성일</th>
+                            <th style={{width:'14%'}}>작성일</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,11 +170,10 @@ const MyPost = ({ memberId }) => {
                             <td>{post.boardNo}</td>
                             <td>{post.category}</td>
                             <td
-                                style={{ textAlign: 'left', paddingLeft: '.6rem', cursor: 'pointer' }}
+                                style={{ cursor: 'pointer' }}
                                 onClick={() => handleTitleClick(post.boardNo)}>{post.title}
                             </td>
                             <td>{post.author}</td>
-                            <td >{post.views}</td>
                             <td>{formatDate(post.writeDate)}</td>
                             </tr>
                         ))
@@ -210,7 +202,7 @@ const MyPost = ({ memberId }) => {
                         <tr>
                             <th style={{width:'8%'}}>번호</th>
                             <th style={{width:'10%'}}>카테고리</th>
-                            <th style={{width:'42%'}}>내용</th>
+                            <th style={{width:'50%'}}>내용</th>
                             <th style={{width:'18%'}}>작성자</th>
                             <th style={{width:'14%'}}>작성일</th>
                         </tr>
@@ -221,7 +213,6 @@ const MyPost = ({ memberId }) => {
                             <tr key={index}>
                                 <td>{comment.commentNo}</td>
                                 <td>{comment.category}</td>
-                                {/* <td style={{textAlign:'left', paddingLeft:'.6rem'}}>{comment.content}</td>  */}
                                 <td
                                 style={{ cursor: 'pointer' }}
                                 onClick={() => handleTitleClick(comment.boardNo)}>{comment.content}
