@@ -327,7 +327,7 @@ const BoardsManage = () => {
                   <td>{board.category}</td>
                   <td>{board.author}</td>
                   <td>{board.title}</td>
-                  <td>{dangerouslySetInnerHTML={{__html: board.contents}}}</td>
+                  <td>{board.contents}</td>
                   <td>{formatDate(board.writeDate)}</td>
                 </TableRow>
               ))}
