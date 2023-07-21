@@ -412,15 +412,19 @@ const EditBoard = () => {
 
                         <td>
                             <select name="category" value={region} onChange={onChangeregion}>
-                            <option value="">지역선택</option>
-                            <option value="서울">서울</option>
-                            <option value="경기">경기</option>
-                            <option value="인천">인천</option>
-                            <option value="충청">충청</option>
-                            <option value="강원">강원</option>
-                            <option value="경상도">경상도</option>
-                            <option value="전라도">전라도</option>
-                            <option value="제주">제주</option>
+                                <option value="">지역선택</option>
+                                <option value="서울">서울</option>
+                                <option value="경기">경기</option>
+                                <option value="인천">인천</option>
+                                <option value="충청">충청</option>
+                                <option value="강원">강원</option>
+                                <option value="전북">전북</option>
+                                <option value="전남">전남</option>
+                                <option value="광주">광주</option>
+                                <option value="경북">경북</option>
+                                <option value="경남">경남</option>
+                                <option value="부산">부산</option>
+                                <option value="제주">제주</option>
                             </select>
                         </td>
 
