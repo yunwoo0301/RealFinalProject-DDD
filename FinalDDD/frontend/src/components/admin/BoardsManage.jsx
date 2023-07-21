@@ -163,7 +163,10 @@ const BoardsManage = () => {
     });
 
 
-
+  // html태그 삭제
+  const removeHtmlTags = (str) => {
+    return str.replace(/<.*?>/g, '');
+  };
 
 
   // 날짜 형식 변환 함수
@@ -327,7 +330,7 @@ const BoardsManage = () => {
                   <td>{board.category}</td>
                   <td>{board.author}</td>
                   <td>{board.title}</td>
-                  <td dangerouslySetInnerHTML={{__html: board.contents}}></td>
+                  <td>{removeHtmlTags(board.contents)}</td>
                   <td>{formatDate(board.writeDate)}</td>
                 </TableRow>
               ))}
