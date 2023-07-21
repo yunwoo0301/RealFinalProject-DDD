@@ -333,6 +333,13 @@ const BoardView = () => {
     const {memberData} = useStore(); // 회원 데이터에서 프로필 가져오기용(댓글)
     console.log(memberData);
 
+    // DB상 카테고리 값이 영어 이므로 한글로 반환하기 위한 매핑 작업
+    const categoryMapping = {
+        "Recommend": "추천수다",
+        "Question": "질문하기",
+        "DDDmate": "동행찾기"
+    };
+
     // 게시글 작성일자(연도-월-일)로 추출
     const formattedDate = boardView?.writeDate.substring(0, 10);
 
@@ -561,12 +568,13 @@ const BoardView = () => {
                         <Select
                         labelId="demo-simple-select-readonly-label"
                         id="demo-simple-select-readonly"
-                        value={boardView?.category || ''}
+                        value={categoryMapping[boardView?.category] || ''}
                         label="카테고리"
                         inputProps={{ readOnly: true }}
                         sx={{ height: '2.5em' }}
                         IconComponent={() => null}>
-                        <MenuItem value={boardView?.category }>{boardView?.category}</MenuItem>
+                        <MenuItem value={categoryMapping[boardView?.category] || ''}>
+                        {categoryMapping[boardView?.category] || ''}</MenuItem>
                         </Select>
                     </FormControl>
 

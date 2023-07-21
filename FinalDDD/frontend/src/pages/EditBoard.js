@@ -241,6 +241,13 @@ const EditBoard = () => {
     const [originImg, setOriginImg] = useState(null);
 
 
+    // DB상 카테고리 값이 영어 이므로 한글로 반환하기 위한 매핑 작업
+    const categoryMapping = {
+        "Recommend": "추천수다",
+        "Question": "질문하기",
+        "DDDmate": "동행찾기"
+    };
+
     // 게시글 상세페이지 본문 불러오기(조회)
     useEffect(() => {
         const boardView = async () => {
@@ -395,7 +402,7 @@ const EditBoard = () => {
                     </tr>
                     <tr>
                         <td>
-                            <select name="category" value={category} onChange={onChangerCtg}>
+                            <select name="category" value={categoryMapping[category] || category} onChange={onChangerCtg}>
                             <option value="">카테고리</option>
                             <option value="추천수다">추천수다</option>
                             <option value="질문하기">질문하기</option>
