@@ -160,10 +160,12 @@ const DashBoard = () => {
         };
         getBookings();
         }, []);
+
     // 대시보드로 제일예매가 많이 된 전시정보 전달
     const [dashboardData, setDashboardData] = useState({ exhibitName: "", imgUrl: "" });
     // 오늘 날짜인 예약 개수
     const [todayBookingCount, setTodayBookingCount] = useState(0);
+
     useEffect(() => {
         const today = new Date();
         const formattedToday = formatDate(today); // 오늘 날짜를 형식에 맞게 변환
@@ -275,17 +277,16 @@ const DashBoard = () => {
      const getMembers = async() => {
         const result = await LoginApi.getAllMembers();
 
-    // 오늘 날짜 계산
-    const today = new Date().toISOString().slice(0, 10);
+        // 오늘 날짜 계산
+        const today = new Date().toISOString().slice(0, 10);
 
-    // regDate가 오늘 날짜인 데이터 개수 구하기
-    const regDateCount = result.data.filter((item) => item.regDate.slice(0, 10) === today).length;
+        // regDate가 오늘 날짜인 데이터 개수 구하기
+        const regDateCount = result.data.filter((item) => item.regDate.slice(0, 10) === today).length;
+        // deleteDate가 오늘 날짜인 데이터 개수 구하기
+        const deleteDateCount = result.data.filter((item) => item.deleteDate && item.deleteDate.slice(0, 10) === today).length;
 
-    // deleteDate가 오늘 날짜인 데이터 개수 구하기
-    const deleteDateCount = result.data.filter((item) => item.deleteDate && item.deleteDate.slice(0, 10) === today).length;
-
-    setRegDateCnt(regDateCount);
-    setDeleteDateCnt(deleteDateCount);
+        setRegDateCnt(regDateCount);
+        setDeleteDateCnt(deleteDateCount);
 
     }
     useEffect(() => {
@@ -305,7 +306,7 @@ const DashBoard = () => {
         const today = new Date().toISOString().slice(0, 10);
 
         // writeDate가 오늘 날짜인 데이터 개수 구하기
-        const todayWriteDateCount = result.data.filter((item) => item.writeDate === today).length;
+        const todayWriteDateCount = result.data.filter((item) => item.writeDate && item.writeDate.slice(0, 10) === today).length;
         setTodayArticles(todayWriteDateCount);
 
       } catch (e) {
