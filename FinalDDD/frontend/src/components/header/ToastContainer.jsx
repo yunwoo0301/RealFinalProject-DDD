@@ -12,10 +12,6 @@ const Container = styled(ToastContainer)`
     color: #fff;
   }
 
-  .Toastify__toast-icon {
-    width: 5rem;
-  }
-
   .Toastify__toast--info {
     background: rgba(94, 173, 247, 0.8);
   }

@@ -318,12 +318,6 @@ const DashBoard = () => {
     }, []);
 
 
-
-
-
-
-
-
   return(
       <DashboardContainer>
         <h3 className="dash-title">Dash Board</h3>

@@ -128,15 +128,22 @@ const MyMessage = () => {
         checkMsg();
     }, []);
 
-    const ITEMS_PAGE = 3;
+
+
+    const sortByDateDesc = (data) => {
+      return data.sort((a, b) => new Date(b.messageDate) - new Date(a.messageDate));
+    };
 
     const handlePageClick = (selectedPage) => {
         setCurrentPage(selectedPage.selected);
     }
 
+    const ITEMS_PAGE = 3;
+
     const pageCount = Math.ceil(msgData.length / ITEMS_PAGE);
+    const sortedMsgData = sortByDateDesc(msgData);
     const offset = currentPage * ITEMS_PAGE;
-    const currentPageData = msgData.slice(offset, offset + ITEMS_PAGE);
+    const currentPageData = sortedMsgData.slice(offset, offset + ITEMS_PAGE);
 
     useEffect(() => {
         const checkSentMsg = async() => {
@@ -146,6 +153,8 @@ const MyMessage = () => {
         checkSentMsg();
     }, []);
 
+
+
     const handleSentMsgClick = (selectedPage) => {
         setSentCurrentPage(selectedPage.selected);
 
@@ -153,8 +162,9 @@ const MyMessage = () => {
 
     const ITEM_PAGE2 = 3;
     const pageCount2 = Math.ceil(sentMsgData.length / ITEM_PAGE2);
+    const sortedSentMsgData = sortByDateDesc(sentMsgData);
     const offset2 = sentCurrentPage * ITEMS_PAGE;
-    const sentCurrentPageData = sentMsgData.slice(offset2, offset2 + ITEM_PAGE2);
+    const sentCurrentPageData = sortedSentMsgData.slice(offset2, offset2 + ITEM_PAGE2);
 
 
     // 받은메세지 확인

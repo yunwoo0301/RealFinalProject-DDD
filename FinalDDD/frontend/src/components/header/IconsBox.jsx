@@ -194,7 +194,7 @@ const Icons = () => {
                     return bookingDate === today;
                     });
                     setTodayBookingCnt(todayBookings.length);
-                    if (todayBookingCnt > 0) {
+                    if (todayBookings.length > 0 ) {
                         showToast(`🎫 예약된 오늘의 전시가 ${todayBookings.length}건 있습니다`);
                       }
                   } catch (e) {
@@ -210,7 +210,6 @@ const Icons = () => {
                     const message = async() => {
                         try {
                             const msgList = await DDDApi.receivedMsg(getId);
-                            console.log("메세지 리스트 : ", msgList.data);
 
                             const todayMsgs = msgList.data.filter((msg) => {
                                 const msgDate = new Date(msg.messageDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-");
@@ -219,7 +218,7 @@ const Icons = () => {
                                 return isToday && isOpened;
                               });
                               setTodayMsg(todayMsgs.length);
-                              if (todayMsgs.length > 0) {
+                              if (todayMsgs.length > 0 && todayMsgs[0].isOpened === 0) {
                                 showToast(`💌 새로운 메세지가 도착했습니다.`);
                               }
                         }catch(e) {
