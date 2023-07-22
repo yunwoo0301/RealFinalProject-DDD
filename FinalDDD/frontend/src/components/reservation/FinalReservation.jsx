@@ -64,7 +64,7 @@ const FinalReservation = ({props}) => {
 
     const openMyBooking = () => {
       setShowPage('예약관리')
-      navigate(`/api/mypage/${getId}`);
+      navigate(`/mypage/${getId}`);
     }
 
     return(
