@@ -24,7 +24,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/login")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;

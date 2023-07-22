@@ -58,7 +58,7 @@ const WeatherInfo = () => {
         const fetchData = async () => {
             try {
                 const responseArray = await Promise.all(locations.map(location =>
-                axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${location}&appid=41209c337a94d9dbc18526bf71a3f002`)
+                axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=41209c337a94d9dbc18526bf71a3f002`)
             ));
             const data = responseArray.map(response => response.data);
             setWeatherData(data);

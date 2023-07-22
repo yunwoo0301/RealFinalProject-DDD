@@ -39,7 +39,7 @@ const Foot = styled.div`
             <p>Diverse Different Display :DDD</p>
         </div>
         <div className="third">
-        <p>장연주 정연우 이택현 곽은지</p>
+        <p>장연주 정연우 이택현</p>
         </div>
         </div>   
         </Foot>

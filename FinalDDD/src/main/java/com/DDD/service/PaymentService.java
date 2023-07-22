@@ -85,10 +85,10 @@ public class PaymentService {
         // 상품비과세 금액(필수)
         params.add("tax_free_amount", "0");
         // 성공 시 redirect url => 결제완료페이지와 연결해야함
-        String approvalUrl = "http://myexhibitions.store/pay/kakaoSuccess?id=" + id + "&bookingId=" + bookingId;
+        String approvalUrl = "https://myexhibitions.store/pay/kakaoSuccess?id=" + id + "&bookingId=" + bookingId;
         params.add("approval_url", approvalUrl);
         // 취소 시  url
-        String cancelUrl = "http://myexhibitions.store/pay/kakaoCancel?bookingId=" + bookingId;
+        String cancelUrl = "https://myexhibitions.store/pay/kakaoCancel?bookingId=" + bookingId;
         params.add("cancel_url", cancelUrl);
         // 실패 시  url
         params.add("fail_url", cancelUrl);
