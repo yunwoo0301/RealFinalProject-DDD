@@ -99,8 +99,17 @@ public class MemberService {
         memberRepository.save(member);
 
         // Compose email content
-        String subject = "[:DDD] Change your password !🔑 ";
-        String body = "Your new password : " + generatedString  + " Please sign-in and change your new password";
+        String subject = "[:DDD] 패스워드를 확인해주세요🔑 ";
+        String body =
+
+        "<div style=\"background-color: #f6f6f6; padding: 20px;\">"
+                + "<h1 style=\"color: #333; font-size: 24px;\">:DDD 패스워드를 확인해주세요 </h1>"
+                + "<p style=\"color: #333; font-size: 18px;\">안녕하세요 :) 비밀번호 변경 관련 이메일입니다. </p>"
+                + "<p style=\"color: #333; font-size: 18px;\"> 변경된 비밀번호를 확인하고, 새로운 비밀번호로 변경해주세요. :) </p>"
+                + "<a style=\"display: inline-block; color: #fff; background-color: #007bff; border: solid 1px #007bff; "
+                + "padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 18px;\" "
+                + "<p style=\"color: #333; font-size: 18px;\"> 새로운 비밀번호 : "  +  generatedString  + "</p>"
+                + "</div>";
 
         // Send email
         emailService.sendMail(member.getEmail(), subject, body);

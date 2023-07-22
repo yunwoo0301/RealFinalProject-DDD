@@ -54,6 +54,13 @@ public class FreeBoardController {
         return new ResponseEntity(freeBoardService.selectBoardOne(boardNo), HttpStatus.OK);
     }
 
+    // 조회수 증가 (put 이용시)
+    @PutMapping("/boardView/{boardNo}/views")
+    public ResponseEntity<Void> increaseViewCount(@PathVariable("boardNo") Long boardNo) {
+        freeBoardService.increaseViewCount(boardNo);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     // 이전글, 다음글 조회(게시물 상세조회 내)
     @GetMapping("/{currentBoardNo}/navigate")
     public ResponseEntity<Map<String, FreeBoardDto>> getPrevAndNextBoard(@PathVariable("currentBoardNo") Long currentBoardNo) {

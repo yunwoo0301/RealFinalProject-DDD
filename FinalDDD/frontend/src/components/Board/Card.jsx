@@ -46,7 +46,8 @@ const Wrapper = styled.div` // 동행찾기 게시판 전체 컨테이너 영역
 `;
 
 const CardContainer = styled.div` // 전체 카드아이템 컨테이너
-    max-width: 80em;
+//    max-width: 80em;
+    width: 80em; // 컨텐츠 내용에 따라 가변크기 수정 **
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     justify-content: center;
@@ -249,8 +250,12 @@ const Card = () => {
                 <option value="인천">인천</option>
                 <option value="충청">충청</option>
                 <option value="강원">강원</option>
-                <option value="경상도">경상도</option>
-                <option value="전라도">전라도</option>
+                <option value="전북">전북</option>
+                <option value="전남">전남</option>
+                <option value="광주">광주</option>
+                <option value="경북">경북</option>
+                <option value="경남">경남</option>
+                <option value="부산">부산</option>
                 <option value="제주">제주</option>
             </SelectBox>
         </SelectWrapper>

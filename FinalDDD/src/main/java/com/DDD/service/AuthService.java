@@ -44,9 +44,15 @@ public class AuthService {
             memberRepository.save(member);
 
             // Compose email content
-            String subject = "Email Confirmation";
-            String body = "Click this link to confirm your email: " +
-                    "<a href=\"http://localhost:8111/login/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>";
+            String subject = ":DDD 회원가입 이메일 인증";
+            String body = "<div style=\"background-color: #f6f6f6; padding: 20px;\">"
+                    + "<h1 style=\"color: #333; font-size: 24px;\">:DDD 회원가입 이메일 인증</h1>"
+                    + "<p style=\"color: #333; font-size: 18px;\">안녕하세요 :) 이메일 인증을 위한 이메일입니다. </p>"
+                    + "<p style=\"color: #333; font-size: 18px;\"> 아래 링크를 클릭하고 이메일 인증을 완료해주세요 :) </p>"
+                    + "<a style=\"display: inline-block; color: #fff; background-color: #007bff; border: solid 1px #007bff; "
+                    + "padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 18px;\" "
+                    + "href=\"https://myexhibitions.store:8111/login/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>"
+                    + "</div>";
 
             // Send email
             emailService.sendMail(member.getEmail(), subject, body);

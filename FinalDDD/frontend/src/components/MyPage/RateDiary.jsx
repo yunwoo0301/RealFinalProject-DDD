@@ -11,13 +11,29 @@ import AlertModal from '../../util/Alert';
 import SearchExhibition from './SearchExhibition';
 
 const Container = styled.div`
+    box-sizing: border-box;
     width: 100%;
-    height: auto;
     /* background-color: aqua; */
     display: flex;
     justify-content: center;
-    @media (max-width: 768px) {
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
 
+
+
+    .progressBlock{
+      width: 100%;
+      height: auto;
+      background-color: #c2c2c2;
+      position: sticky;
+      top: -1%;
+      z-index: 1;
+      .progressBar {
+        width: 100%;
+        height: 1.5rem;
+        background-color: black;
+      }
     }
     .wrap{
         /* background-color: blue; */
@@ -151,6 +167,7 @@ const BlackBG = styled.div`
 
 `;
 
+
 const RateDiary = () => {
 
   const { stealExhibition, search , setSearch, myDiaryData, setMyDiaryData } = useStore();
@@ -249,6 +266,23 @@ setInputComment(newComments);
     setTimeout(handleClose, 1000)
   };
 
+  useEffect(() => {
+      const updateProgressBar = () => {
+        const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollPercentage = (scrollPosition / scrollTotal) * 100;
+
+        document.querySelector('.progressBar').style.width = `${scrollPercentage}%`;
+      };
+
+      window.addEventListener('scroll', updateProgressBar);
+
+      return () => {
+        window.removeEventListener('scroll', updateProgressBar);
+      };
+    }, []);
+
+
 
     return (
       <>
@@ -256,9 +290,9 @@ setInputComment(newComments);
 
       <Container>
         <>
-                {/* <input type="text" value={search} onChange={handleFind}/> */}
-
-
+                    <div className='progressBlock'>
+                      <div className='progressBar'/>
+                    </div>
             <div className="wrap">
            {filterExhibition.map((item, index) => {
                 return (

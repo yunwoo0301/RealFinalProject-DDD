@@ -4,17 +4,38 @@ import Functions from "../util/Functions";
 
 
 
-const updateProfileField = async (memberId, fieldName, fieldValue) => {
-    try {
-      Functions.setAuthorizationHeader(); // 헤더에 토큰을 넣는 함수
-      return await axios.post(`/api/mypage/${memberId}/${fieldName}`, {
-        id: memberId,
-        ...fieldValue
-      });
-    } catch (error) {
-        console.log("Error: ", error);
-        throw error;
-    }
+//const updateProfileField = async (memberId, fieldName, fieldValue) => {
+//    try {
+//      Functions.setAuthorizationHeader(); // 헤더에 토큰을 넣는 함수
+//      return await axios.post(`/api/mypage/${memberId}/${fieldName}`, {
+//        id: memberId,
+//        ...fieldValue
+//      });
+//    } catch (error) {
+//        console.log("Error: ", error);
+//        throw error;
+//    }
+//  };
+
+  const updateProfileField = async (memberId, fieldName, fieldValue) => {
+      try {
+        Functions.setAuthorizationHeader(); // 헤더에 토큰을 넣는 함수
+        return await axios.post(`/api/mypage/${memberId}/${fieldName}`, {
+          id: memberId,
+          ...fieldValue
+        });
+      } catch (error) {
+        await Functions.handleApiError(error);  // api 에러 401을 받으면 로컬에 저장된 리프레쉬 토큰을 보내 액세스 토큰을 재발급 받는 axios 요청을 보내는 함수(await 필수)
+
+        if (error.response && error.response.status === 401) {
+          // 다시 시도하기 전에 헤더를 설정합니다.
+          Functions.setAuthorizationHeader();
+          return await axios.post(`/api/mypage/${memberId}/${fieldName}`, {
+            id: memberId,
+            ...fieldValue
+          });
+        }
+      }
   };
 
 
