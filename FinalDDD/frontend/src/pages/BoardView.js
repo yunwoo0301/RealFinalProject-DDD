@@ -389,38 +389,45 @@ const BoardView = () => {
 
 
     // 본문 불러오기
+    const boardViewLoad = async () => {
+        try {
+        // 게시물 내용 불러오기
+        const response = await DDDApi.getBoard(boardNo);
+        if(response.status === 200) {
+            const data = response.data;
+            setBoardView(data); // 기존의 게시물 정보 설정
+            setCategory(data.category); // 카테고리 정보 설정
+
+            // 댓글 내용 불러오기
+            const commentData = data.comments;
+            setCommentList(commentData);
+            const rsp = await MyPageApi.info(getId); // localStorage 상에 닉네임 저장된 api 불러와서 재 렌더링
+            setNickname(rsp.data.nickname);
+            setTest(rsp.data.profileImg); // 기본프로필 이미지 불러오기
+        }
+        } catch (e) {
+        console.log(e);
+        }
+    };
+
+    // 조회수 증가 포함 수정 **
     useEffect(() => {
-        const boardViewLoad = async () => {
-            try {
-                // 게시물 내용 불러오기
-                const response = await DDDApi.getBoard(boardNo);
-                if(response.status === 200) {
-                    const data = response.data;
-                    setBoardView(data); // 기존의 게시물 정보 설정
-                    setCategory(data.category); // 카테고리 정보 설정
-
-                    // 댓글 내용 불러오기
-                    const commentData = data.comments;
-                    setCommentList(commentData);
-                    const rsp = await MyPageApi.info(getId); // localStorage 상에 닉네임 저장된 api 불러와서 재 렌더링
-                    setNickname(rsp.data.nickname);
-                    setTest(rsp.data.profileImg); // 기본프로필 이미지 불러오기
-
-                    if (boardView && boardView.views != null) { // 게시글 조회수 구간
-                    // if (data && data.views != null) { // 게시글 조회수 구간
-                        setBoardView(prevState => ({
-                            ...prevState,
-                            views: prevState.views + 1
-
-                        }));
-                    }
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        };
         boardViewLoad();
-    }, [boardNo, regComment]);
+        const increaseView = async () => {
+        // 조회수 증가 API 호출
+        const increaseViewCountResponse = await DDDApi.increaseViewCount(boardNo);
+
+        // 조회수 증가 API 호출이 성공했을 때만 게시물 데이터를 다시 불러옴
+        if (increaseViewCountResponse.status === 204) {
+            const updatedBoardResponse = await DDDApi.getBoard(boardNo);
+            if (updatedBoardResponse.status === 200) {
+                setBoardView(updatedBoardResponse.data);
+            }
+        }
+        }
+        increaseView();
+    }, [boardNo]);
+
 
     // 이전글 및 다음글 가져오기
     useEffect(() => {
@@ -700,7 +707,8 @@ const BoardView = () => {
                 commentList={commentList}
                 setCommentList={setCommentList}
                 regComment = {regComm}
-                setRegComment={setRegComment}/>
+                setRegComment={setRegComment}
+                onCommentPost={boardViewLoad}/>
             </Section>
         </ViewWrap>
 

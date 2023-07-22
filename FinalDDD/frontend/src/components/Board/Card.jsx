@@ -46,7 +46,8 @@ const Wrapper = styled.div` // 동행찾기 게시판 전체 컨테이너 영역
 `;
 
 const CardContainer = styled.div` // 전체 카드아이템 컨테이너
-    max-width: 80em;
+//    max-width: 80em;
+    width: 80em; // 컨텐츠 내용에 따라 가변크기 수정 **
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     justify-content: center;

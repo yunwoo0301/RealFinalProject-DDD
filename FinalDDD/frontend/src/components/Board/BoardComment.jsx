@@ -87,7 +87,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList, regComment, setRegComment }) => {
+const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList, regComment, setRegComment, onCommentPost }) => {
 
   const getId = window.localStorage.getItem("memberId");
   const isLogin = window.localStorage.getItem("isLogin");
@@ -96,64 +96,72 @@ const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList,
   const navigate = useNavigate();
 
   // 댓글 작성 함수
-  const postComment = async () => {
-    try {
-      const response = await DDDApi.commentWrite(comment, getId, boardNo);
-      console.log("성공내용 : " + response.data);
+      const postComment = async () => {
+        try {
+          const response = await DDDApi.commentWrite(comment, getId, boardNo);
+          if (response.status === 200) {
+            setSendModal(true);
+            setComment("");
 
-      if (response.status === 200) {
-      // 댓글 등록 후 commentList 업데이트
-      setRegComment(true); // 댓글 업데이트 함수 호출
-      console.log("regComment");
-      setSendModal(true);
-      setComment("") // 댓글 입력값 초기화
+            setTimeout(() => {
+              setSendModal(false);
+            }, 2000);
 
-      // 게시글 및 댓글 내용 다시 불러오기
-      // boardViewLoad();
+            // 댓글 작성이 성공적으로 완료된 후에 상위 컴포넌트에 알림
+            onCommentPost();
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-      setTimeout(() => {
-        setSendModal(false);
-      }, 2000);
-    }
-  } catch (error) {
-        console.log(error);
-    }
-  };
+      const fetchComments = async () => {
+          try {
+            const response = await DDDApi.getBoard(boardNo);
+            if (response.status === 200) {
+              setCommentList(response.data.comments);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        };
 
-  useEffect(() => {
-    if (regComment) {
-      setRegComment(false); // 상태 초기화
-    }
-  }, [regComment]);
+      useEffect(() => {
+        if (regComment) {
+          fetchComments();
+          setRegComment(false);
+        }
+      }, [regComment]);
+
+      // 엔터 쳤을 때 이벤트 동작 함수
+      const handleEnterKeyPress = (e) => {
+        if (e.key === "Enter") {
+          postComment();
+          setRegComment(true);
+          setSendModal(true);
+        }
+      };
+
+      // 전송 버튼 클릭 했을 때 이벤트 동작 함수
+      const handleButtonClick = () => {
+        postComment();
+        setRegComment(true);
+        setSendModal(true);
+      };
 
 
+      // 댓글 입력 값
+      const handleInputChange = (e) => {
+        setComment(e.target.value);
+      };
 
-
-
-
-  const handleEnterKeyPress = (e) => {
-    if (e.key === "Enter") {
-      postComment();
-      setSendModal(true);
-    }
-  };
-
-  const handleButtonClick = () => {
-    postComment();
-    setSendModal(true);
-  };
-
-  const handleInputChange = (e) => {
-    setComment(e.target.value);
-  };
-
-  const handleInputClick = () => {
-    if (!isLogin) {
-      alert('로그인 후 작성이 가능합니다');
-      navigate('/login')
-    }
-  }
-
+      // 로그인한 상태에서만 작성하도록 조건식 적용
+      const handleInputClick = () => {
+        if (!isLogin) {
+          alert('로그인 후 작성이 가능합니다');
+          navigate('/login')
+        }
+      }
 
     return (
         <Wrapper>

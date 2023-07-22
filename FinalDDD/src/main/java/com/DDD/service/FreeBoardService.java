@@ -67,22 +67,10 @@ public class FreeBoardService {
     }
 
 
-    // 게시글 상세조회(+댓글 포함)
+    // 게시글 상세조회( + 댓글 포함) 7.22일 기준 최종 작업
     public FreeBoardDto selectBoardOne(Long boardNo) {
         FreeBoard freeBoard = freeBoardRepository.findById(boardNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
-
-
-        // 조회수 초기화 (수정)
-        if (freeBoard.getViews() == null) {
-            freeBoard.setViews(0);
-        }
-
-        // 조회수 증가
-        freeBoard.setViews(freeBoard.getViews() + 1);
-        freeBoardRepository.save(freeBoard);
-        System.out.println("조회수 : " + freeBoard.getViews());
-
 
         FreeBoardDto freeboardDto = new FreeBoardDto();
         freeboardDto.setBoardNo(freeBoard.getBoardNo());
@@ -126,6 +114,25 @@ public class FreeBoardService {
 
         return freeboardDto;
     }
+
+    // 조회수 증가 코드 ** 추가
+    public void increaseViewCount(Long boardNo) {
+        FreeBoard freeBoard = freeBoardRepository.findById(boardNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+
+        // 조회수 초기화 (수정)
+        if (freeBoard.getViews() == null) {
+            freeBoard.setViews(0);
+        }
+
+        // 조회수 증가 구간
+        freeBoard.setViews(freeBoard.getViews() + 1);
+        freeBoardRepository.save(freeBoard);
+        System.out.println("조회수 : " + freeBoard.getViews());
+    }
+
+
+
 
     // 이전글 조회(게시물 상세조회 내)
     public Optional<FreeBoard> getPrevBoard(Long currentBoardNo, String category) {
