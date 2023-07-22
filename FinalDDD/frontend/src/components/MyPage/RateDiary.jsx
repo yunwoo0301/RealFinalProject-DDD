@@ -13,14 +13,12 @@ import SearchExhibition from './SearchExhibition';
 const Container = styled.div`
     box-sizing: border-box;
     width: 100%;
-    height: auto;
     /* background-color: aqua; */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     position: absolute;
-    overflow-x: hidden;
 
 
 
@@ -33,7 +31,7 @@ const Container = styled.div`
       z-index: 1;
       .progressBar {
         width: 100%;
-        height: 2rem;
+        height: 1.5rem;
         background-color: black;
       }
     }

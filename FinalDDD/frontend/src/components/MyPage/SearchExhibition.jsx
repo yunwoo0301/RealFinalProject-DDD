@@ -21,19 +21,34 @@ const Container = styled.div`
       object-fit: cover;
     }
   }
-  .searchBar {
+  .searchBlock{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 1;
+    flex-direction: column;
+    /* background-color: red; */
+    .title{
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      text-align: left;
+      padding: 0.5rem;
+      line-height: 2.5rem;
+    }
+
+    .searchBar {
     width: 18rem;
     height: 3rem;
-    z-index: 1;
     border-radius: 10rem;
     padding: 0 2rem;
     outline: none;
     border: 1px solid #c2c2c2;
   }
+
+  }
+
 `;
 
 const BlackBG = styled.div`
@@ -56,10 +71,6 @@ const SearchExhibition = () => {
     setSearch(currentWord);
   };
 
-    const resetSearchText = () => {
-      setSearch('');
-    };
-
   useEffect(() => {
     const filterSearch = stealExhibition.filter((item) =>
       item.exhibitName.toString().includes(search.toString())
@@ -67,17 +78,18 @@ const SearchExhibition = () => {
     setFilterExhibition(filterSearch);
   }, [search, stealExhibition]);
 
-  useEffect(() => {
-      return () => {
-        resetSearchText();
-      };
-    }, []);
-
 
     return (
         <Container>
           <div className='videoBox'>
-            <input type="text" className='searchBar' placeholder='전시회를 검색하세요' value={search} onChange={handleFind}/>
+            <div className='searchBlock'>
+              <div className="title">
+                <span style={{fontSize:'1.0rem', fontWeight:'400'}}>Get Your Diary</span>  <br/>
+                당신만의 다이어리를 완성해보세요 !
+                </div>
+              <input type="text" className='searchBar' placeholder='전시회를 검색하세요' value={search} onChange={handleFind}/>
+            </div>
+
             <BlackBG/>
             {/* <video autoPlay loop muted >
               <source src={videoUrl} type="video/mp4" />
