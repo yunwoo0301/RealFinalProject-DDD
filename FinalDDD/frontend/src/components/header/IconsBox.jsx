@@ -9,6 +9,7 @@ import Badge from '@mui/material/Badge';
 import DDDApi from "../../api/DDDApi";
 import MyPageBG from "../MyPage/MyPageBG";
 import Functions from "../../util/Functions";
+import {showToast} from "./ToastContainer";
 
 const IconBox = styled.div`
     display: flex;
@@ -183,24 +184,26 @@ const Icons = () => {
         navigate('/')
     }
 
-    useEffect(() => {
-            const reservations = async () => {
-              try {
-                const reservationList = await DDDApi.myBookedList(getId);
+     useEffect(() => {
+                const reservations = async () => {
+                  try {
+                    const reservationList = await DDDApi.myBookedList(getId);
 
-                const todayBookings = reservationList.data.filter((booking) => {
-                const bookingDate = new Date(booking.bookingDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 예약 날짜 표시
-                return bookingDate === today;
-                });
+                    const todayBookings = reservationList.data.filter((booking) => {
+                    const bookingDate = new Date(booking.bookingDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 예약 날짜 표시
+                    return bookingDate === today;
+                    });
+                    setTodayBookingCnt(todayBookings.length);
+                    if (todayBookingCnt > 0) {
+                        showToast(`🎫 예약된 오늘의 전시가 ${todayBookings.length}건 있습니다`);
+                      }
+                  } catch (e) {
+                    console.log(e);
+                  }
+                };
 
-                setTodayBookingCnt(todayBookings.length);
-              } catch (e) {
-                console.log(e);
-              }
-            };
-
-            reservations();
-        }, []);
+                reservations();
+            }, []);
 
         // 오늘날짜로 받은 메세지 뱃지
                 useEffect(() => {
@@ -216,6 +219,9 @@ const Icons = () => {
                                 return isToday && isOpened;
                               });
                               setTodayMsg(todayMsgs.length);
+                              if (todayMsgs.length > 0) {
+                                showToast(`💌 새로운 메세지가 도착했습니다.`);
+                              }
                         }catch(e) {
                             console.log(e);
                         }
