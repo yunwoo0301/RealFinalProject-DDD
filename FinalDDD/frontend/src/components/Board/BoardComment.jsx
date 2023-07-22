@@ -87,7 +87,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList, regComment, setRegComment, onCommentPost }) => {
+const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList, onCommentPost }) => {
 
   const getId = window.localStorage.getItem("memberId");
   const isLogin = window.localStorage.getItem("isLogin");
@@ -109,6 +109,9 @@ const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList,
 
             // 댓글 작성이 성공적으로 완료된 후에 상위 컴포넌트에 알림
             onCommentPost();
+
+            // 댓글 작성 후 댓글 목록 업데이트
+            fetchComments();
           }
         } catch (error) {
           console.log(error);
@@ -126,18 +129,10 @@ const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList,
           }
         };
 
-      useEffect(() => {
-        if (regComment) {
-          fetchComments();
-          setRegComment(false);
-        }
-      }, [regComment]);
-
       // 엔터 쳤을 때 이벤트 동작 함수
       const handleEnterKeyPress = (e) => {
         if (e.key === "Enter") {
           postComment();
-          setRegComment(true);
           setSendModal(true);
         }
       };
@@ -145,7 +140,6 @@ const BoardComment = ({ boardNo, nickname, profile, commentList, setCommentList,
       // 전송 버튼 클릭 했을 때 이벤트 동작 함수
       const handleButtonClick = () => {
         postComment();
-        setRegComment(true);
         setSendModal(true);
       };
 

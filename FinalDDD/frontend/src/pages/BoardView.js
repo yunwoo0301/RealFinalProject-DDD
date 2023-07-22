@@ -378,13 +378,6 @@ const BoardView = () => {
         return isLogin && isAuthorMatched;
     };
 
-    // 업데이트 함수 추가 **
-    const [regComment, setRegComment] = useState(false);
-    const regComm = () => {
-        console.log("댓글 업데이트 함수호출 : ");
-        setRegComment(true);
-    }
-
     const [prevAndNextData, setPrevAndNextData] = useState(null); // 이전글, 다음글 담을 상태변수
 
 
@@ -424,8 +417,8 @@ const BoardView = () => {
                 setBoardView(updatedBoardResponse.data);
             }
         }
-        }
-        increaseView();
+    }
+    increaseView();
     }, [boardNo]);
 
 
@@ -463,6 +456,7 @@ const BoardView = () => {
         }
     };
 
+    // 다음글 보기 함수
     const onClickNext = () => {
         if (prevAndNextData && prevAndNextData.next) {
             const nextBoardNo = prevAndNextData.next.boardNo;
@@ -493,7 +487,7 @@ const BoardView = () => {
         }
     };
 
-
+    // 게시물 삭제 모달 이벤트
     const onClickDelete = () => {
         setShowModal(true);
     };
@@ -619,7 +613,8 @@ const BoardView = () => {
                 {boardView && (
                 <div className="authorinfo">
                     {/*기본 프로필 이미지*/}
-                    <img src={test} alt="프로필"/>
+                     {/* <img src={test} alt="프로필"/> */}
+                    <img src={boardView?.profileImg} alt="프로필"/>
                     <div className="author">{boardView?.author}</div>
                 </div>
                 )}
@@ -706,8 +701,8 @@ const BoardView = () => {
                 nickname = {nickname}
                 commentList={commentList}
                 setCommentList={setCommentList}
-                regComment = {regComm}
-                setRegComment={setRegComment}
+//                regComment = {regComm}
+//                setRegComment={setRegComment}
                 onCommentPost={boardViewLoad}/>
             </Section>
         </ViewWrap>
