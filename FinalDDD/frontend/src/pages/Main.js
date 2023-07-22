@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Header from "../components/header/Header";
 import Footer from "../components/main/Footer";
 import Mainpage from "../components/main/MainScroll";
+import Toast from "../components/header/ToastContainer";
 
 
 
@@ -30,7 +31,7 @@ const Main = () => {
             </HeaderStyle>
             <Mainpage/>
             <Footer/>
-
+            <Toast/>
         </MainContainer>
 
     );

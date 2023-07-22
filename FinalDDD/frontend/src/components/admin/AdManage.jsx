@@ -20,7 +20,7 @@ const AdsManage = () => {
 
     return(
         <AdsContainer>
-        광고관리입니다.
+
         </AdsContainer>
     )
 }

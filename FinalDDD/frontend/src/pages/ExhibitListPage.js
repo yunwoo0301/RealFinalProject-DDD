@@ -98,12 +98,19 @@ const Container = styled.div`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+    cursor: pointer;
 
     // 미디어 쿼리
     @media (max-width: 768px) {
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
       margin-top: 1rem;
+    }
+
+    &.listMode {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
 
@@ -123,7 +130,7 @@ const ExhibitListPage = () => {
   // 카테고리
   const [category, setCategory] = useState('menu1');
   // 검색
-  const [searchName, setSearchName] = useState('');
+  const [seachName, setSearchName] = useState('');
   // 검색한 내용다시
   const [filteredData, setFilteredData] = useState([]);
   // 지역
@@ -180,7 +187,7 @@ const ExhibitListPage = () => {
   };
   // 전시검색
   const searchExhibitions = () => {
-    const searchTerm = searchName.toLowerCase();
+    const searchTerm = seachName.toLowerCase();
     return filteredData.filter((exhibition) =>
       exhibition.exhibitName.toLowerCase().includes(searchTerm)
     );
@@ -237,13 +244,13 @@ const ExhibitListPage = () => {
           <div className="select">
             <SelectBtn selectedOption={selectedOption} setSelectedOption={setSelectedOption} options={['갤러리', '리스트']} />
             <div className="searchBox">
-              <input className="searchBar" type="text" value={searchName} onChange={handleChangeExhibition} />
+              <input className="searchBar" type="text" value={seachName} onChange={handleChangeExhibition} />
               <div className="searchIcon">
                 <FiSearch />
               </div>
             </div>
           </div>
-          <div className="imgBoxs">
+          <div className={`imgBoxs ${selectedOption === '리스트' ? 'listMode' : ''}`}>
             {currentPageData.map((data) => (
               <InfoBox key={data.exhibitNo} data={data} selectedOption={selectedOption} onClick={() => exClick(data)} />
             ))}
