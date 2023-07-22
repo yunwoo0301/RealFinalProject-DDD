@@ -57,7 +57,7 @@ const MyPageBG = () => {
   // let memberId = Functions.getMemberId();
   const { memberId } = useParams();
 
-  const { memberData, showPage, setMemberData,  setMyDiaryData, myDiaryData} = useStore();
+  const { memberData, showPage, setShowPage, setMemberData,  setMyDiaryData, myDiaryData} = useStore();
   // const [ myDiaryData,  ] = useState();
 
   useEffect(() => {
@@ -87,6 +87,10 @@ const MyPageBG = () => {
   const findMember = () => {
     navigate(`/api/mypage/${testInput}`)
   }
+
+  useEffect(()=>{
+    setShowPage("마이페이지")
+  }, [])
 
 
   return (

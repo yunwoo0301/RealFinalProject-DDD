@@ -56,12 +56,22 @@ const SearchExhibition = () => {
     setSearch(currentWord);
   };
 
+    const resetSearchText = () => {
+      setSearch('');
+    };
+
   useEffect(() => {
     const filterSearch = stealExhibition.filter((item) =>
       item.exhibitName.toString().includes(search.toString())
     );
     setFilterExhibition(filterSearch);
   }, [search, stealExhibition]);
+
+  useEffect(() => {
+      return () => {
+        resetSearchText();
+      };
+    }, []);
 
 
     return (
