@@ -16,6 +16,7 @@ import EditBoard from './pages/EditBoard';
 import VerifyEmail from './components/Login/VerifyEmail';
 import RateDiary from './components/MyPage/RateDiary';
 import SearchExhibition from './components/MyPage/SearchExhibition';
+import Toast from './components/header/ToastContainer';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/login/check-email-token" element={<VerifyEmail/>}/>
         <Route path="/ratediary" element={<RateDiary/>}/>
       </Routes>
+       <Toast/>
       </Router>
   );
 }
