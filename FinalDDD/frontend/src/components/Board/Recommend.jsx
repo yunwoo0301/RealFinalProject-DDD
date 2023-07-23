@@ -193,7 +193,7 @@ const Recommend = () => {
     return (
         <BoardContainer>
         <Section id="board" className="section">
-        <BoardSearch onSearch={handleSearch} />
+        <BoardSearch onSearch={handleSearch} category='Recommend'/>
           <div className="board_box">
             <table>
               <tbody>

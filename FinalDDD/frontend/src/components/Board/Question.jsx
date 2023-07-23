@@ -191,7 +191,7 @@ const Question = () => {
     return (
         <BoardContainer>
         <Section id="board" className="section">
-          <BoardSearch onSearch={handleSearch} />
+          <BoardSearch onSearch={handleSearch} category='Question'/>
           <div className="board_box">
             <table>
               <tbody>

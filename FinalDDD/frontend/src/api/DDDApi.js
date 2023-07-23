@@ -11,7 +11,7 @@ const DDDApi = {
          } catch(error){
         console.error(error)
         await Functions.handleApiError(error);  // api 에러 401을 받으면 로컬에 저장된 리프레쉬 토큰을 보내 액세스 토큰을 재발급 받는 axios 요청을 보내는 함수(await 필수)
-        return await axios.get(`/boardList/${category}`);
+        return await axios.get(`/api/boardList/${category}`);
     }},
 
     // 특정 게시판 번호의 게시물 상세 조회(+댓글 포함)

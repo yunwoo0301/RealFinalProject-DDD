@@ -44,7 +44,7 @@ const SearchWrap = styled.div` // 검색창 활성화 안된 부분 일부 위�
 
 
 
-const BoardSearch = ({ onSearch }) => {
+const BoardSearch = ({ onSearch, category }) => {
 
      // 검색
      const [keyword, setKeyword] = useState("");
@@ -56,9 +56,11 @@ const BoardSearch = ({ onSearch }) => {
      const onClickSearch = async () => {
          try {
             const response = await DDDApi.searchListLoad(keyword);
-            const boardList = response.data;
-            console.log("넘어오는 데이터값 확인 :" + response.data);
-            onSearch(boardList); // 검색 결과를 부모 컴포넌트로 전달
+//            const boardList = response.data;
+            const filteredList = response.data.filter(boardList => boardList.category === category); // 수정사항
+//            console.log("넘어오는 데이터값 확인 :" + response.data);
+//            onSearch(boardList); // 검색 결과를 부모 컴포넌트로 전달
+            onSearch(filteredList); // 검색 결과를 부모 컴포넌트로 전달 ** 수정사항
             } catch (e) {
             console.log(e);
             }

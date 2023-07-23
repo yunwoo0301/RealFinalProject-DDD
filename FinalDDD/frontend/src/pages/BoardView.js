@@ -365,7 +365,6 @@ const BoardView = () => {
     const [boardView, setBoardView] = useState(null); // URL에서 boardNo를 가져옴(게시판목록)
     const [commentList, setCommentList] = useState([]); // 댓글용 추가
     const [nickname, setNickname] = useState(""); // 닉네임 초기값 수정
-    const [test, setTest] = useState(""); // 기본 이미지 불러오기용
     const [category, setCategory] = useState(null); // 이전글, 다음글 카테고리 설정용
 
     const {memberData} = useStore(); // 회원 데이터에서 프로필 가져오기용(댓글)
@@ -434,7 +433,6 @@ const BoardView = () => {
             setCommentList(commentData);
             const rsp = await MyPageApi.info(getId); // localStorage 상에 닉네임 저장된 api 불러와서 재 렌더링
             setNickname(rsp.data.nickname);
-//            setTest(rsp.data.profileImg); // 기본프로필 이미지 불러오기
             }
         } catch (e) {
         console.log(e);

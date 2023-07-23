@@ -294,7 +294,7 @@ const WriteBoard = () => {
 
       // 이미지 업로드 함수
     const onClickSave = async () => {
-      if (title.length === 0 || category.length === 0 || contents === 0) {
+      if (title.length === 0 || category.length === 0 || contents.length === 0) {
         alert("제목, 카테고리, 내용을 모두 입력해 주세요.");
         return;
       }
