@@ -82,5 +82,25 @@ public class ExhibitCommentService {
         return exhibitCommentDTOS;
     }
 
+    // 개인이 쓴 한줄평 가지고오기
+    public List<ExhibitCommentDTO> commentBy(String memberId) {
+        List<ExhibitCommentDTO> exhibitCommentDTOS = new ArrayList<>();
+        List<ExhibitComment> exhibitComments = exhibitCommentRepository.findByMemberId(Long.valueOf(memberId));
+
+        for(ExhibitComment e : exhibitComments) {
+            ExhibitCommentDTO exhibitCommentDTO = new ExhibitCommentDTO();
+            exhibitCommentDTO.setCommentNo(String.valueOf(e.getCommentNo()));
+            exhibitCommentDTO.setMemberId(String.valueOf(e.getMember().getId()));
+            exhibitCommentDTO.setStarRates(e.getStarRates());
+            exhibitCommentDTO.setExhibitName(e.getExhibitions().getExhibitName());
+            exhibitCommentDTO.setComment(e.getComment());
+            exhibitCommentDTO.setCommentTime(e.getCommentTime());
+
+            exhibitCommentDTOS.add(exhibitCommentDTO);
+
+        }
+        return exhibitCommentDTOS;
+    }
+
 
 }

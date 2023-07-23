@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ExhibitCommentRepository extends JpaRepository<ExhibitComment, Long> {
     List<ExhibitComment> findByExhibitions_ExhibitNo(Long exhibitNo);
+    List<ExhibitComment> findByMemberId(Long memberId);
 
 }

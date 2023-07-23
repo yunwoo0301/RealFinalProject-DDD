@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping(value = "/exhibitComment")
-//@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:3000")
 public class ExhibitCommentController {
     private final ExhibitCommentService exhibitCommentService;
 
@@ -42,6 +42,12 @@ public class ExhibitCommentController {
     public ResponseEntity<List<ExhibitCommentDTO>> getCommentList(@RequestParam("exhibitNo") String exhibitNo) {
         List<ExhibitCommentDTO> list = exhibitCommentService.getComments(exhibitNo);
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    // 개인별 쓴 한줄평 목록
+    @GetMapping("/listBy")
+    public List<ExhibitCommentDTO> getCommentListBy(@RequestParam("memberId") String memberId) {
+        return exhibitCommentService.commentBy(memberId);
     }
 
 }
