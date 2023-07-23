@@ -9,6 +9,7 @@ import DDDApi from '../api/DDDApi';
 import ConfirmModal from "../util/ConfirmModal";
 import { Backdrop } from "@mui/material";
 import { FcCloseUpMode } from 'react-icons/fc';
+import Header from "../components/header/Header";
 
 const Wrap = styled.div`
 //  width: 80vw;
@@ -379,6 +380,7 @@ const WriteBoard = () => {
 
     return (
       <>
+      <Header/>
       <Wrap>
         <Section className="section">
           <div className="board_header">

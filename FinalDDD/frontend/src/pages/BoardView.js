@@ -14,6 +14,7 @@ import { Backdrop } from "@mui/material";
 import useStore from '../store';
 import {RiUserHeartLine} from "react-icons/ri";
 import MessageForm from "../components/Message/MessageForm";
+import Header from "../components/header/Header";
 
 
 const ViewWrap = styled.div`
@@ -669,6 +670,7 @@ const BoardView = () => {
 
     return(
         <>
+        <Header/>
         {openMsg && <MessageForm senderId={getId} receiverId={receiver} receiverName={receiverName} close={closeToMsg}/>}
         {warnModal && <ConfirmModal props={props}/>}
         <ViewWrap>

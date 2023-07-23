@@ -8,6 +8,7 @@ import { storage } from '../util/FireBase';
 import ConfirmModal from "../util/ConfirmModal";
 import { FcEditImage } from "react-icons/fc";
 import { Backdrop } from "@mui/material";
+import Header from "../components/header/Header";
 
 
 const EditWrap = styled.div`
@@ -389,6 +390,7 @@ const EditBoard = () => {
 
     return (
         <>
+        <Header/>
         <EditWrap>
             <Section className="section">
             <div className="board_header">

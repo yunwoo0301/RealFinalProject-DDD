@@ -4,6 +4,7 @@ import {useState, useCallback} from 'react';
 import Categories from '../components/Board/Category';
 import Recommend from '../components/Board/Recommend';
 import Question from '../components/Board/Question';
+import Header from "../components/header/Header";
 
 const Wrap = styled.div`
     width: 100%;
@@ -59,6 +60,8 @@ const BoardList = () => {
 
 
     return(
+    <>
+    <Header/>
         <Wrap>
             <div className="boardtitle">
                 <h2>자유 게시판</h2>
@@ -70,6 +73,7 @@ const BoardList = () => {
                 {category === 'menu3' && <Card />}
             </div>
         </Wrap>
+    </>
     )
 };
 
