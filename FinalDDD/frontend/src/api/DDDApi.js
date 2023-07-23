@@ -227,7 +227,12 @@ const DDDApi = {
                   emailContents: contents,
             }
             return await axios.post("/emailAd/send", emailData);
-        }
+        },
+
+        //광고메일조회
+            emailAdList: async() => {
+                return await axios.get("/emailAd/all");
+            }
 
 
 

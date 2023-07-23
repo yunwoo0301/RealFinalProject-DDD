@@ -3,7 +3,13 @@ import { MembersContainer, ButtonWrapper, TableHeader, TableRow } from "./Member
 import LoginApi from "../../api/LoginApi";
 import PageNation from "../../util/PageNation";
 import SendEmail from "../Message/SendEmail";
+import DDDApi from "../../api/DDDApi";
+import styled from "styled-components";
 
+const AdContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`
 
 const AdsManage = () => {
     const [selectedRows, setSelectedRows] = useState([]); // 체크박스
@@ -77,7 +83,7 @@ const AdsManage = () => {
 
     // 페이지네이션
     //보여질 페이지 개수
-    const ITEMS_PAGE = 10;
+    const ITEMS_PAGE = 5;
     const [currentPage, setCurrentPage] = useState(0);
     const handlePageClick = (selectedPage) => {
         setCurrentPage(selectedPage.selected);
@@ -87,9 +93,31 @@ const AdsManage = () => {
     const offset = currentPage * ITEMS_PAGE; // 현재 페이지에서 보여줄 아이템의 시작 인덱스
     const currentPageData = memberList.slice(offset, offset + ITEMS_PAGE);
 
+    // 이메일 리스트보기
+    const [emailList, setEmailList] = useState([])
+
+    useEffect(() => {
+        const getList = async() => {
+           const result = await DDDApi.emailAdList();
+           setEmailList(result.data);
+        }
+        getList();
+    }, [])
+
+    // 이메일리스트 페이지네이션
+    const [currentEmailPage, setCurrentEmailPage] = useState(0);
+    const handleEmailPage = (selectedPage) => {
+        setCurrentEmailPage(selectedPage.selected);
+    }
+
+    const emailPageCount = Math.ceil(emailList.length / ITEMS_PAGE);
+    const emailOffset = currentEmailPage * ITEMS_PAGE;
+    const emailPageData = emailList.slice(emailOffset, emailOffset + ITEMS_PAGE);
+
 
     return (
       <>
+      <AdContainer>
         {isModalOpen && (
           <SendEmail
             onClose={() => {
@@ -153,6 +181,39 @@ const AdsManage = () => {
             selected={currentPage + 1}
           />
         </MembersContainer>
+        <MembersContainer>
+          <h3 className="title">보낸 광고</h3>
+          <div className="table-container">
+            <div className="member-table">
+              <table>
+                <thead>
+                  <TableRow>
+                    <TableHeader style={{ width: "15%" }}>이메일번호</TableHeader>
+                    <TableHeader style={{ width: "20%" }}>제목</TableHeader>
+                    <TableHeader style={{ width: "35%%" }}>내용</TableHeader>
+                    <TableHeader style={{ width: "20%" }}>보낸날짜</TableHeader>
+                  </TableRow>
+                </thead>
+                <tbody>
+                  {emailPageData.map((item) => (
+                    <TableRow key={item.emailNo}>
+                      <td>{item.emailNo}</td>
+                      <td>{item.title}</td>
+                      <td>{item.emailContents}</td>
+                      <td>{formatDate(item.sentEmailDate)}</td>
+                    </TableRow>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <PageNation
+            pageCount={emailPageCount}
+            onPageChange={handleEmailPage}
+            selected={currentEmailPage + 1}
+          />
+        </MembersContainer>
+        </AdContainer>
       </>
     );
   };

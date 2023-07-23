@@ -9,8 +9,6 @@ import {MdOutlineChangeCircle} from "react-icons/md";
 
 export const MembersContainer = styled.div`
     width: 80vw;
-    height: 100vh;
-
 
     .title {
         margin-left: 3rem;
