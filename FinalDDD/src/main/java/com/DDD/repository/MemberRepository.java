@@ -21,10 +21,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 닉네임 전체 조회 (닉네임 중복 체크)
     Optional<Member> findByNickname(String nickname);
 
-//    boolean getIsActive(Long memberId);
-
     // 회원번호(PK) 찾기
     Optional<Member> findById(Long id);
+    Optional<Member> findByEmailCheckToken(String token);
 
     // 비밀번호 조회
     Member findByPassword(String password);

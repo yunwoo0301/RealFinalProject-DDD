@@ -16,5 +16,16 @@ public class TokenDto {
     private String refreshToken;
     private Long tokenExpiresIn;
     private Long memberId; // 추가: member의 id를 담기 위한 필드
-}
 
+    public TokenDto(String renewAccessToken){
+        accessToken = renewAccessToken;
+    }
+
+    public TokenDto(String accessToken, String refreshToken, Long tokenExpiresIn, Long memberId) {
+        this.grantType = "Bearer"; // Assuming you're using Bearer tokens
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.tokenExpiresIn = tokenExpiresIn;
+        this.memberId = memberId;
+    }
+}

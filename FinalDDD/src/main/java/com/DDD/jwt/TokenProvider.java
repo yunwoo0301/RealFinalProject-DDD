@@ -26,7 +26,7 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "bearer";
 
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 30분(인증권한에 대한 발급받은 토큰의 허용 시간을 짧게 잡아야함) 토큰을 재생산해야되는
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 30 * 1; // 30분(인증권한에 대한 발급받은 토큰의 허용 시간을 짧게 잡아야함) 토큰을 재생산해야되는
 
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7L * 24 * 60 * 60 * 1000;
     // Refresh Token 설정
@@ -89,6 +89,29 @@ public class TokenProvider {
                 .build();
     }
 
+    public TokenDto generateAccessTokenDto(Authentication authentication, Long memberId, String refreshToken) {
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+
+        Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+
+        System.out.println(tokenExpiresIn);
+
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .claim("memberId", authentication.getName())
+                .setExpiration(tokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        return new TokenDto(accessToken, refreshToken, tokenExpiresIn.getTime(), memberId);  // Use the new constructor to create the object
+    }
+
+
     public TokenDto refreshToken(String expiredToken) {
         // 만료된 토큰을 파싱함
         Claims claims = parseClaims(expiredToken);
@@ -114,7 +137,7 @@ public class TokenProvider {
     }
 
 
-
+    //권한에 대해 인증을 하는 부분
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
@@ -137,13 +160,13 @@ public class TokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 (wrong sign) JWT 서명입니다.");
+            log.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("만료된 (expired) JWT 토큰입니다.");
+            log.info("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 (not support) JWT 토큰입니다.");
+            log.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 (wrong token) 잘못되었습니다.");
+            log.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
     }

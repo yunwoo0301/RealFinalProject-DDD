@@ -4,8 +4,10 @@ import com.DDD.dto.MemberRequestDto;
 import com.DDD.dto.MemberResponseDto;
 import com.DDD.dto.TokenDto;
 import com.DDD.entity.Member;
+import com.DDD.entity.RefreshToken;
 import com.DDD.jwt.TokenProvider;
 import com.DDD.repository.MemberRepository;
+import com.DDD.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,11 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-
+// ==================== 이메일 인증 창 port번호 확인 ======================
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ import java.util.UUID;
 public class AuthService {
     private final AuthenticationManagerBuilder managerBuilder;
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final EmailService emailService;
@@ -44,15 +46,9 @@ public class AuthService {
             memberRepository.save(member);
 
             // Compose email content
-            String subject = ":DDD 회원가입 이메일 인증";
-            String body = "<div style=\"background-color: #f6f6f6; padding: 20px;\">"
-                    + "<h1 style=\"color: #333; font-size: 24px;\">:DDD 회원가입 이메일 인증</h1>"
-                    + "<p style=\"color: #333; font-size: 18px;\">안녕하세요 :) 이메일 인증을 위한 이메일입니다. </p>"
-                    + "<p style=\"color: #333; font-size: 18px;\"> 아래 링크를 클릭하고 이메일 인증을 완료해주세요 :) </p>"
-                    + "<a style=\"display: inline-block; color: #fff; background-color: #007bff; border: solid 1px #007bff; "
-                    + "padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 18px;\" "
-                    + "href=\"https://myexhibitions.store/login/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>"
-                    + "</div>";
+            String subject = "Email Confirmation";
+            String body = "Click this link to confirm your email: " +
+                    "<a href=\"http://localhost:3000/login/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>";
 
             // Send email
             emailService.sendMail(member.getEmail(), subject, body);
@@ -61,7 +57,7 @@ public class AuthService {
             return MemberResponseDto.of(member);
         }
     }
-
+//
 
     public boolean getIsActive(Long memberId) {
         Optional<Member> memberOptional = memberRepository.findById(memberId);
@@ -76,6 +72,7 @@ public class AuthService {
         return member.isActive();
     }
 
+    @Transactional
     public TokenDto login(MemberRequestDto requestDto) {
         UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
         Long memberId = getMemberIdByEmail(requestDto.getEmail());
@@ -86,7 +83,24 @@ public class AuthService {
 
         // 사용자가 활성 상태라면 인증을 진행합니다.
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
-        return tokenProvider.generateTokenDto(authentication, memberId); // memberId 인자 추가
+
+        // Generate new tokens
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, memberId); // memberId 인자 추가
+
+        // Create or update refresh token entity
+        Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findById(memberId);
+        if (refreshTokenOptional.isPresent()) {
+            // If refresh token exists for the user, update it
+            RefreshToken refreshToken = refreshTokenOptional.get();
+            refreshToken.update(tokenDto.getRefreshToken());
+        } else {
+            // If refresh token does not exist for the user, create a new one
+            RefreshToken refreshToken = new RefreshToken(String.valueOf(memberId), tokenDto.getRefreshToken());
+            log.info(String.valueOf(refreshToken));
+            refreshTokenRepository.save(refreshToken);
+        }
+
+        return tokenDto;
     }
 
 
@@ -98,7 +112,6 @@ public class AuthService {
             throw new BadCredentialsException("Invalid password");
         }
         member.setActive(false);
-        member.setDeleteDate(LocalDateTime.now());
         memberRepository.save(member);
     }
 

@@ -9,11 +9,14 @@ import com.DDD.entity.Member;
 import com.DDD.repository.MemberRepository;
 import com.DDD.service.AuthService;
 import com.DDD.service.MemberService;
+import com.DDD.service.TokenService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +31,15 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
     private final MemberRepository memberRepository;
+    private final TokenService tokenService;
+
+
+    // AccessToken 재발급 코드
+    @PostMapping("/auth/token")
+    public ResponseEntity<TokenDto> renewAccessToken(@RequestBody TokenDto requestDto){
+        TokenDto renewDto = tokenService.createNewAccessToken(requestDto.getRefreshToken());
+        return ResponseEntity.ok(renewDto);
+    }
 
 
     @PostMapping
@@ -40,21 +52,35 @@ public class MemberController {
         return ResponseEntity.ok(authService.signup(requestDto));
     }
 
-    @GetMapping("/check-email-token")
-    public String checkEmailToken(@RequestParam String token, @RequestParam String email){
-        Optional<Member> memberOpt = memberRepository.findByEmail(email);
-        if(memberOpt.isPresent()){
-            Member member = memberOpt.get();
-            if(member.getEmailCheckToken().equals(token)){
-                member.setActive(true);
-                member.setEmailCheckToken(null); // after validation you can null the token
-                memberRepository.save(member);
-                return "인증이 완료되었습니다.";
-            }
-        }
-        return "인증에 실패하였습니다.";
-    }
+//    @GetMapping("/check-email-token")
+//    public String checkEmailToken(@RequestParam String token, @RequestParam String email){
+//        Optional<Member> memberOpt = memberRepository.findByEmail(email);
+//        if(memberOpt.isPresent()){
+//            Member member = memberOpt.get();
+//            if(member.getEmailCheckToken().equals(token)){
+//                member.setActive(true);
+//                member.setEmailCheckToken(null); // after validation you can null the token
+//                memberRepository.save(member);
+//                return "인증이 완료되었습니다.";
+//            }
+//        }
+//        return "인증에 실패하였습니다.";
+//    }
 
+      // 체크이메일 안될 시 이걸로 해보기
+    @GetMapping("/check-email-token")
+    public String checkEmailToken(@RequestParam("token") String token) {
+        Optional<Member> optionalUser = memberRepository.findByEmailCheckToken(token);
+        if (optionalUser.isPresent()) {
+            Member member = optionalUser.get();
+            member.setActive(true);
+            member.setEmailCheckToken(null); // after validation you can null the token
+            memberRepository.save(member);
+            return "Email is successfully verified";
+        } else {
+            return "Invalid token";
+        }
+    }
 
     @PostMapping("/forgot")
     public ResponseEntity<Boolean> forgotPw(@RequestBody Map<String, String> forgotEmail) {
