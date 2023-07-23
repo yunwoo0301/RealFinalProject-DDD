@@ -16,6 +16,7 @@ import EditBoard from './pages/EditBoard';
 import VerifyEmail from './components/Login/VerifyEmail';
 import RateDiary from './components/MyPage/RateDiary';
 import SearchExhibition from './components/MyPage/SearchExhibition';
+import Chatbot from './pages/Chatbot';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/admin" element={<AdminMain/>}/>
         <Route path="/login/check-email-token" element={<VerifyEmail/>}/>
         <Route path="/ratediary" element={<RateDiary/>}/>
+        <Route path="/chatbot" element={<Chatbot/>}/>
       </Routes>
       </Router>
   );

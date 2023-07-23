@@ -101,10 +101,25 @@ const Review = styled.div`
         background-color: gray;
     }
     .memberInfo{
+        width: 100%;
         margin-left: 3rem;
         display: flex;
         flex-direction: column;
         gap: 2rem;
+        .upper{
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          p{
+            font-size: 0.8rem;
+          }
+        }
+        @media (max-width: 768px) {
+          .upper{
+            flex-direction: column;
+          }
+        }
     }
     .name{
         margin-top: 0.5rem;
@@ -150,6 +165,19 @@ const ExhibitionReview = ({ data }) => {
     const getId = window.localStorage.getItem("memberId");
     const isLogin = window.localStorage.getItem("isLogin");
     const exhibitNo = data.exhibitNo;
+
+    //시간설정
+    function formatDate(dateTimeString) {
+      const date = new Date(dateTimeString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+
+      const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
+      return formattedDate;
+    }
 
     // 별점
     const [stars, setStars] = useState(0);
@@ -248,7 +276,7 @@ const ExhibitionReview = ({ data }) => {
       openToWarnModal();
       return;
     }
-      navigate(`/api/mypage/${memberId}`);
+      navigate(`/mypage/${memberId}`);
     };
 
     const handleMouseEnter = (commentNo) => {
@@ -363,7 +391,10 @@ const ExhibitionReview = ({ data }) => {
               </div>
 
               <div className="memberInfo">
+                <div className="upper">
                 <Rating name="read-only" value={e.starRates} readOnly  precision={0.5} />
+                <p>{formatDate(e.commentTime)}</p>
+                </div>
                 <div className="comment">{e.comment}</div>
 
               </div>

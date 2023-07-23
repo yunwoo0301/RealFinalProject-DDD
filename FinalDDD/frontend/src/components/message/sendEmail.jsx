@@ -21,7 +21,7 @@ export const Container = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 96;
+    z-index: 93;
     .reservationBox{
         box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.3), 0.2rem 0.2rem 1rem rgba(0, 0, 0, 0.3);
         background-color: #F4F8FF;
