@@ -1,6 +1,7 @@
 package com.DDD.controller;
 
 
+import com.DDD.dto.EmailAdDTO;
 import com.DDD.entity.EmailAd;
 import com.DDD.entity.Member;
 import com.DDD.service.EmailAdService;
@@ -17,7 +18,6 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/emailAd")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class EmailAdController {
     @Autowired
     private final EmailAdService emailAdService;
@@ -42,6 +42,11 @@ public class EmailAdController {
         } else {
             return ResponseEntity.badRequest().body("광고메일 보내기가 실패했습니다.😭");
         }
+    }
+
+    @GetMapping("/all")
+    public List<EmailAdDTO> allEmailAdds() {
+        return emailAdService.getEmailAds();
     }
 
 }

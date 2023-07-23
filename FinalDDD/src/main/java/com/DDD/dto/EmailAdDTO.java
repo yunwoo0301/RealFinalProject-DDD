@@ -14,8 +14,6 @@ public class EmailAdDTO {
     private String emailNo;
     private String title;
     private String emailContents;
-    private String memberEmail;
-    private String memberId;
     private LocalDateTime sentEmailDate;
 
 }
