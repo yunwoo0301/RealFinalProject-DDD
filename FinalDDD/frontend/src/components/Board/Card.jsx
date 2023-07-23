@@ -9,7 +9,6 @@ import DDDApi from "../../api/DDDApi";
 
 const Wrapper = styled.div` // 동행찾기 게시판 전체 컨테이너 영역
     box-sizing: border-box;
-//    width: 100vw;
     width: 100%;
     display:flex;
     flex-direction: column;
@@ -46,7 +45,6 @@ const Wrapper = styled.div` // 동행찾기 게시판 전체 컨테이너 영역
 `;
 
 const CardContainer = styled.div` // 전체 카드아이템 컨테이너
-//    max-width: 80em;
     width: 80em; // 컨텐츠 내용에 따라 가변크기 수정 **
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -188,7 +186,6 @@ const Card = () => {
             const filteredData = response.data.filter(boardList => boardList.category === category);
             setBoardList(filteredData);
             setFilterRegion(filteredData); // 지역별 필터링 추가
-            console.log(filteredData);
           } catch (error) {
             console.log(error);
           }
@@ -202,8 +199,6 @@ const Card = () => {
     const selectedRegion = event.target.value;
     setSelectedRegion(selectedRegion);
 
-    console.log(selectedRegion);
-
     // 선택된 지역에 해당하는 데이터를 필터링하여 업데이트
     const filteredData = boardList.filter((item) => {
         return selectedRegion ? item.region === selectedRegion : true;
@@ -214,14 +209,10 @@ const Card = () => {
 
 
 
-
-
     // 글쓰기 버튼 클릭 시 게시판 작성페이지로 이동
     const onClickToWrite = () => {
         const isLogin = window.localStorage.getItem("isLogin");
         const getId = window.localStorage.getItem("memberId");
-        console.log(isLogin);
-        console.log(getId);
 
         if (isLogin === "true") {
             const link = "write/";

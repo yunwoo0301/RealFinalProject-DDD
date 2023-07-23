@@ -13,7 +13,6 @@ import Header from "../components/header/Header";
 
 const EditWrap = styled.div`
     width: 82vw;
-//    width: 80vw;
     height: 100%;
     margin: 0 auto;
     align-items: center;
@@ -195,7 +194,6 @@ const Section = styled.div`
 
 
 const TextWrap = styled.div`
-//    width: 80vw;
     width: 75vw;
     margin: 0 auto;
     margin-bottom:20px;
@@ -269,8 +267,6 @@ const EditBoard = () => {
             }
         }
 
-            // 데이터 잘 연동되는지 보기
-            console.log(response.data);
         } catch (e) {
             console.log(e);
         }
@@ -311,14 +307,11 @@ const EditBoard = () => {
             try {
               await fileRef.put(image.image_file);
               let url = await fileRef.getDownloadURL();
-              console.log("파일경로확인", url);
               if (!url) {
                 url = previewUrl;
-                console.log("프리뷰사진그대로 들어오는지", url);
               }
               imageUrl = url;
             } catch (error) {
-              console.log("게시글 수정 중 오류가 발생했습니다." + error);
             }
           }
 

@@ -369,7 +369,6 @@ const BoardView = () => {
     const [category, setCategory] = useState(null); // 이전글, 다음글 카테고리 설정용
 
     const {memberData} = useStore(); // 회원 데이터에서 프로필 가져오기용(댓글)
-    console.log(memberData);
 
     // DB상 카테고리 값이 영어 이므로 한글로 반환하기 위한 매핑 작업
     const categoryMapping = {
@@ -385,25 +384,9 @@ const BoardView = () => {
     window.localStorage.setItem('author', boardView?.author);
     const isLogin = window.localStorage.getItem("isLogin");
 
-    // 로그인 상태 확인
-    console.log(isLogin);
-
     // 로그인한 id와 작성자의 id 비교
     const getId = window.localStorage.getItem("memberId"); // localStorage 저장 정보
     const isAuthorMatched = String(boardView?.id) === getId; // boardView?.id(숫자타입)를 문자열로 반환
-    console.log(isAuthorMatched);
-
-
-    // 데이터 타입 비교
-    console.log("boardView?.id 타입:", typeof boardView?.id); // number
-    console.log("getId 타입:", typeof getId); // string
-
-
-    //작성자와 id 일치 여부 확인 출력
-    console.log("작성자 정보:", boardView?.author);
-    console.log("getId:", getId);
-    console.log("작성자와 Id 일치 여부:", isAuthorMatched);
-    console.log(boardView?.id);
 
     // 글목록 화면으로 이동
     const onClickMain = () => {
@@ -480,7 +463,6 @@ const BoardView = () => {
 
     // prevAndNextData 상태가 업데이트될 때마다 호출되는 useEffect
     useEffect(() => {
-        console.log(prevAndNextData); // 상태 업데이트 후 호출됨
     }, [prevAndNextData]);
 
 
@@ -514,7 +496,6 @@ const BoardView = () => {
     const deleteBoard = async (boardNo) => {
         try {
             const response = await DDDApi.delBoards(boardNo);
-            console.log(response);
             if (response.status === 200) {
                 setShowModal(false);
                 navigate('/boardList'); // 삭제 후 게시판 메인 이동
@@ -811,7 +792,6 @@ const BoardView = () => {
                         {/* 로그인한 사용자와 댓글 작성자의 닉넴이 같은 경우에만 삭제 버튼을 보여줌 */}
                         {nickname === comment.nickname && (
                         <div className="deleteBtn" onClick={()=> {setCheckAgain(true);
-                            // deleteComment(comment.commentNo);}}
                             setDelSelect(comment.commentNo);}}
                             style={{ cursor: 'pointer', fontWeight: 'bold' }}>삭제</div>)}
                         </div>
@@ -831,8 +811,6 @@ const BoardView = () => {
                 nickname = {nickname}
                 commentList={commentList}
                 setCommentList={setCommentList}
-//                regComment = {regComm}
-//                setRegComment={setRegComment}
                 onCommentPost={boardViewLoad}/>
             </Section>
         </ViewWrap>

@@ -158,7 +158,6 @@ const Recommend = () => {
             const response = await DDDApi.getFreeBoardsByCategory(category);
             const filteredData = response.data.filter(boardList => boardList.category === category);
             setBoardList(filteredData);
-            console.log(response.data);
           } catch (error) {
             console.log(error);
           }
@@ -172,8 +171,6 @@ const Recommend = () => {
     const onClickToWrite = () => {
         const isLogin = window.localStorage.getItem("isLogin");
         const getId = window.localStorage.getItem("memberId");
-        console.log(isLogin);
-        console.log(getId);
 
         if (isLogin === "true") {
             const link = "write/";

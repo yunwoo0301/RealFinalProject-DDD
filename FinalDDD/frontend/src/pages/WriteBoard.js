@@ -12,7 +12,6 @@ import { FcCloseUpMode } from 'react-icons/fc';
 import Header from "../components/header/Header";
 
 const Wrap = styled.div`
-//  width: 80vw;
     width: 82vw;
     height: 100%;
     margin: 0 auto;
@@ -83,7 +82,6 @@ const Section = styled.div`
     }
 
     table {
-//    width: 80vw;
       width: 75vw;
       margin: 0 auto;
       border-collapse: collapse;
@@ -198,7 +196,6 @@ const Section = styled.div`
 `;
 
 const TextWrap = styled.div`
-//  width: 80vw;
     width: 75vw;
     margin: 0 auto;
     margin-bottom:20px;
@@ -231,8 +228,6 @@ const ModalBodyStyle = styled.div`
 const WriteBoard = () => {
     const isLogin = window.localStorage.getItem("isLogin");
     const getId = localStorage.getItem("memberId")
-    console.log("getId:", getId);
-    console.log(isLogin);
 
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
@@ -248,17 +243,6 @@ const WriteBoard = () => {
 
     const [previewUrl, setPreviewUrl] = useState(""); // 이미지 미리보기
     const [contents, setContents] = useState("");
-
-
-      useEffect(() => {
-        console.log("입력값:", {
-          category: category,
-          region: region,
-          title: title,
-          contents: contents
-        });
-      }, [category, region, title, contents]);
-
 
 
     // 게시판 카테고리 선택
@@ -329,7 +313,6 @@ const WriteBoard = () => {
       );
 
       const linkNo = resultNo.data;
-      console.log("Result Number:", linkNo);
 
       if (linkNo === true) {
         setShowModal(true);

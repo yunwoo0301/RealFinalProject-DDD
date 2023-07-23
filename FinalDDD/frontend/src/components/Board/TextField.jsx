@@ -23,7 +23,6 @@ const TextField = () => {
   const [contents, setContents] = useState("");
 
   useEffect(() => {
-    console.log("내용:", contents);
   }, [contents]);
 
 

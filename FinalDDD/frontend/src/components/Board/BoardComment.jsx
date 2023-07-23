@@ -48,7 +48,6 @@ const Wrapper = styled.div`
             display: flex;
             flex-direction: row;
             align-items: center;
-//            margin-left: auto;
             flex-grow: 1;
             margin: 9px;
 
@@ -64,9 +63,6 @@ const Wrapper = styled.div`
 
 
         }
-//        .sendComment {
-//          display: flex;
-
 
           button {
               padding: 0.5em 1em;
@@ -77,7 +73,6 @@ const Wrapper = styled.div`
               display: inline-block;
               cursor: pointer;
               margin-left: 1em;
-//            }
         }
 
          @media (max-width: 768px) {
