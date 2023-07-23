@@ -735,7 +735,7 @@ const BoardView = () => {
                 </div>
                 )}
 
-                {isHovered[boardView.boardNo] && (
+                {isHovered[boardView?.boardNo] && (
               <div className="hoverContent">
                 <p onClick={() => openToMsg(boardView?.id, boardView?.author)}>쪽지보내기</p>
                 <p onClick={() => openProfile(boardView?.id)}>프로필보기</p>
