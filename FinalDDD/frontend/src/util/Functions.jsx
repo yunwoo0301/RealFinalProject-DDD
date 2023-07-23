@@ -28,8 +28,6 @@ const Functions = {
       },
     //accessToken 게터
     getAccessToken : () => {
-        // console.log('겟엑세스토큰함수 작동여부')
-        // console.log( '2번째 줄 ' + window.localStorage.getItem("accessToken"))
         return window.localStorage.getItem("accessToken");
       },
     //refreshToken 세터
@@ -51,27 +49,31 @@ const Functions = {
 
     // 토큰 재발급 함수
     tokenRenewal: async() => {
+      try {
         const token = {
           refreshToken : Functions.getRefreshToken()
-        }
-        const rsp = await axios.post("/login/token", token)
-        Functions.setAccessToken(rsp.data.accessToken);
-        Functions.setAuthorizationHeader();
-      },
+      } 
+      const rsp = await axios.post("/login/auth/token", token)
+      Functions.setAccessToken(rsp.data.accessToken); 
+      Functions.setAuthorizationHeader();
+
+  } catch (error) {
+      console.error('토큰 재발급 중 오류 발생:', error);
+  }
+},
 
     // 401 에러시 토큰 재발급 함수 실행하는 함수
     handleApiError: async(error) => {
-    //   if (error.response && error.response.status === 401) {
-    //     // 토큰이 만료되었거나 유효하지 않은 경우
-    //     await Functions.tokenRenewal();
-    //   } else {
+      if (error.response && error.response.status === 401) {
+      // 토큰이 만료되었거나 유효하지 않은 경우
+        await Functions.tokenRenewal();
+
+      } else {
         // 그 외의 오류 처리
         console.error('API 요청 오류:', error);
         // window.location.href = '/login';
-        // 에러 메시지를 표시하거나 기타 처리를 수행
-    //   }
     }
-
+  },
 }
 
 export default Functions;

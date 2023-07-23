@@ -1,21 +1,6 @@
 import axios from "axios";
 import Functions from "../util/Functions";
-//const HEADER = { "Content-type": "application/json" };
 
-
-
-//const updateProfileField = async (memberId, fieldName, fieldValue) => {
-//    try {
-//      Functions.setAuthorizationHeader(); // 헤더에 토큰을 넣는 함수
-//      return await axios.post(`/api/mypage/${memberId}/${fieldName}`, {
-//        id: memberId,
-//        ...fieldValue
-//      });
-//    } catch (error) {
-//        console.log("Error: ", error);
-//        throw error;
-//    }
-//  };
 
   const updateProfileField = async (memberId, fieldName, fieldValue) => {
       try {
@@ -114,10 +99,6 @@ const DiaryApi = {
                 comment : inputComment,
                 rateStar : ratingStarValue
             }
-            console.log('API 통신 부분 멤버아이디 ' + exhibitNo)
-            console.log('API 통신 부분 전시아이디 ' + exhibitNo)
-            console.log('API 통신 부분 커멘트 ' + inputComment)
-            console.log('API 통신 부분 별 ' + ratingStarValue)
             return await axios.post(`/api/mypage/${memberId}/diary/${exhibitNo}`, diaryCheck)
 
         } catch (error) {

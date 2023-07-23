@@ -26,7 +26,7 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "bearer";
 
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 30 * 1; // 30분(인증권한에 대한 발급받은 토큰의 허용 시간을 짧게 잡아야함) 토큰을 재생산해야되는
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 30분(인증권한에 대한 발급받은 토큰의 허용 시간을 짧게 잡아야함) 토큰을 재생산해야되는
 
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7L * 24 * 60 * 60 * 1000;
     // Refresh Token 설정
