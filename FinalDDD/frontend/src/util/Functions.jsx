@@ -1,6 +1,5 @@
 import axios from "axios";
 
-const KH_DOMAIN = "http://localhost:8111"
 
 // 이 프로젝트 전역에서 두루 쓰이는 함수를 모아놓았습니다.
 const Functions = {
@@ -45,12 +44,7 @@ const Functions = {
     //  헤더에 AccessToken 설정하는 함수
     setAuthorizationHeader : () => {
         const accessToken = Functions.getAccessToken();
-        // console.log('funtions 함수내 엑세스토큰 :  '+ accessToken)
-        // const test1 = axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        // console.log('test1입니다 ' + test1)
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        // const test2 = axios.defaults.headers.common['Content-Type'] = 'application/json';
-        // console.log('test2입니다 ' + test2)
         axios.defaults.headers.common['Content-Type'] = 'application/json';
 
       },
@@ -60,7 +54,7 @@ const Functions = {
         const token = {
           refreshToken : Functions.getRefreshToken()
         }
-        const rsp = await axios.post(KH_DOMAIN + "/auth/token", token)
+        const rsp = await axios.post("/login/token", token)
         Functions.setAccessToken(rsp.data.accessToken);
         Functions.setAuthorizationHeader();
       },

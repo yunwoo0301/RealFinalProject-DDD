@@ -205,7 +205,6 @@ const DeleteAccount = () => {
     return (
         <>
             <Container>
-            <button onClick={()=>{setFailModal(true) }}>test하기</button>
                 <div className='title'>회원탈퇴</div>
                 <div className="textBlock">
                     <span> :DDD 에서 회원을 탈퇴하시겠습니까?</span>

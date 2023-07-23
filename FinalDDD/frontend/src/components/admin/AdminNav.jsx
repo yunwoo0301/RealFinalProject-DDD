@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import {CiLogin} from "react-icons/ci";
 import {BiKey} from "react-icons/bi";
-import AdminImg from "../../resources/기본프로필.png";
+import AdminImg from "../../resources/defaultProfile.png";
 import { useNavigate } from "react-router-dom";
 
 const Navcontainer = styled.div`

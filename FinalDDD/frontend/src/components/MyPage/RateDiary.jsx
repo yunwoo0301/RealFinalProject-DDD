@@ -4,7 +4,7 @@ import Functions from '../../util/Functions';
 import styled from 'styled-components';
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
-import profileImage from '../../resources/기본프로필.png';
+import profileImage from '../../resources/defaultProfile.png'
 import { DiaryApi } from '../../api/MyPageApi';
 import Backdrop from '@mui/material/Backdrop';
 import AlertModal from '../../util/Alert';

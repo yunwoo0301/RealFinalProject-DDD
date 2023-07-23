@@ -51,7 +51,7 @@ public class AuthService {
                     + "<p style=\"color: #333; font-size: 18px;\"> 아래 링크를 클릭하고 이메일 인증을 완료해주세요 :) </p>"
                     + "<a style=\"display: inline-block; color: #fff; background-color: #007bff; border: solid 1px #007bff; "
                     + "padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 18px;\" "
-                    + "href=\"https://myexhibitions.store:8111/login/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>"
+                    + "href=\"https://myexhibitions.store/login/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>"
                     + "</div>";
 
             // Send email

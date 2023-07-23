@@ -230,7 +230,7 @@ const Icons = () => {
 
 
     const onClickToReservation = () => {
-            setShowPage('예약관리')
+        setShowPage('예약관리')
         navigate(`/mypage/${getId}`);
     };
 
