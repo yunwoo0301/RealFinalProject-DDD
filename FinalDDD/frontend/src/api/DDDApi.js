@@ -215,7 +215,19 @@ const DDDApi = {
             isOpened: isOpened
         }
         return await axios.post(`/message/isOpened/${messageNo}`, updateStatus);
-    }
+    },
+    //광고 메일 보내기
+        sendEmail: async(id, email, title, contents) =>{
+            const emailData = {
+                member: {
+                    id: id,
+                    email: email,
+                  },
+                  title: title,
+                  emailContents: contents,
+            }
+            return await axios.post("/emailAd/send", emailData);
+        }
 
 
 

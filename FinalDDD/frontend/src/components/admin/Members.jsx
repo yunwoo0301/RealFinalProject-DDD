@@ -7,7 +7,7 @@ import ConfirmModal from "../../util/ConfirmModal";
 import {MdOutlineChangeCircle} from "react-icons/md";
 
 
-const MembersContainer = styled.div`
+export const MembersContainer = styled.div`
     width: 80vw;
     height: 100vh;
 
@@ -29,13 +29,13 @@ const MembersContainer = styled.div`
     }
 `;
 
-    const TableHeader = styled.th`
+export const TableHeader = styled.th`
         background-color: #050E3D;
         color: white;
         padding: 8px;
     `;
 
-    const TableRow = styled.tr`
+export const TableRow = styled.tr`
         td {
             border-bottom: 1px solid #ddd;
             padding: 8px;
@@ -48,7 +48,7 @@ const MembersContainer = styled.div`
 
     `;
 
-const ButtonWrapper = styled.div`
+export const ButtonWrapper = styled.div`
     margin-bottom: 1rem;
     width: 80%;
     text-align: right;
@@ -69,7 +69,7 @@ const ButtonWrapper = styled.div`
     }
 `;
 
-const ModalContainer = styled.div`
+export const ModalContainer = styled.div`
     width: 50%;
     h3{text-align: center;}
     p{
@@ -82,6 +82,16 @@ const Members = () => {
     const [selectedMember, setSelectedMember] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [memberList, setMemberList] = useState([]);
+
+     // 날짜형식
+     const formatDate = (date) => {
+        const writeDate = new Date(date);
+        const year = writeDate.getFullYear();
+        const month = (writeDate.getMonth() + 1).toString().padStart(2, "0");
+        const day = writeDate.getDate().toString().padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+      };
 
     // 멤버리스트가져오기
     const getMembers = async() => {
@@ -179,7 +189,7 @@ const handleSelectRow = (id, email) => {
     setIsModalOpen(false);
     };
 
-      // 페이지네이션
+    // 페이지네이션
     //보여질 페이지 개수
     const ITEMS_PAGE = 10;
     const [currentPage, setCurrentPage] = useState(0);
@@ -252,8 +262,9 @@ return (
                     <td onClick={() => openModal(item)}>{item.email}</td>
                     <td onClick={() => openModal(item)}>{item.name}</td>
                     <td>{item.tel}</td>
-                    <td>{item.regDate}</td>
-                    <td>{item.deleteDate}</td>
+                    <td>{formatDate(item.regDate)}</td>
+                    {item.deleteDate === "null" ? <td></td> :
+                    <td>{formatDate(item.deleteDate)}</td>}
                 </TableRow>
                 ))}
             </tbody>
