@@ -95,6 +95,18 @@ const MyPost = ({ memberId }) => {
         }
     };
 
+    // 한줄평
+    const [exhibitComment, setExhibitComment] = useState([]);
+
+    useEffect(() => {
+        const getExhibitComment = async() => {
+            const exhibitCommentData = await DDDApi.myExhibitComments(memberId);
+            setExhibitComment(exhibitCommentData.data);
+        }
+        getExhibitComment();
+    }, [])
+
+
     // 로그인 했을 시 회원 ID 값을 받아오기 위해
     useEffect(() => {
         fetchPost(memberId);
@@ -118,9 +130,10 @@ const MyPost = ({ memberId }) => {
 
 
     // 페이지 네이션
-    const ITEMS_PAGE = 5;
+    const ITEMS_PAGE = 3;
     const [currentPage, setCurrentPage] = useState(0);
     const [currentCommentPage, setCurrentCommentPage] = useState(0);
+    const [currentExhibitPage, setCurrentExhibitPage] = useState(0);
 
     // 게시글 페이지 넘기기
     const handlePageClick = (selectedPage) => {
@@ -132,18 +145,22 @@ const MyPost = ({ memberId }) => {
         setCurrentCommentPage(selectedPage.selected);
     };
 
+    // 한줄평 페이지 넘기기
+    const handleExhibitPageClick = (selectedPage) => {
+        setCurrentExhibitPage(selectedPage.selected);
+    }
+
 
     const offset = currentPage * ITEMS_PAGE;
     const comoffset = currentCommentPage * ITEMS_PAGE;
+    const exhibitOffset = currentExhibitPage * ITEMS_PAGE;
 
     const currentPageData = posts.slice(offset, offset + ITEMS_PAGE); // 게시글
     const currentSecData = comments.slice(comoffset, comoffset + ITEMS_PAGE); // 댓글
+    const exhibitCurrentData = exhibitComment.slice(exhibitOffset, exhibitOffset + ITEMS_PAGE);
     const pageCount = Math.ceil(posts.length / ITEMS_PAGE);
     const pageCount2 = Math.ceil(comments.length / ITEMS_PAGE);
-
-
-
-
+    const pageCount3 = Math.ceil(exhibitComment.length / ITEMS_PAGE);
 
     return (
         <>
@@ -233,6 +250,39 @@ const MyPost = ({ memberId }) => {
                     </tbody>
                 </Table>
                 <PageNation pageCount={pageCount2} onPageChange={handleCommentPageClick}/>
+
+                <div className='moreBox' style={{marginTop:'2rem'}}>
+                    <span>내가 쓴 한줄평</span>
+                </div>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th style={{width:'30%'}}>전시회명</th>
+                            <th style={{width:'10%'}}>별점</th>
+                            <th style={{width:'40%'}}>한줄평</th>
+                            <th style={{width:'20%'}}>작성일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {exhibitCurrentData.length > 0 && exhibitCurrentData.map((exhibit) => (
+                            <tr key={exhibit.commentNo}>
+                                <td>{exhibit.exhibitName}</td>
+                                <td>{exhibit.starRates}</td>
+                                <td>{exhibit.comment}</td>
+                                <td>{formatDate(exhibit.commentTime)}</td>
+                            </tr>
+                        ))
+                    }
+                    {exhibitCurrentData.length === 0 &&
+                        (
+                            <tr>
+                                <td colSpan={6}>작성 한 한줄평이 없습니다. </td>
+                            </tr>
+                        )
+                    }
+                    </tbody>
+                </Table>
+                <PageNation pageCount={pageCount3} onPageChange={handleExhibitPageClick}/>
             </PostWrap>
         </>
     );

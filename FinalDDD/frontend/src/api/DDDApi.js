@@ -313,6 +313,18 @@ commentList: async(exhibitNo) =>{
     }
 },
 
+// 내가 쓴 한줄평(마이페이지 내)
+ myExhibitComments: async(getId) => {
+     try{
+        Functions.setAuthorizationHeader();
+        return await axios.get(`/exhibitComment/listBy?memberId=${getId}`);
+     } catch(error) {
+        console.error(error);
+        await Functions.handleApiError(error);
+        return await axios.get(`/exhibitComment/listBy?memberId=${getId}`);
+     }
+ },
+
 // 내가 한 예약조회(마이페이지 내)
 myBookedList: async(getId) => {
     try{
