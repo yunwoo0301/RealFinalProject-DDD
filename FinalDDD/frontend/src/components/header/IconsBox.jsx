@@ -186,7 +186,6 @@ const Icons = () => {
 
      useEffect(() => {
                 const reservations = async () => {
-                  try {
                     const reservationList = await DDDApi.myBookedList(getId);
 
                     const todayBookings = reservationList.data.filter((booking) => {
@@ -197,36 +196,30 @@ const Icons = () => {
                     if (todayBookings.length > 0 ) {
                         showToast(`🎫 예약된 오늘의 전시가 ${todayBookings.length}건 있습니다`);
                       }
-                  } catch (e) {
-                    console.log(e);
-                  }
+
                 };
 
                 reservations();
             }, []);
 
-        // 오늘날짜로 받은 메세지 뱃지
-                useEffect(() => {
-                    const message = async() => {
-                        try {
-                            const msgList = await DDDApi.receivedMsg(getId);
 
-                            const todayMsgs = msgList.data.filter((msg) => {
-                                const msgDate = new Date(msg.messageDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-");
-                                const isOpened = msg.isOpened === 0;
-                                const isToday = msgDate === today;
-                                return isToday && isOpened;
-                              });
-                              setTodayMsg(todayMsgs.length);
-                              if (todayMsgs.length > 0 && todayMsgs[0].isOpened === 0) {
-                                showToast(`💌 새로운 메세지가 도착했습니다.`);
-                              }
-                        }catch(e) {
-                            console.log(e);
-                        }
-                    }
-                    message();
-                }, []);
+        // 새로운족지 뱃지
+          useEffect(() => {
+            const message = async () => {
+              const msgList = await DDDApi.receivedMsg(getId);
+
+              const todayMsgs = msgList.data.filter((msg) => msg.isOpened === 0);
+
+              setTodayMsg(todayMsgs.length);
+
+              if (todayMsgs.length > 0) {
+                showToast(`💌 새로운 메세지가 도착했습니다.`);
+              }
+            };
+
+            message();
+          }, []);
+
 
 
     const onClickToReservation = () => {

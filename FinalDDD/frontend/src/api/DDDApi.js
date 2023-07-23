@@ -327,15 +327,15 @@ commentList: async(exhibitNo) =>{
 
 // 내가 한 예약조회(마이페이지 내)
 myBookedList: async(getId) => {
-    try{
-        Functions.setAuthorizationHeader();
-        return await axios.get(`/booking/checkTicket?id=${getId}`);
-    } catch(error){
-        console.error(error);
-        await Functions.handleApiError(error);
-        return await axios.get(`/booking/checkTicket?id=${getId}`);
-    }
-},
+     try{
+         Functions.setAuthorizationHeader();
+         return await axios.get(`/booking/checkTicket?id=${getId}`);
+     } catch(error){
+         console.error(error);
+         await Functions.handleApiError(error);
+         return await axios.get(`/booking/checkTicket?id=${getId}`);
+     }
+ },
 
 // 예매취소
 cancelReservation: async(selectedData) => {
@@ -423,15 +423,15 @@ sendMsg: async(sendId, receiverId, title, contents) => {
 
 // 받은쪽지가지고오기
 receivedMsg: async(receiverId) => {
-    try{
-        Functions.setAuthorizationHeader();
-        return await axios.get(`/message/receiveMsgList?receiverId=${receiverId}`);
-    } catch(error){
-        console.error(error);
-        await Functions.handleApiError(error);
-        return await axios.get(`/message/receiveMsgList?receiverId=${receiverId}`);
-    }
-},
+     try{
+         Functions.setAuthorizationHeader();
+         return await axios.get(`/message/receiveMsgList?receiverId=${receiverId}`);
+     } catch(error){
+         console.error(error);
+         await Functions.handleApiError(error);
+         return await axios.get(`/message/receiveMsgList?receiverId=${receiverId}`);
+     }
+ },
 
 // 보낸쪽지
 sentMsg: async(sendId) => {

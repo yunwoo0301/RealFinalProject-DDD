@@ -418,7 +418,6 @@ const PayTicket = ({data}) => {
         const totalPrice = data.totalPrice;
         const result = await DDDApi.kakaopayReady(getId, exhibitNo, ticketCnt, totalPrice, bookingId);
         const payUrl = result.data.next_redirect_pc_url;
-        console.log("결제요청 url" + payUrl);
         // 새로운 창에서 페이지 열기
         window.open(payUrl, "_blank");
         setOpenBooked(true);
