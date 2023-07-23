@@ -40,18 +40,17 @@ const Wrapper = styled.div`
         }
 
         .writedate {
-        font-size:1px;
-        margin-top: .2em;
+            font-size: 1px;
+            margin-top: .2em;
        }
 
         .input-wrapper {
             display: flex;
             flex-direction: row;
             align-items: center;
-            margin-left: auto;
+//            margin-left: auto;
             flex-grow: 1;
-            margin: 12px;
-            /* margin-right: 1em;  */
+            margin: 9px;
 
 
           input {
@@ -65,8 +64,8 @@ const Wrapper = styled.div`
 
 
         }
-        .sendComment {
-          display: flex;
+//        .sendComment {
+//          display: flex;
 
 
           button {
@@ -78,7 +77,7 @@ const Wrapper = styled.div`
               display: inline-block;
               cursor: pointer;
               margin-left: 1em;
-            }
+//            }
         }
 
          @media (max-width: 768px) {
