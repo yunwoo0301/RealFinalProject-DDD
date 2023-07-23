@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import {CiLogin} from "react-icons/ci";
 import {BiKey} from "react-icons/bi";
-import AdminImg from "../../resources/프로필.png";
+import AdminImg from "../../resources/기본프로필.png";
 import { useNavigate } from "react-router-dom";
 
 const Navcontainer = styled.div`
@@ -15,6 +15,8 @@ const Navcontainer = styled.div`
     justify-content: center;
     flex-direction: column;
     z-index: 9999;
+    position: sticky;
+
 
     .admin-login{
         margin-bottom: 1.5rem;

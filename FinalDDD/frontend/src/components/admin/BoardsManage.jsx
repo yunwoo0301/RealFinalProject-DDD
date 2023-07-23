@@ -327,7 +327,11 @@ const BoardsManage = () => {
                       onChange={() => handleSelectRow1(board.boardNo)}
                     />
                   </td>
-                  <td>{board.category}</td>
+                  <td>
+                  {board.category === 'Recommend' && '추천하기'}
+                  {board.category === 'Question' && '질문하기'}
+                  {board.category === 'DDDmate' && '동행찾기'}
+                  </td>
                   <td>{board.author}</td>
                   <td>{board.title}</td>
                   <td>{removeHtmlTags(board.contents)}</td>
@@ -385,7 +389,11 @@ const BoardsManage = () => {
                       onChange={() => handleSelectRow2(comment.commentNo)}
                     />
                   </td>
-                  <td>{comment.categoryName}</td>
+                  <td>
+                    {comment.categoryName === 'Recommend' && '추천하기'}
+                    {comment.categoryName === 'Question' && '질문하기'}
+                    {comment.categoryName === 'DDDmate' && '동행찾기'}
+                  </td>
                   <td>{comment.boardTitle}</td>
                   <td>{comment.nickname}</td>
                   <td>{comment.content}</td>

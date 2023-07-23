@@ -12,6 +12,8 @@ import ConfirmModal from "../util/ConfirmModal";
 import { FcCancel } from "react-icons/fc";
 import { Backdrop } from "@mui/material";
 import useStore from '../store';
+import {RiUserHeartLine} from "react-icons/ri";
+import MessageForm from "../components/Message/MessageForm";
 
 
 const ViewWrap = styled.div`
@@ -162,6 +164,24 @@ const Section = styled.div`
     @media (max-width: 768px) {
         width: 100vw;
     }
+
+    .hoverContent {
+    position: absolute;
+    width: 10%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1;
+    cursor: pointer;
+
+    p {
+      margin: 0;
+      cursor: pointer;
+    }
+    }
 `;
 
 const ListMenu = styled.div`
@@ -290,6 +310,24 @@ const Wrapper = styled.div`
         align-items: center;
     }
 
+    .hoverContent {
+    position: absolute;
+    width: 10%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1;
+    cursor: pointer;
+
+    p {
+      margin: 0;
+      cursor: pointer;
+    }
+    }
+
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -327,7 +365,7 @@ const BoardView = () => {
     const [boardView, setBoardView] = useState(null); // URL에서 boardNo를 가져옴(게시판목록)
     const [commentList, setCommentList] = useState([]); // 댓글용 추가
     const [nickname, setNickname] = useState(""); // 닉네임 초기값 수정
-//    const [test, setTest] = useState(""); // 기본 이미지 불러오기용
+    const [test, setTest] = useState(""); // 기본 이미지 불러오기용
     const [category, setCategory] = useState(null); // 이전글, 다음글 카테고리 설정용
 
     const {memberData} = useStore(); // 회원 데이터에서 프로필 가져오기용(댓글)
@@ -554,9 +592,87 @@ const BoardView = () => {
         icon: <FcCancel/>
       }
 
+      // 쪽지보내기
+
+    // 다른 멤버에게 쪽지보내기 또는 프로필 보기메뉴
+    const [isHovered, setIsHovered] = useState({});
+    const [openedComment, setOpenedComment] = useState(null);
+
+    const [warnModal, setWarnModal] = useState(false);
+    const openToWarnModal = () => {
+      setWarnModal(true);
+    }
+    const closeWarnModal = () => {
+      setWarnModal(false);
+    }
+    const goToLogin = () => {
+      navigate("/login");
+    }
+
+    const openProfile = (memberId) => {
+       // 로그인이 안되어있으면 로그인 모달띄움
+      if (!isLogin) {
+      setIsHovered(false);
+      openToWarnModal();
+      return;
+    }
+      navigate(`/mypage/${memberId}`);
+    };
+
+    const handleMouseEnter = (commentNo) => {
+      if (openedComment !== null) {
+        setIsHovered((prev) => ({ ...prev, [openedComment]: false }));
+      }
+      setIsHovered((prev) => ({ ...prev, [commentNo]: !prev[commentNo] }));
+      setOpenedComment((prev) => (prev === commentNo ? null : commentNo));
+    };
+
+    // 쪽지보내기로 props 보내기
+    const [openMsg, setOpenMsg] = useState(false);
+    const [receiver, setReceiver] = useState('');
+    const [receiverName, setReceiverName] = useState('');
+
+
+    const openToMsg = (receiverId, receiverName) =>{
+      // 로그인이 안되어있으면 로그인 모달띄움
+    if (!isLogin) {
+      setIsHovered(false);
+      openToWarnModal();
+      return;
+    }
+
+      setIsHovered(false);
+      setOpenMsg(true);
+      setReceiver(receiverId);
+      setReceiverName(receiverName);
+    }
+    const closeToMsg = () => {
+      setOpenMsg(false);
+    }
+
+
+
+    const props = {
+      icon: <RiUserHeartLine color="#FF69B4"/>,
+      body:(
+        <>
+        <p>로그인 후 이용가능합니다🥺</p>
+        <p style={{fontSize: "0.9rem"}}>확인을 누르시면 로그인페이지로 이동합니다.</p>
+        </>
+      ),
+      button: [
+        <button onClick={goToLogin}>확인</button>,
+        <button onClick={closeWarnModal}>취소</button>
+      ]
+
+    }
+
+
 
     return(
         <>
+        {openMsg && <MessageForm senderId={getId} receiverId={receiver} receiverName={receiverName} close={closeToMsg}/>}
+        {warnModal && <ConfirmModal props={props}/>}
         <ViewWrap>
             <Section className="section">
             <div className="board_header">
@@ -614,10 +730,17 @@ const BoardView = () => {
                 <div className="authorinfo">
                     {/*기본 프로필 이미지*/}
                      {/* <img src={test} alt="프로필"/> */}
-                    <img src={boardView?.profileImg} alt="프로필"/>
+                    <img src={boardView?.profileImg} alt="프로필" onClick={() => handleMouseEnter(boardView?.boardNo)}/>
                     <div className="author">{boardView?.author}</div>
                 </div>
                 )}
+
+                {isHovered[boardView.boardNo] && (
+              <div className="hoverContent">
+                <p onClick={() => openToMsg(boardView?.id, boardView?.author)}>쪽지보내기</p>
+                <p onClick={() => openProfile(boardView?.id)}>프로필보기</p>
+              </div>
+            )}
 
                 {/* 작성일 및 조회수 구간 */}
                 {boardView && (
@@ -670,9 +793,16 @@ const BoardView = () => {
                 {/* 댓글 작성자 정보 */}
                 <div className="userinfo">
                     <div className="profile">
-                        <img src={comment.profileImg} alt="프로필 이미지" />
+                        <img src={comment.profileImg} alt="프로필 이미지" onClick={() => handleMouseEnter(comment.commentNo)} />
                         <div className="user">{comment.nickname}</div>
                     </div>
+
+                    {isHovered[comment.commentNo] && (
+                        <div className="hoverContent">
+                        <p onClick={() => openToMsg(comment.id, comment.nickname)}>쪽지보내기</p>
+                        <p onClick={() => openProfile(comment.id)}>프로필보기</p>
+                        </div>
+                    )}
 
                     {/* 작성일, 삭제 버튼 영역 */}
                     <div className="rightmenu">
