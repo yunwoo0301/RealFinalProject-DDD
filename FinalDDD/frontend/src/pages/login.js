@@ -6,9 +6,6 @@ import SignUpModal from "../components/Login/SignUpModal";
 import ForgotPwModal from "../components/Login/ForgotPwModal";
 import Agreement from "../components/Login/Agreement";
 import PopupModal from "../components/Login/PopupModal";
-import MyPageBG from "../components/MyPage/MyPageBG";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const Container = styled.div`
     width: 100vw;

@@ -7,6 +7,7 @@ const Container = styled.div`
   height: 50vh; // 이 부분을 수정
   overflow: hidden;
   position: relative; // 이 부분을 추가
+  margin-top: 3%;
   .videoBox {
     width: 100vw;
     height: 50vh;
