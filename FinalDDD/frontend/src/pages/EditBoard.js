@@ -69,17 +69,14 @@ const Section = styled.div`
     display: flex;
     flex-direction: column;
 
-    .board_header { // 게시물 수정 영역
-        h2 {
-            font-size: 1.8em;
-            margin-top: 30px;
-            font-weight: 900;
+    .boardtitle {
+            font-size: 2em;
+            margin-bottom: 1em;
+            font-weight: bold;
             text-align: center;
         }
-    }
 
     table {
-//        width: 80vw;
         width: 75vw;
         margin: 0 auto;
         border-collapse: collapse;
@@ -387,9 +384,7 @@ const EditBoard = () => {
         <EditWrap>
             <Section className="section">
             <div className="board_header">
-                <div className="boardtitle">
-                <h2>자유 게시판</h2>
-                </div>
+                <div className="boardtitle">자유 게시판</div>
                 <table>
                     <tbody>
                     <tr>

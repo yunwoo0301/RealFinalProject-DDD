@@ -2,7 +2,7 @@ import React from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { storage } from "../util/FireBase";
 import { useNavigate } from 'react-router-dom';
 import DDDApi from '../api/DDDApi';
@@ -72,13 +72,11 @@ const Section = styled.div`
     display: flex;
     flex-direction: column;
 
-    .board_header { // 게시물 작성 영역
-        h2 {
-            font-size: 1.8em;
-            margin-top: 30px;
-            font-weight: 900;
-            text-align: center;
-        }
+    .boardtitle {
+        font-size: 2em;
+        margin-bottom: 1em;
+        font-weight: bold;
+        text-align: center;
     }
 
     table {
@@ -367,9 +365,7 @@ const WriteBoard = () => {
       <Wrap>
         <Section className="section">
           <div className="board_header">
-            <div className="boardtitle">
-              <h2>자유 게시판</h2>
-            </div>
+            <div className="boardtitle">자유 게시판</div>
               <table>
                 <tbody>
                 <tr>

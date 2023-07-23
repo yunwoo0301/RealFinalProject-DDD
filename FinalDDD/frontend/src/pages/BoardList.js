@@ -13,20 +13,12 @@ const Wrap = styled.div`
 
 
     .boardtitle {
-        margin-bottom: 1em;
+        margin-bottom: 1.3em;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 30px;
-        font-weight: 600;
-        color: #1a5d98;
-
-        h2 {
-            font-size: 1em;
-            margin-top: 1.2em;
-            color:black;
-        }
-
+        font-size: 2em;
+        font-weight: bold;
     }
 
     button {
@@ -63,9 +55,7 @@ const BoardList = () => {
     <>
     <Header/>
         <Wrap>
-            <div className="boardtitle">
-                <h2>자유 게시판</h2>
-            </div>
+            <div className="boardtitle">자유 게시판</div>
             <div className="category">
                 <Categories category={category} onSelect={handleSelect}/>
                 {category === 'menu1' && <Recommend />}

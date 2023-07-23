@@ -34,13 +34,11 @@ const Section = styled.div`
     float: center;
     position: relative;
 
-    .board_header {
-        h2 {
-            font-size: 1.8em;
-            margin-top: 30px;
-            font-weight: 900;
+    .boardtitle {
+            font-size: 2em;
+            margin-bottom: 1em;
+            font-weight: bold;
             text-align: center;
-        }
     }
 
 
@@ -657,7 +655,7 @@ const BoardView = () => {
         <ViewWrap>
             <Section className="section">
             <div className="board_header">
-                <div className="boardtitle"><h2>자유 게시판</h2></div>
+                <div className="boardtitle">자유 게시판</div>
 
                 {/* 게시판 카테고리 */}
                 <div className="sub_category">
