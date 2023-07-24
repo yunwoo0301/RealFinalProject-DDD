@@ -8,9 +8,11 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 
 const ModalStyle = styled.div`
+  width: 100%;
   .modal {
     display: none;
     position: fixed;
+    width: 100%;
     top: 0;
     right: 0;
     bottom: 0;

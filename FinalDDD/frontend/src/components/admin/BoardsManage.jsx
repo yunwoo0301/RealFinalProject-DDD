@@ -308,11 +308,11 @@ const BoardsManage = () => {
                     onChange={handleSelectAllRows1}
                   />
                 </TableHeader>
-                <TableHeader>카테고리</TableHeader>
-                <TableHeader>작성자</TableHeader>
-                <TableHeader>작성제목</TableHeader>
-                <TableHeader>작성내용</TableHeader>
-                <TableHeader>작성일</TableHeader>
+                <TableHeader style={{ width: "12%" }}>카테고리</TableHeader>
+                <TableHeader style={{ width: "8%" }}>작성자</TableHeader>
+                <TableHeader style={{ width: "30%" }}>작성제목</TableHeader>
+                <TableHeader style={{ width: "40%" }}>작성내용</TableHeader>
+                <TableHeader style={{ width: "10%" }}>작성일</TableHeader>
               </TableRow>
             </thead>
             <tbody>
@@ -335,7 +335,7 @@ const BoardsManage = () => {
                   <td>{board.author}</td>
                   <td>{board.title}</td>
                   <td>{removeHtmlTags(board.contents)}</td>
-                  <td>{formatDate(board.writeDate)}</td>
+                  <td style={{fontSize: "0.8rem"}}>{formatDate(board.writeDate)}</td>
                 </TableRow>
               ))}
           </tbody>
@@ -372,11 +372,11 @@ const BoardsManage = () => {
                     onChange={handleSelectAllRows2}
                   />
                 </TableHeader>
-                <TableHeader>카테고리</TableHeader>
-                <TableHeader>글 제목</TableHeader>
-                <TableHeader>댓글 작성자</TableHeader>
-                <TableHeader>댓글 내용</TableHeader>
-                <TableHeader>댓글 작성 시간</TableHeader>
+                <TableHeader style={{ width: "10%" }}>카테고리</TableHeader>
+                <TableHeader style={{ width: "20%" }}>글 제목</TableHeader>
+                <TableHeader style={{ width: "10%" }}>댓글 작성자</TableHeader>
+                <TableHeader style={{ width: "40%" }}>댓글 내용</TableHeader>
+                <TableHeader style={{ width: "10%" }}>댓글 작성 시간</TableHeader>
               </TableRow>
             </thead>
             <tbody>
@@ -397,7 +397,7 @@ const BoardsManage = () => {
                   <td>{comment.boardTitle}</td>
                   <td>{comment.nickname}</td>
                   <td>{comment.content}</td>
-                  <td>{formatDate(comment.writeDate)}</td>
+                  <td style={{fontSize: "0.8rem"}}>{formatDate(comment.writeDate)}</td>
                 </TableRow>
               ))}
             </tbody>

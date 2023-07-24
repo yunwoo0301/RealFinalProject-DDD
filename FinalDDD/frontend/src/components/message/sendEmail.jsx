@@ -63,7 +63,7 @@ export const Container = styled.div`
         input{
           width: 20rem;
           height: 3rem;
-          background-color: #eee;
+          background-color: #fff;
           border: 1px solid #5EADF7;
           border-radius: .3rem;
           padding-left: .8rem;
@@ -80,7 +80,7 @@ export const Container = styled.div`
         textarea{
           width: 20rem;
           height: 20rem;
-          background-color: #F4F8FF;
+          background-color: #fff;
           border: 1px solid #5EADF7;
           border-radius: .3rem;
           padding-top: .8rem;

@@ -83,6 +83,22 @@ export default function SwipeableTemporaryDrawer() {
 
     }
 
+    const clickToHome = () => {
+      navigate("/");
+    }
+
+    const clickToExhibit = () => {
+      navigate("/exhibitList");
+    }
+
+    const clickToBoardList = () => {
+      navigate("/boardList");
+    }
+
+    const clickToChatbot = () => {
+      navigate("/chatbot");
+    }
+
     // 로그인 경고모달
       const [warnModal, setWarnModal] = useState(false);
       const closeWarnModal = () => {
@@ -115,11 +131,11 @@ export default function SwipeableTemporaryDrawer() {
       >
     <List>
         <h3 sx={{ cursor: 'pointer' }}>&times;</h3>
-        <h2><CustomLink to="/">HOME</CustomLink></h2>
-        <h2><CustomLink to="/exhibitList">전시예매</CustomLink></h2>
+        <h2><CustomLink onClick={clickToHome}>HOME</CustomLink></h2>
+        <h2><CustomLink onClick={clickToExhibit}>전시예매</CustomLink></h2>
         <h2><CustomLink onClick={clickToRates}>평가하기</CustomLink></h2>
-        <h2><CustomLink to="/boardList">게시판</CustomLink></h2>
-        <h2><CustomLink to="/chatbot">고객센터</CustomLink></h2>
+        <h2><CustomLink onClick={clickToBoardList}>게시판</CustomLink></h2>
+        <h2><CustomLink onClick={clickToChatbot}>고객센터</CustomLink></h2>
     </List>
       </Box>
     );

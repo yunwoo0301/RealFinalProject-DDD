@@ -37,7 +37,7 @@ public class MemberRequestDto { // DB 넣어질 요소
                 .name(name)
                 .tel(tel)
                 .authority(Authority.ROLE_USER)
-                .isActive(true)
+                .isActive(false)
                 .instagram(instagram)
                 .profileImg("/default-profile.png")
                 .backgroundImg("/default-BG.jpg")

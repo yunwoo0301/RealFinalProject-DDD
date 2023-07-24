@@ -15,7 +15,11 @@ const Chart = () => {
   const [chartData, setChartData] = useState([]);
 
   const getMembers = async () => {
+    // 가정: LoginApi.getAllMembers()는 회원 데이터를 가져오는 비동기 함수라고 가정합니다.
     const result = await LoginApi.getAllMembers();
+
+    // 날짜 기준으로 오름차순 정렬
+    result.data.sort((a, b) => a.regDate.localeCompare(b.regDate));
 
     const regDateCounts = {};
     result.data.forEach((member) => {
@@ -71,17 +75,15 @@ const Chart = () => {
             const x = index * scaleX;
             const y = graphHeight - (item.count - minValue) * scaleY;
 
+            // 수정된 부분: 하나의 점만 찍도록 수정
             return (
               <React.Fragment key={item.date}>
-                {Array.from({ length: item.count }, (_, dotIndex) => (
-                  <circle
-                    key={`${item.date}-${dotIndex}`}
-                    cx={x}
-                    cy={y - dotIndex * 5} // 점 사이의 간격 조정
-                    r={2} // 점의 반지름 조정
-                    fill="#050E3D"
-                  />
-                ))}
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={2} // 점의 반지름 조정
+                  fill="#050E3D"
+                />
                 {index !== 0 && (
                   <line
                     x1={(index - 1) * scaleX}

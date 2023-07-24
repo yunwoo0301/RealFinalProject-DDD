@@ -135,7 +135,7 @@ const DeleteAccount = () => {
         localStorage.removeItem("storageEmail");
         localStorage.removeItem("memberId");
         localStorage.removeItem("accessToken");
-        navigate('/')
+        navigate('/login');
     }
 
 

@@ -28,7 +28,7 @@ function VerifyEmail() {
 
   useEffect(() => {
     const token = new URLSearchParams(location.search).get("token");
-    axios.get(`http://localhost:8111/login/check-email-token?token=${token}`)
+    axios.get(`https://myexhibitions.store/login/api/check-email-token?token=${token}`)
     .then(res => {
       console.log(res.data);
     })

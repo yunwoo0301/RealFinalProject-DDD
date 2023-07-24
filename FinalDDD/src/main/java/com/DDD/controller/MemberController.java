@@ -68,7 +68,7 @@ public class MemberController {
 //    }
 
       // 체크이메일 안될 시 이걸로 해보기
-    @GetMapping("/check-email-token")
+    @GetMapping("/api/check-email-token")
     public String checkEmailToken(@RequestParam("token") String token) {
         Optional<Member> optionalUser = memberRepository.findByEmailCheckToken(token);
         if (optionalUser.isPresent()) {

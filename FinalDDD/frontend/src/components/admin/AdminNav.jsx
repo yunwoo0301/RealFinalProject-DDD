@@ -87,7 +87,7 @@ const AdminNav = ({activeMenuItem, setCurrentMenuItem}) => {
         localStorage.removeItem("storageEmail");
         localStorage.removeItem("memberId");
         localStorage.removeItem("accessToken");
-        navigate('/')
+        navigate('/login')
     }
 
 

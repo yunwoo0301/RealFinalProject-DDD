@@ -181,7 +181,7 @@ const Icons = () => {
         localStorage.removeItem("storageEmail");
         localStorage.removeItem("memberId");
         localStorage.removeItem("accessToken");
-        navigate('/')
+        navigate('/login')
     }
 
      useEffect(() => {
@@ -189,7 +189,7 @@ const Icons = () => {
                     const reservationList = await DDDApi.myBookedList(getId);
 
                     const todayBookings = reservationList.data.filter((booking) => {
-                    const bookingDate = new Date(booking.bookingDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 예약 날짜 표시
+                    const bookingDate = new Date(booking.visitDate).toLocaleString("en-US", { timeZone: userTimezone, dateStyle: "short" }).replace(/\//g, "-"); // 사용자의 타임존에 맞춰 예약 날짜 표시
                     return bookingDate === today;
                     });
                     setTodayBookingCnt(todayBookings.length);

@@ -47,9 +47,32 @@ public class AuthService {
 
             // Compose email content
             String subject = "Email Confirmation";
-            String body = "Click this link to confirm your email: " +
-                    "<a href=\"http://localhost:3000/login/check-email-token?token=" + emailCheckToken + "\">Confirm Email</a>";
-
+            String body = "<!DOCTYPE html>\n" +
+                    "<html>\n" +
+                    "<head>\n" +
+                    "    <title>이메일 주소 확인</title>\n" +
+                    "</head>\n" +
+                    "<body style=\"margin: 0; padding: 0; background-color: #f6f6f6;\">\n" +
+                    "    <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                    "        <tr>\n" +
+                    "            <td style=\"padding: 20px; text-align: center; font-family: Arial, sans-serif; font-size: 24px; color: #333;\">\n" +
+                    "                <h1 style=\"margin-bottom: 20px;\">이메일 주소 확인</h1>\n" +
+                    "                <p style=\"font-size: 18px; color: #333;\">안녕하세요 :) :DDD 가입을 환영합니다🥰🥰</p>\n" +
+                    "                <p style=\"font-size: 18px; color: #333;\">이메일 주소 확인을 위해 아래 링크를 클릭해주세요.</p>\n" +
+                    "                <p style=\"font-size: 18px; color: #333;\">계속하시려면 아래 \"이메일 확인\" 버튼을 클릭하세요.</p>\n" +
+                    "                <a href=\"https://myexhibitions.store/login/check-email-token?token=" + emailCheckToken + "\"\n" +
+                    "                   style=\"display: inline-block; color: #fff; background-color: #007bff; border: solid 1px #007bff;\n" +
+                    "                   padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 18px; margin-top: 20px;\">\n" +
+                    "                    이메일 확인\n" +
+                    "                </a>\n" +
+                    "                <p style=\"font-size: 18px; color: #333; margin-top: 20px;\">\n" +
+                    "                    회원가입을 원치 않으시면 이 이메일을 무시하셔도 됩니다.\n" +
+                    "                </p>\n" +
+                    "            </td>\n" +
+                    "        </tr>\n" +
+                    "    </table>\n" +
+                    "</body>\n" +
+                    "</html>";
             // Send email
             emailService.sendMail(member.getEmail(), subject, body);
             log.info("AuthService의 email : "+ member.getEmail());
