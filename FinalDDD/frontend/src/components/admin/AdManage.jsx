@@ -97,12 +97,16 @@ const AdsManage = () => {
     const [emailList, setEmailList] = useState([])
 
     useEffect(() => {
-        const getList = async() => {
-           const result = await DDDApi.emailAdList();
-           setEmailList(result.data);
-        }
-        getList();
-    }, [])
+      const getList = async () => {
+        const result = await DDDApi.emailAdList();
+
+        // regDate를 기준으로 최신순으로 정렬
+        const sortedList = result.data.sort((a, b) => new Date(b.sentEmailDate) - new Date(a.sentEmailDate));
+        setEmailList(sortedList);
+      };
+
+      getList();
+    }, []);
 
     // 이메일리스트 페이지네이션
     const [currentEmailPage, setCurrentEmailPage] = useState(0);

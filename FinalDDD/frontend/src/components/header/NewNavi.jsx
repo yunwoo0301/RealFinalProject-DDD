@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React,{useState} from 'react';
 // import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import {BsList} from 'react-icons/bs';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {RiUserHeartLine} from "react-icons/ri";
+import ConfirmModal from '../../util/ConfirmModal';
 
 const Button = styled.button`
     font-size: 1.7rem;
@@ -41,7 +43,7 @@ const Box = styled.div`
 
 `
 
-const CustomLink = styled(Link)`
+const CustomLink = styled.div`
   color: inherit; /* 기본 색상 유지 */
   text-decoration: none; /* 밑줄 제거 */
   &:hover {
@@ -53,6 +55,8 @@ const CustomLink = styled(Link)`
 
 
 export default function SwipeableTemporaryDrawer() {
+    const navigate = useNavigate();
+    const isLogin = window.localStorage.getItem("isLogin");
     const [state, setState] = React.useState({
       right: false,
       isChatbotOpen: false,
@@ -70,6 +74,38 @@ export default function SwipeableTemporaryDrawer() {
       setState({ ...state, [anchor]: open });
     };
 
+    const clickToRates = () => {
+      if(isLogin){
+        navigate("/rateDiary");
+      } else {
+        setWarnModal(true);
+      }
+
+    }
+
+    // 로그인 경고모달
+      const [warnModal, setWarnModal] = useState(false);
+      const closeWarnModal = () => {
+        setWarnModal(false);
+      }
+      const goToLogin = () => {
+        navigate("/login");
+      }
+
+    const props = {
+      icon: <RiUserHeartLine color="#FF69B4"/>,
+      body:(
+        <>
+        <p>로그인 후 이용가능합니다🥺</p>
+        <p style={{fontSize: "0.9rem"}}>확인을 누르시면 로그인페이지로 이동합니다.</p>
+        </>
+      ),
+      button: [
+        <button onClick={goToLogin}>확인</button>,
+        <button onClick={closeWarnModal}>취소</button>
+      ]
+    }
+
     const list = (anchor) => (
       <Box
         // sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 300 }}
@@ -81,8 +117,8 @@ export default function SwipeableTemporaryDrawer() {
         <h3 sx={{ cursor: 'pointer' }}>&times;</h3>
         <h2><CustomLink to="/">HOME</CustomLink></h2>
         <h2><CustomLink to="/exhibitList">전시예매</CustomLink></h2>
+        <h2><CustomLink onClick={clickToRates}>평가하기</CustomLink></h2>
         <h2><CustomLink to="/boardList">게시판</CustomLink></h2>
-{/*         <h2><CustomLink to="/ratediary">평가하기</CustomLink></h2> */}
         <h2><CustomLink to="/chatbot">고객센터</CustomLink></h2>
     </List>
       </Box>
@@ -90,6 +126,7 @@ export default function SwipeableTemporaryDrawer() {
 
     return (
       <div>
+        {warnModal && <ConfirmModal props={props}/>}
         <Button onClick={toggleDrawer('right', true)}><BsList/></Button>
         <SwipeableDrawer
           anchor="right"

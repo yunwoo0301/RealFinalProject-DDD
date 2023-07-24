@@ -13,7 +13,7 @@ const Modal = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 3rem;
-    z-index: 92;
+    z-index: 90;
 `;
 
 export const Container = styled.div`
@@ -63,7 +63,7 @@ export const Container = styled.div`
         input{
           width: 20rem;
           height: 3rem;
-          background-color: #F4F8FF;
+          background-color: #eee;
           border: 1px solid #5EADF7;
           border-radius: .3rem;
           padding-left: .8rem;
@@ -83,6 +83,7 @@ export const Container = styled.div`
           background-color: #F4F8FF;
           border: 1px solid #5EADF7;
           border-radius: .3rem;
+          padding-top: .8rem;
           padding-left: .8rem;
           resize: none;
         }

@@ -22,7 +22,7 @@ const Modal = styled.div`
   justify-content: center;
   align-items: center;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 99;
+  z-index: 999;
   .checkIcon {
     /* background-color: blue; */
     height: 20%;
