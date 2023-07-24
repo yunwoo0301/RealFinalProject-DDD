@@ -380,18 +380,18 @@ const PayTicket = ({data}) => {
       }
 
       // 확인버튼을 누르면 예매페이지로이동
-      const [openBooked, setOpenBooked] = useState(false);
-      const handleToComplete = async () => {
-        const totalPrice = data.price;
-        const ticketCnt = data.quantity;
-        const result = await DDDApi.bankingPayment(getId, bookingId, totalPrice, ticketCnt);
-        const isOk = result.data;
-        if(isOk){
-        setModalOpen(false);
-        setShowInputInfo(false);
-        setOpenBooked(true);
-        }
-      }
+     const [openBooked, setOpenBooked] = useState(false);
+     const handleToComplete = async () => {
+       const totalPrice = data.totalPrice;
+       const ticketCnt = data.quantity;
+       const result = await DDDApi.bankingPayment(getId, bookingId, totalPrice, ticketCnt);
+       const isOk = result.data;
+       if(isOk){
+       setModalOpen(false);
+       setShowInputInfo(false);
+       setOpenBooked(true);
+       }
+     }
 
 
 

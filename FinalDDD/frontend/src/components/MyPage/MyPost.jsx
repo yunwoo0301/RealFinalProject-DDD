@@ -185,7 +185,11 @@ const MyPost = ({ memberId }) => {
                        currentPageData.length > 0 && currentPageData.map((post, index) => (
                             <tr key={index}>
                             <td>{post.boardNo}</td>
-                            <td>{post.category}</td>
+                            <td>
+                            {post.category === 'Recommend' && '추천하기'}
+                            {post.category === 'Question' && '질문하기'}
+                            {post.category === 'DDDmate' && '동행찾기'}
+                            </td>
                             <td
                                 style={{ cursor: 'pointer' }}
                                 onClick={() => handleTitleClick(post.boardNo)}>{post.title}
@@ -229,7 +233,11 @@ const MyPost = ({ memberId }) => {
                         currentSecData.length > 0 && currentSecData.map((comment, index) => (
                             <tr key={index}>
                                 <td>{comment.commentNo}</td>
-                                <td>{comment.category}</td>
+                                <td>
+                                {comment.category === 'Recommend' && '추천하기'}
+                                {comment.category === 'Question' && '질문하기'}
+                                {comment.category === 'DDDmate' && '동행찾기'}
+                                </td>
                                 <td
                                 style={{ cursor: 'pointer' }}
                                 onClick={() => handleTitleClick(comment.boardNo)}>{comment.content}

@@ -312,7 +312,7 @@ const BoardsManage = () => {
                 <TableHeader style={{ width: "8%" }}>작성자</TableHeader>
                 <TableHeader style={{ width: "30%" }}>작성제목</TableHeader>
                 <TableHeader style={{ width: "40%" }}>작성내용</TableHeader>
-                <TableHeader style={{ width: "10%" }}>작성일</TableHeader>
+                <TableHeader style={{ width: "10%" }}>작성일시</TableHeader>
               </TableRow>
             </thead>
             <tbody>
@@ -374,9 +374,9 @@ const BoardsManage = () => {
                 </TableHeader>
                 <TableHeader style={{ width: "10%" }}>카테고리</TableHeader>
                 <TableHeader style={{ width: "20%" }}>글 제목</TableHeader>
-                <TableHeader style={{ width: "10%" }}>댓글 작성자</TableHeader>
-                <TableHeader style={{ width: "40%" }}>댓글 내용</TableHeader>
-                <TableHeader style={{ width: "10%" }}>댓글 작성 시간</TableHeader>
+                <TableHeader style={{ width: "10%" }}>작성자</TableHeader>
+                <TableHeader style={{ width: "40%" }}>내용</TableHeader>
+                <TableHeader style={{ width: "10%" }}>작성일시</TableHeader>
               </TableRow>
             </thead>
             <tbody>
